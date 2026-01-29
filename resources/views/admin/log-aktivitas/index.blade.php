@@ -1,43 +1,45 @@
-<x-layouts.app :title="'Log Aktivitas - Admin'">
-    <div class="mx-auto max-w-6xl p-6">
-        @include('partials.topbar', [
-            'title' => 'Log Aktivitas',
-            'subtitle' => 'Admin dapat melihat log aktivitas.',
-        ])
+<x-layouts.app title="Log Aktivitas">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Log Aktivitas</h1>
+            <p class="text-gray-600 text-sm mt-1\">Total: {{ $items->total() }} aktivitas</p>
+        </div>
 
-        <div class="mt-6 space-y-4">
-            @include('partials.flash')
-
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <!-- Table -->
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-slate-50 text-slate-600">
-                    <tr>
-                        <th class="px-4 py-3 text-left">Waktu</th>
-                        <th class="px-4 py-3 text-left">User</th>
-                        <th class="px-4 py-3 text-left">Aktivitas</th>
-                    </tr>
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="px-6 py-3 text-left font-semibold text-gray-700">Waktu</th>
+                            <th class="px-6 py-3 text-left font-semibold text-gray-700">User</th>
+                            <th class="px-6 py-3 text-left font-semibold text-gray-700">Aktivitas</th>
+                        </tr>
                     </thead>
-                    <tbody>
-                    @forelse ($items as $log)
-                        <tr class="border-t border-slate-100">
-                            <td class="px-4 py-3 whitespace-nowrap">{{ $log->created_at?->format('d/m/Y H:i') }}</td>
-                            <td class="px-4 py-3">
-                                <div class="font-medium">{{ $log->user?->name }}</div>
-                                <div class="text-xs text-slate-500">{{ $log->user?->username }} ({{ $log->user?->role }})</div>
-                            </td>
-                            <td class="px-4 py-3 text-slate-700">{{ $log->aktivitas }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3" class="px-4 py-8 text-center text-slate-500">Belum ada data.</td>
-                        </tr>
-                    @endforelse
+                    <tbody class="divide-y divide-gray-200">
+                        @forelse ($items as $log)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-3 text-gray-600 whitespace-nowrap">{{ $log->created_at?->format('d/m H:i') }}</td>
+                                <td class="px-6 py-3">
+                                    <div class="font-medium text-gray-900">{{ $log->user?->name }}</div>
+                                    <div class="text-xs text-gray-500">{{ $log->user?->username }} ({{ $log->user?->role }})</div>
+                                </td>
+                                <td class="px-6 py-3 text-gray-600">{{ $log->aktivitas }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-6 py-8 text-center text-gray-500">Tidak ada aktivitas ditemukan</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <div>{{ $items->links() }}</div>
+        <!-- Pagination -->
+        <div class="flex justify-center">
+            {{ $items->links() }}
         </div>
     </div>
 </x-layouts.app>
-

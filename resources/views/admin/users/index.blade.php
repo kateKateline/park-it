@@ -1,78 +1,75 @@
-<x-layouts.app :title="'CRUD User - Admin'">
-    <div class="mx-auto max-w-6xl p-6">
-        @include('partials.topbar', [
-            'title' => 'CRUD User',
-            'subtitle' => 'Admin dapat mengelola user (admin/petugas/owner).',
-        ])
-
-        <div class="mt-6 space-y-4">
-            @include('partials.flash')
-
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <form class="flex gap-2" method="GET" action="{{ route('admin.users.index') }}">
-                    <input name="q" value="{{ $q }}" placeholder="Cari nama/username/role..."
-                           class="w-full sm:w-80 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
-                    <button class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50">
-                        Cari
-                    </button>
-                </form>
-
-                <a href="{{ route('admin.users.create') }}"
-                   class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
-                    + User
-                </a>
+<x-layouts.app title="Users">
+    <div class="space-y-6">
+        <!-- Header & Actions -->
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Users</h1>
+                <p class="text-gray-600 text-sm mt-1">Total: {{ $users->total() }} users</p>
             </div>
+            <a href="{{ route('admin.users.create') }}" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                <i class="fas fa-plus mr-2"></i>Tambah User
+            </a>
+        </div>
 
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <!-- Search -->
+        <form method="GET" action="{{ route('admin.users.index') }}" class="flex gap-2">
+            <input type="text" name="q" value="{{ $q }}" placeholder="Cari nama atau username..."
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+            <button type="submit" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+
+        <!-- Table -->
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-slate-50 text-slate-600">
-                    <tr>
-                        <th class="px-4 py-3 text-left">#</th>
-                        <th class="px-4 py-3 text-left">Nama</th>
-                        <th class="px-4 py-3 text-left">Username</th>
-                        <th class="px-4 py-3 text-left">Role</th>
-                        <th class="px-4 py-3 text-right">Aksi</th>
-                    </tr>
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="px-6 py-3 text-left font-semibold text-gray-700">Nama</th>
+                            <th class="px-6 py-3 text-left font-semibold text-gray-700">Username</th>
+                            <th class="px-6 py-3 text-left font-semibold text-gray-700">Role</th>
+                            <th class="px-6 py-3 text-center font-semibold text-gray-700">Aksi</th>
+                        </tr>
                     </thead>
-                    <tbody>
-                    @forelse ($users as $u)
-                        <tr class="border-t border-slate-100">
-                            <td class="px-4 py-3">{{ $u->id }}</td>
-                            <td class="px-4 py-3 font-medium">{{ $u->name }}</td>
-                            <td class="px-4 py-3">{{ $u->username }}</td>
-                            <td class="px-4 py-3">
-                                <span class="inline-flex rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
-                                    {{ $u->role }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-right">
-                                <div class="inline-flex items-center gap-2">
-                                    <a class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50"
-                                       href="{{ route('admin.users.edit', $u) }}">
-                                        Edit
-                                    </a>
-                                    <form method="POST" action="{{ route('admin.users.destroy', $u) }}"
-                                          onsubmit="return confirm('Hapus user ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50">
-                                            Hapus
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-4 py-8 text-center text-slate-500">Belum ada data.</td>
-                        </tr>
-                    @endforelse
+                    <tbody class="divide-y divide-gray-200">
+                        @forelse ($users as $u)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-3 font-medium text-gray-900">{{ $u->name }}</td>
+                                <td class="px-6 py-3 text-gray-600">{{ $u->username }}</td>
+                                <td class="px-6 py-3">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
+                                        {{ $u->role }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-3 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <a href="{{ route('admin.users.edit', $u) }}" class="p-2 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition">
+                                            <i class="fas fa-pen-to-square"></i>
+                                        </a>
+                                        <form action="{{ route('admin.users.destroy', $u) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-2 bg-red-50 text-red-600 rounded hover:bg-red-100 transition">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-gray-500">Tidak ada user ditemukan</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <div>{{ $users->links() }}</div>
+        <!-- Pagination -->
+        <div class="flex justify-center">
+            {{ $users->links() }}
         </div>
     </div>
 </x-layouts.app>
-
