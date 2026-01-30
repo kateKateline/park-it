@@ -1,4 +1,4 @@
-<x-layouts.app :title="$mode === 'create' ? 'Tambah Area Parkir - Admin' : 'Edit Area Parkir - Admin'">
+<x-layouts.admin :title="$mode === 'create' ? 'Tambah Area Parkir - Admin' : 'Edit Area Parkir - Admin'">
     <div class="mx-auto max-w-3xl p-6">
         @include('partials.topbar', [
             'title' => $mode === 'create' ? 'Tambah Area Parkir' : 'Edit Area Parkir',
@@ -60,5 +60,5 @@
             </form>
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.admin>
 

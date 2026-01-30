@@ -1,4 +1,4 @@
-<x-layouts.app :title="'Login - Park-It'">
+<x-layouts.guest :title="'Login - Park-It'">
     <div class="min-h-screen flex items-center justify-center p-6">
         <div class="w-full max-w-md">
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
@@ -59,5 +59,5 @@
             </div>
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.guest>
 

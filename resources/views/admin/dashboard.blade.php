@@ -1,4 +1,4 @@
-<x-layouts.app :title="'Dashboard'">
+<x-layouts.admin :title="'Dashboard'">
     <div class="space-y-6">
         <!-- Header Row with Date Filter -->
         <div class="flex items-center justify-between mb-8">
@@ -213,5 +213,5 @@
             </div>
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.admin>
 

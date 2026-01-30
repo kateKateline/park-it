@@ -1,4 +1,4 @@
-<x-layouts.app title="Log Aktivitas">
+<x-layouts.admin title="Log Aktivitas">
     <div class="space-y-6">
         <!-- Header -->
         <div>
@@ -42,4 +42,4 @@
             {{ $items->links() }}
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.admin>

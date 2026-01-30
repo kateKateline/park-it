@@ -1,4 +1,4 @@
-<x-layouts.app :title="'Transaksi Demo - Petugas'">
+<x-layouts.guest :title="'Transaksi Demo - Petugas'">
     <div class="mx-auto max-w-6xl p-6">
         @include('partials.topbar', [
             'title' => 'Transaksi (Demo)',
@@ -53,5 +53,5 @@
             <div>{{ $items->links() }}</div>
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.guest>
 

@@ -1,4 +1,4 @@
-<x-layouts.app title="Tarif Parkir">
+<x-layouts.admin title="Tarif Parkir">
     <div class="space-y-6">
         <!-- Header & Actions -->
         <div class="flex items-center justify-between">
@@ -57,4 +57,4 @@
             {{ $tarif->links() }}
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.admin>

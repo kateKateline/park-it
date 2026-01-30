@@ -1,4 +1,4 @@
-<x-layouts.app title="Users">
+<x-layouts.admin title="Users">
     <div class="space-y-6">
         <!-- Header & Actions -->
         <div class="flex items-center justify-between">
@@ -72,4 +72,4 @@
             {{ $users->links() }}
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.admin>

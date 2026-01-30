@@ -1,4 +1,4 @@
-<x-layouts.app title="Area Parkir">
+<x-layouts.admin title="Area Parkir">
     <div class="space-y-6">
         <!-- Header & Actions -->
         <div class="flex items-center justify-between">
@@ -59,4 +59,4 @@
             {{ $items->links() }}
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.admin>

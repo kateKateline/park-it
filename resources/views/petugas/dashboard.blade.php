@@ -1,4 +1,4 @@
-<x-layouts.app :title="'Petugas Dashboard - Park-It'">
+<x-layouts.guest :title="'Petugas Dashboard - Park-It'">
     <div class="mx-auto max-w-6xl p-6">
         @include('partials.topbar', [
             'title' => 'Dashboard Petugas',
@@ -38,5 +38,5 @@
             </div>
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.guest>
 
