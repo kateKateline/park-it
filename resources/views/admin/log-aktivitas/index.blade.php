@@ -39,7 +39,7 @@
 
         <!-- Pagination -->
         <div class="flex justify-center">
-            {{ $items->links() }}
+            {{ $items->links('pagination::tailwind') }}
         </div>
     </div>
 </x-layouts.admin>

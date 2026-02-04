@@ -1,11 +1,10 @@
 <x-layouts.admin :title="'Dashboard'">
     <div class="space-y-6">
-        <!-- Header Row with Date Filter -->
+        <!-- Header Row -->
         <div class="flex items-center justify-between mb-8">
             <h2 class="text-xl font-semibold text-gray-900">Dashboard</h2>
             <div class="text-sm text-gray-600">
                 <span class="font-medium">{{ now()->format('F d, Y') }}</span>
-                <a href="#" class="ml-4 text-blue-600 hover:text-blue-700 font-medium">Filter date</a>
             </div>
         </div>
 
@@ -19,9 +18,22 @@
                         <p class="text-4xl font-bold text-gray-900 mt-3">{{ $kpi['transaksi_aktif'] ?? 0 }}</p>
                     </div>
                     <div class="flex flex-col items-end">
-                        <span class="text-green-600 text-sm font-semibold flex items-center">
-                            <i class="fas fa-arrow-up mr-1"></i>
-                            12%
+                        @php
+                            $yesterday = now()->subDay()->toDateString();
+                            $transaksiKemarin = \App\Models\Transaksi::where('status', 'masuk')
+                                ->whereDate('waktu_masuk', $yesterday)
+                                ->count();
+                            $transaksiSekarang = $kpi['transaksi_aktif'] ?? 0;
+                            $persentase = $transaksiKemarin > 0 
+                                ? round((($transaksiSekarang - $transaksiKemarin) / $transaksiKemarin) * 100) 
+                                : ($transaksiSekarang > 0 ? 100 : 0);
+                            $isPositive = $persentase >= 0;
+                            $colorClass = $isPositive ? 'text-green-600' : 'text-red-600';
+                            $arrowIcon = $isPositive ? 'fa-arrow-up' : 'fa-arrow-down';
+                        @endphp
+                        <span class="{{ $colorClass }} text-sm font-semibold flex items-center">
+                            <i class="fas {{ $arrowIcon }} mr-1"></i>
+                            {{ abs($persentase) }}%
                         </span>
                     </div>
                 </div>
@@ -36,9 +48,20 @@
                         <p class="text-4xl font-bold text-gray-900 mt-3">{{ $kpi['transaksi_hari_ini'] ?? 0 }}</p>
                     </div>
                     <div class="flex flex-col items-end">
-                        <span class="text-green-600 text-sm font-semibold flex items-center">
-                            <i class="fas fa-arrow-up mr-1"></i>
-                            8%
+                        @php
+                            $yesterday = now()->subDay()->toDateString();
+                            $transaksiKemarin = \App\Models\Transaksi::whereDate('waktu_masuk', $yesterday)->count();
+                            $transaksiSekarang = $kpi['transaksi_hari_ini'] ?? 0;
+                            $persentase = $transaksiKemarin > 0 
+                                ? round((($transaksiSekarang - $transaksiKemarin) / $transaksiKemarin) * 100) 
+                                : ($transaksiSekarang > 0 ? 100 : 0);
+                            $isPositive = $persentase >= 0;
+                            $colorClass = $isPositive ? 'text-green-600' : 'text-red-600';
+                            $arrowIcon = $isPositive ? 'fa-arrow-up' : 'fa-arrow-down';
+                        @endphp
+                        <span class="{{ $colorClass }} text-sm font-semibold flex items-center">
+                            <i class="fas {{ $arrowIcon }} mr-1"></i>
+                            {{ abs($persentase) }}%
                         </span>
                     </div>
                 </div>
@@ -53,9 +76,22 @@
                         <p class="text-3xl font-bold text-gray-900 mt-3">Rp {{ number_format($kpi['pendapatan_hari_ini'] ?? 0, 0, ',', '.') }}</p>
                     </div>
                     <div class="flex flex-col items-end">
-                        <span class="text-green-600 text-sm font-semibold flex items-center">
-                            <i class="fas fa-arrow-up mr-1"></i>
-                            15%
+                        @php
+                            $yesterday = now()->subDay()->toDateString();
+                            $pendapatanKemarin = (int) \App\Models\Transaksi::where('status', 'selesai')
+                                ->whereDate('waktu_keluar', $yesterday)
+                                ->sum('total_bayar');
+                            $pendapatanSekarang = $kpi['pendapatan_hari_ini'] ?? 0;
+                            $persentase = $pendapatanKemarin > 0 
+                                ? round((($pendapatanSekarang - $pendapatanKemarin) / $pendapatanKemarin) * 100) 
+                                : ($pendapatanSekarang > 0 ? 100 : 0);
+                            $isPositive = $persentase >= 0;
+                            $colorClass = $isPositive ? 'text-green-600' : 'text-red-600';
+                            $arrowIcon = $isPositive ? 'fa-arrow-up' : 'fa-arrow-down';
+                        @endphp
+                        <span class="{{ $colorClass }} text-sm font-semibold flex items-center">
+                            <i class="fas {{ $arrowIcon }} mr-1"></i>
+                            {{ abs($persentase) }}%
                         </span>
                     </div>
                 </div>
@@ -181,8 +217,12 @@
 
         <!-- Recent Activities -->
         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-900">Recent Activities</h3>
+                <a href="{{ route('admin.log-aktivitas.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
+                    View All
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -194,7 +234,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @forelse ($recent['logs'] ?? [] as $log)
+                        @forelse (($recent['logs'] ?? collect())->take(5) as $log)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 text-gray-600 whitespace-nowrap text-xs">{{ $log->created_at?->format('d/m H:i') }}</td>
                                 <td class="px-6 py-4">
