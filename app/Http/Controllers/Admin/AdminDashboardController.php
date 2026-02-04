@@ -39,7 +39,7 @@ class AdminDashboardController extends Controller
                 'tarif' => Tarif::latest('id')->limit(8)->get(),
                 'area' => AreaParkir::latest('id')->limit(8)->get(),
                 'kendaraan' => Kendaraan::latest('id')->limit(8)->get(),
-                'logs' => LogAktivitas::with('user')->latest('id')->limit(10)->get(),
+                'logs' => LogAktivitas::with('user')->latest('id')->limit(5)->get(),
                 'transaksi' => Transaksi::with(['kendaraan', 'areaParkir', 'petugas'])
                     ->latest('id')
                     ->limit(8)
