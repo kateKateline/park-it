@@ -20,10 +20,11 @@ class SidebarController {
             profileInfo: '[data-profile="info"]',
             profileLogout: '[data-profile="logout"]',
             profileCard: '[data-profile="card"]',
+            profileContainer: '[data-profile="container"]',
+            header: '[data-header="brand-toggle"]',
             brandFull: '[data-brand="full"]',
-            brandMini: '[data-brand="mini"]',
-            collapseIcon: '[data-icon="collapse"]',
-            expandIcon: '[data-icon="expand"]'
+            hamburgerIcon: '[data-icon="hamburger"]',
+            logoutForm: '#logout-form'
         };
         
         this.dimensions = {
@@ -46,9 +47,8 @@ class SidebarController {
         }
         
         this.loadState();
+        this.applyInitialState();
         this.attachEventListeners();
-        this.applyState();
-        this.handleResponsive();
     }
 
     /**
@@ -85,6 +85,68 @@ class SidebarController {
     }
 
     /**
+     * Apply initial state without animation (to avoid flicker on page load)
+     */
+    applyInitialState() {
+        const sidebar = this.sidebar;
+        const originalSidebarTransition = sidebar.style.transition;
+
+        // Matikan transition sementara di sidebar dan elemen-elemen terkait
+        sidebar.style.transition = 'none';
+        const affectedSelectors = [
+            this.selectors.navLabels,
+            this.selectors.profileInfo,
+            this.selectors.profileLogout,
+            this.selectors.profileCard,
+            this.selectors.profileContainer,
+            this.selectors.brandFull
+        ];
+
+        const originalTransitions = new Map();
+        affectedSelectors.forEach(selector => {
+            if (!selector) return;
+            document.querySelectorAll(selector).forEach(el => {
+                originalTransitions.set(el, el.style.transition);
+                el.style.transition = 'none';
+            });
+        });
+
+        if (this.state.collapsed) {
+            // Lebar dan state awal collapse
+            sidebar.style.width = this.dimensions.collapsed;
+            sidebar.setAttribute('data-state', 'collapsed');
+
+            this.hideElements(this.selectors.navLabels);
+            this.hideElements(this.selectors.profileInfo);
+            this.hideElements(this.selectors.profileLogout);
+            this.hideElements(this.selectors.brandFull);
+        } else {
+            // Lebar dan state awal expanded
+            sidebar.style.width = this.dimensions.expanded;
+            sidebar.setAttribute('data-state', 'expanded');
+
+            this.showElements(this.selectors.navLabels);
+            this.showElements(this.selectors.profileInfo);
+            this.showElements(this.selectors.profileLogout);
+            this.showElements(this.selectors.brandFull);
+        }
+
+        // Sidebar sudah siap ditampilkan tanpa glitch
+        sidebar.classList.remove('opacity-0');
+        sidebar.dataset.ready = 'true';
+
+        // Paksa reflow lalu kembalikan transition
+        // eslint-disable-next-line no-unused-expressions
+        sidebar.offsetHeight;
+        sidebar.style.transition = originalSidebarTransition;
+
+        // Kembalikan transition elemen-elemen lain
+        originalTransitions.forEach((value, el) => {
+            el.style.transition = value;
+        });
+    }
+
+    /**
      * Attach event listeners
      */
     attachEventListeners() {
@@ -93,8 +155,17 @@ class SidebarController {
             e.stopPropagation();
             this.toggle();
         });
-        
-        window.addEventListener('resize', () => this.handleResponsive());
+
+        // Logout confirmation popup
+        const logoutForm = document.querySelector(this.selectors.logoutForm);
+        if (logoutForm) {
+            logoutForm.addEventListener('submit', (e) => {
+                const confirmed = window.confirm('Apakah Anda yakin ingin logout?');
+                if (!confirmed) {
+                    e.preventDefault();
+                }
+            });
+        }
     }
 
     /**
@@ -128,17 +199,26 @@ class SidebarController {
         // Hide navigation labels immediately for smooth collapse
         this.hideElements(this.selectors.navLabels);
         
-        // Hide profile information
+        // Hide profile information (hanya avatar yang tampil)
         this.hideElements(this.selectors.profileInfo);
         this.hideElements(this.selectors.profileLogout);
-        
-        // Switch brand display
+
+        // Pusatkan avatar saat collapse (lebih compact)
+        document.querySelectorAll(this.selectors.profileCard).forEach(el => {
+            el.classList.add('flex', 'flex-col', 'items-center', 'justify-center', 'p-2');
+        });
+        document.querySelectorAll(this.selectors.profileContainer).forEach(el => {
+            el.classList.add('flex', 'flex-col', 'items-center', 'justify-center', 'gap-1');
+        });
+
+        // Sembunyikan brand saat collapse
         this.hideElements(this.selectors.brandFull);
-        this.showElements(this.selectors.brandMini);
-        
-        // Switch toggle icons
-        this.hideElements(this.selectors.collapseIcon);
-        this.showElements(this.selectors.expandIcon);
+
+        // Pusatkan header (hanya hamburger) saat collapse
+        document.querySelectorAll(this.selectors.header).forEach(el => {
+            el.classList.remove('justify-between');
+            el.classList.add('justify-center');
+        });
         
         // Update sidebar width and state attribute
         this.sidebar.style.width = this.dimensions.collapsed;
@@ -159,14 +239,24 @@ class SidebarController {
         // Update sidebar width and state attribute
         this.sidebar.style.width = this.dimensions.expanded;
         this.sidebar.setAttribute('data-state', 'expanded');
-        
-        // Switch brand display
+
+        // Kembalikan layout profile normal (row)
+        document.querySelectorAll(this.selectors.profileCard).forEach(el => {
+            el.classList.remove('flex', 'flex-col', 'items-center', 'justify-center');
+        });
+        document.querySelectorAll(this.selectors.profileContainer).forEach(el => {
+            el.classList.remove('flex', 'flex-col', 'items-center', 'justify-center', 'gap-2');
+            el.classList.add('flex', 'items-center', 'gap-3');
+        });
+
+        // Tampilkan kembali brand label
         this.showElements(this.selectors.brandFull);
-        this.hideElements(this.selectors.brandMini);
-        
-        // Switch toggle icons
-        this.showElements(this.selectors.collapseIcon);
-        this.hideElements(this.selectors.expandIcon);
+
+        // Kembalikan header ke posisi brand kiri, hamburger kanan
+        document.querySelectorAll(this.selectors.header).forEach(el => {
+            el.classList.remove('justify-center');
+            el.classList.add('justify-between');
+        });
         
         // Show navigation labels after width transition starts
         setTimeout(() => {
@@ -203,24 +293,6 @@ class SidebarController {
             element.style.visibility = 'visible';
             element.classList.remove('hidden');
         });
-    }
-
-    /**
-     * Handle responsive behavior
-     */
-    handleResponsive() {
-        const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-        
-        if (isDesktop) {
-            this.toggleButton.classList.remove('hidden');
-        } else {
-            this.toggleButton.classList.add('hidden');
-            // Reset to expanded state on mobile
-            if (this.state.collapsed) {
-                this.state.collapsed = false;
-                this.applyState();
-            }
-        }
     }
 
     /**
