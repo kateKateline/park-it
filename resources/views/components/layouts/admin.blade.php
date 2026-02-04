@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Admin' }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css','resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -31,33 +31,33 @@
             <!-- Navigation -->
             <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto sidebar-nav">
                 <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.dashboard') bg-blue-50 text-blue-700 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
-                    <i class="fas fa-chart-line w-5 flex-shrink-0 nav-icon"></i>
+                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.dashboard') bg-blue-50 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
+                    <i class="fas fa-chart-line w-5 shrink-0 nav-icon"></i>
                     <span class="font-medium nav-label transition-all duration-300">Dashboard</span>
                 </a>
                 <a href="{{ route('admin.users.index') }}"
-                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.users.index') bg-blue-50 text-blue-700 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
-                    <i class="fas fa-users w-5 flex-shrink-0 nav-icon"></i>
+                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.users.index') bg-blue-50 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
+                    <i class="fas fa-users w-5 shrink-0 nav-icon"></i>
                     <span class="font-medium nav-label transition-all duration-300">Users</span>
                 </a>
                 <a href="{{ route('admin.area-parkir.index') }}"
-                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.area-parkir.index') bg-blue-50 text-blue-700 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
-                    <i class="fas fa-map-location-dot w-5 flex-shrink-0 nav-icon"></i>
+                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.area-parkir.index') bg-blue-50 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
+                    <i class="fas fa-map-location-dot w-5 shrink-0 nav-icon"></i>
                     <span class="font-medium nav-label transition-all duration-300">Area Parkir</span>
                 </a>
                 <a href="{{ route('admin.kendaraan.index') }}"
-                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.kendaraan.index') bg-blue-50 text-blue-700 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
-                    <i class="fas fa-car w-5 flex-shrink-0 nav-icon"></i>
+                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.kendaraan.index') bg-blue-50 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
+                    <i class="fas fa-car w-5 shrink-0 nav-icon"></i>
                     <span class="font-medium nav-label transition-all duration-300">Kendaraan</span>
                 </a>
                 <a href="{{ route('admin.tarif.index') }}"
-                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.tarif.index') bg-blue-50 text-blue-700 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
-                    <i class="fas fa-receipt w-5 flex-shrink-0 nav-icon"></i>
+                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.tarif.index') bg-blue-50 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
+                    <i class="fas fa-receipt w-5 shrink-0 nav-icon"></i>
                     <span class="font-medium nav-label transition-all duration-300">Tarif</span>
                 </a>
                 <a href="{{ route('admin.log-aktivitas.index') }}"
-                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.log-aktivitas.index') bg-blue-50 text-blue-700 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
-                    <i class="fas fa-history w-5 flex-shrink-0 nav-icon"></i>
+                    class="flex items-center px-4 py-3 text-gray-700 rounded-lg transition nav-item @if (Route::currentRouteName() === 'admin.log-aktivitas.index') bg-blue-50 border-l-4 border-blue-600 @else hover:bg-gray-100 @endif">
+                    <i class="fas fa-history w-5 shrink-0 nav-icon"></i>
                     <span class="font-medium nav-label transition-all duration-300">Log</span>
                 </a>
             </nav>
@@ -66,7 +66,7 @@
             @auth
                 <div class="border-t border-gray-200 p-4 sidebar-profile">
                     <div class="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-lg profile-full transition-all duration-300">
-                        <div class="w-10 h-10 rounded-full bg-blue-600 flex-shrink-0 flex items-center justify-center text-white font-semibold text-sm">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 shrink-0 flex items-center justify-center text-white font-semibold text-sm">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                         </div>
                         <div class="flex-1 min-w-0">
