@@ -116,7 +116,7 @@
                                 id="logout-button"
                                 aria-label="Logout">
                             <i class="fas fa-sign-out-alt text-sm"></i>
-                            <span data-profile="logout" class="ml-2 text-xs font-medium hidden">Logout</span>
+                            <span data-profile="logout" class="ml-2 text-xs font-medium">Logout</span>
                         </button>
                     </form>
                 </div>
