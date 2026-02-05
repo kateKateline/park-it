@@ -11,29 +11,21 @@
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Transaksi Aktif -->
+            @php
+                $transaksiAktifKemarin = $kpi['transaksi_aktif_kemarin'] ?? 0;
+                $transaksiAktifNow = $kpi['transaksi_aktif'] ?? 0;
+                $p1 = $transaksiAktifKemarin > 0 ? round((($transaksiAktifNow - $transaksiAktifKemarin) / $transaksiAktifKemarin) * 100) : ($transaksiAktifNow > 0 ? 100 : 0);
+            @endphp
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <div class="flex items-start justify-between mb-4">
                     <div>
                         <p class="text-gray-700 font-semibold text-sm">Transaksi Aktif</p>
-                        <p class="text-4xl font-bold text-gray-900 mt-3">{{ $kpi['transaksi_aktif'] ?? 0 }}</p>
+                        <p class="text-4xl font-bold text-gray-900 mt-3">{{ $transaksiAktifNow }}</p>
                     </div>
                     <div class="flex flex-col items-end">
-                        @php
-                            $yesterday = now()->subDay()->toDateString();
-                            $transaksiKemarin = \App\Models\Transaksi::where('status', 'masuk')
-                                ->whereDate('waktu_masuk', $yesterday)
-                                ->count();
-                            $transaksiSekarang = $kpi['transaksi_aktif'] ?? 0;
-                            $persentase = $transaksiKemarin > 0 
-                                ? round((($transaksiSekarang - $transaksiKemarin) / $transaksiKemarin) * 100) 
-                                : ($transaksiSekarang > 0 ? 100 : 0);
-                            $isPositive = $persentase >= 0;
-                            $colorClass = $isPositive ? 'text-green-600' : 'text-red-600';
-                            $arrowIcon = $isPositive ? 'fa-arrow-up' : 'fa-arrow-down';
-                        @endphp
-                        <span class="{{ $colorClass }} text-sm font-semibold flex items-center">
-                            <i class="fas {{ $arrowIcon }} mr-1"></i>
-                            {{ abs($persentase) }}%
+                        <span class="{{ $p1 >= 0 ? 'text-green-600' : 'text-red-600' }} text-sm font-semibold flex items-center">
+                            <i class="fas {{ $p1 >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                            {{ abs($p1) }}%
                         </span>
                     </div>
                 </div>
@@ -41,27 +33,21 @@
             </div>
 
             <!-- Transaksi Hari Ini -->
+            @php
+                $transaksiHariIniKemarin = $kpi['transaksi_hari_ini_kemarin'] ?? 0;
+                $transaksiHariIniNow = $kpi['transaksi_hari_ini'] ?? 0;
+                $p2 = $transaksiHariIniKemarin > 0 ? round((($transaksiHariIniNow - $transaksiHariIniKemarin) / $transaksiHariIniKemarin) * 100) : ($transaksiHariIniNow > 0 ? 100 : 0);
+            @endphp
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <div class="flex items-start justify-between mb-4">
                     <div>
                         <p class="text-gray-700 font-semibold text-sm">Transaksi Hari Ini</p>
-                        <p class="text-4xl font-bold text-gray-900 mt-3">{{ $kpi['transaksi_hari_ini'] ?? 0 }}</p>
+                        <p class="text-4xl font-bold text-gray-900 mt-3">{{ $transaksiHariIniNow }}</p>
                     </div>
                     <div class="flex flex-col items-end">
-                        @php
-                            $yesterday = now()->subDay()->toDateString();
-                            $transaksiKemarin = \App\Models\Transaksi::whereDate('waktu_masuk', $yesterday)->count();
-                            $transaksiSekarang = $kpi['transaksi_hari_ini'] ?? 0;
-                            $persentase = $transaksiKemarin > 0 
-                                ? round((($transaksiSekarang - $transaksiKemarin) / $transaksiKemarin) * 100) 
-                                : ($transaksiSekarang > 0 ? 100 : 0);
-                            $isPositive = $persentase >= 0;
-                            $colorClass = $isPositive ? 'text-green-600' : 'text-red-600';
-                            $arrowIcon = $isPositive ? 'fa-arrow-up' : 'fa-arrow-down';
-                        @endphp
-                        <span class="{{ $colorClass }} text-sm font-semibold flex items-center">
-                            <i class="fas {{ $arrowIcon }} mr-1"></i>
-                            {{ abs($persentase) }}%
+                        <span class="{{ $p2 >= 0 ? 'text-green-600' : 'text-red-600' }} text-sm font-semibold flex items-center">
+                            <i class="fas {{ $p2 >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                            {{ abs($p2) }}%
                         </span>
                     </div>
                 </div>
@@ -69,29 +55,21 @@
             </div>
 
             <!-- Pendapatan Hari Ini -->
+            @php
+                $pendapatanKemarin = $kpi['pendapatan_kemarin'] ?? 0;
+                $pendapatanSekarang = $kpi['pendapatan_hari_ini'] ?? 0;
+                $p3 = $pendapatanKemarin > 0 ? round((($pendapatanSekarang - $pendapatanKemarin) / $pendapatanKemarin) * 100) : ($pendapatanSekarang > 0 ? 100 : 0);
+            @endphp
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <div class="flex items-start justify-between mb-4">
                     <div>
                         <p class="text-gray-700 font-semibold text-sm">Pendapatan Hari Ini</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-3">Rp {{ number_format($kpi['pendapatan_hari_ini'] ?? 0, 0, ',', '.') }}</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-3">Rp {{ number_format($pendapatanSekarang, 0, ',', '.') }}</p>
                     </div>
                     <div class="flex flex-col items-end">
-                        @php
-                            $yesterday = now()->subDay()->toDateString();
-                            $pendapatanKemarin = (int) \App\Models\Transaksi::where('status', 'selesai')
-                                ->whereDate('waktu_keluar', $yesterday)
-                                ->sum('total_bayar');
-                            $pendapatanSekarang = $kpi['pendapatan_hari_ini'] ?? 0;
-                            $persentase = $pendapatanKemarin > 0 
-                                ? round((($pendapatanSekarang - $pendapatanKemarin) / $pendapatanKemarin) * 100) 
-                                : ($pendapatanSekarang > 0 ? 100 : 0);
-                            $isPositive = $persentase >= 0;
-                            $colorClass = $isPositive ? 'text-green-600' : 'text-red-600';
-                            $arrowIcon = $isPositive ? 'fa-arrow-up' : 'fa-arrow-down';
-                        @endphp
-                        <span class="{{ $colorClass }} text-sm font-semibold flex items-center">
-                            <i class="fas {{ $arrowIcon }} mr-1"></i>
-                            {{ abs($persentase) }}%
+                        <span class="{{ $p3 >= 0 ? 'text-green-600' : 'text-red-600' }} text-sm font-semibold flex items-center">
+                            <i class="fas {{ $p3 >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                            {{ abs($p3) }}%
                         </span>
                     </div>
                 </div>
