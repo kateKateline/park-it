@@ -8,6 +8,15 @@
         <div class="mt-6 space-y-4">
             @include('partials.flash')
 
+            <form action="{{ route('logout') }}" method="POST" id="logout-form" class="block">
+                @csrf
+                <button type="submit" 
+                        class="w-full py-3 bg-red-50 text-red-700 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+                        id="logout-button"
+                        aria-label="Logout">
+                    <i class="fas fa-sign-out-alt text-sm"></i>
+                    <span data-profile="logout" class="ml-2 text-xs font-medium">Logout</span>
+
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div class="text-sm text-slate-600">Transaksi selesai</div>
