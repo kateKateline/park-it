@@ -1,12 +1,6 @@
-<x-layouts.guest :title="'Petugas Dashboard - Park-It'">
-    <div class="mx-auto max-w-6xl p-6">
-        @include('partials.topbar', [
-            'title' => 'Dashboard Petugas',
-            'subtitle' => 'Demo dashboard (belum full integrasi deteksi AI).',
-        ])
-
-        <div class="mt-6 space-y-4">
-            @include('partials.flash')
+<x-layouts.petugas :title="'Dashboard - Petugas'">
+    <div class="space-y-4">
+        @include('partials.flash')
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -38,5 +32,4 @@
             </div>
         </div>
     </div>
-</x-layouts.guest>
-
+</x-layouts.petugas>

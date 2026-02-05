@@ -1,12 +1,6 @@
-<x-layouts.guest :title="'Transaksi Demo - Petugas'">
-    <div class="mx-auto max-w-6xl p-6">
-        @include('partials.topbar', [
-            'title' => 'Transaksi (Demo)',
-            'subtitle' => 'Halaman demo untuk petugas (belum full integrasi deteksi AI).',
-        ])
-
-        <div class="mt-6 space-y-4">
-            @include('partials.flash')
+<x-layouts.petugas :title="'Transaksi - Petugas'">
+    <div class="space-y-4">
+        @include('partials.flash')
 
             <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <table class="w-full text-sm">
@@ -50,8 +44,7 @@
                 </table>
             </div>
 
-            <div>{{ $items->links() }}</div>
+            <div class="px-1">{{ $items->links('pagination::tailwind') }}</div>
         </div>
     </div>
-</x-layouts.guest>
-
+</x-layouts.petugas>
