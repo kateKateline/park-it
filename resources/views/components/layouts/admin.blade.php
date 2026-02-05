@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Admin' }}</title>
+    <script>
+        try {
+            var k = 'parkitSidebarState';
+            var collapsed = localStorage.getItem(k) === 'true';
+            if (collapsed) {
+                document.documentElement.classList.add('sidebar-collapsed');
+            } else {
+                document.documentElement.classList.remove('sidebar-collapsed');
+            }
+        } catch (e) {}
+    </script>
     @vite(['resources/css/app.css','resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
@@ -15,7 +26,7 @@
     <div class="flex h-screen overflow-hidden">
         
         <!-- Sidebar Container -->
-        <aside id="app-sidebar" class="bg-white border-r border-gray-200 flex-shrink-0 transition-all duration-300 ease-in-out fixed md:static inset-y-0 left-0 z-50 transform -translate-x-full md:translate-x-0 opacity-0" 
+        <aside id="app-sidebar" class="bg-white border-gray-200 border-r flex-shrink-0 transition-all duration-300 ease-in-out fixed md:static inset-y-0 left-0 z-50" 
                data-state="expanded"
                data-ready="false"
                style="width: 256px; overflow: hidden;">
@@ -41,44 +52,44 @@
                     <ul class="space-y-1">
                         <li>
                             <a href="{{ route('admin.dashboard') }}"
-                               class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.dashboard') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.dashboard') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-chart-line w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200">Dashboard</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Dashboard</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.users.index') }}"
-                               class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.users.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.users.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-users w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200">Users</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Users</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.area-parkir.index') }}"
-                               class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.area-parkir.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.area-parkir.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-map-location-dot w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200">Area Parkir</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Area Parkir</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.kendaraan.index') }}"
-                               class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.kendaraan.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.kendaraan.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-car w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200">Kendaraan</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Kendaraan</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.tarif.index') }}"
-                               class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.tarif.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.tarif.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-receipt w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200">Tarif</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Tarif</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.log-aktivitas.index') }}"
-                               class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.log-aktivitas.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.log-aktivitas.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-history w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200">Log</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Log</span>
                             </a>
                         </li>
                     </ul>
@@ -98,13 +109,14 @@
                             </div>
                         </div>
                     </div>
-                    <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                    <form action="{{ route('logout') }}" method="POST" id="logout-form" class="block">
                         @csrf
                         <button type="submit" 
-                                class="w-10 h-10 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center"
+                                class="w-full py-3 bg-red-50 text-red-700 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
                                 id="logout-button"
                                 aria-label="Logout">
                             <i class="fas fa-sign-out-alt text-sm"></i>
+                            <span data-profile="logout" class="ml-2 text-xs font-medium hidden">Logout</span>
                         </button>
                     </form>
                 </div>
@@ -115,13 +127,6 @@
 
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col min-w-0">
-            
-            <!-- Top Header Bar -->
-            <header class="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <div></div>
-                </div>
-            </header>
 
             <!-- Page Content -->
             <main class="flex-1 overflow-y-auto bg-gray-50">

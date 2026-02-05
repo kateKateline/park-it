@@ -8,3 +8,40 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Sidebar: disable transitions until ready */
+#app-sidebar[data-ready="false"] {
+    transition: none !important;
+}
+#app-sidebar[data-ready="false"] * {
+    transition: none !important;
+}
+
+/* Prepaint collapsed state driven by HTML class */
+html.sidebar-collapsed #app-sidebar {
+    width: 80px !important;
+}
+html.sidebar-collapsed #app-sidebar [data-brand="full"] {
+    display: none !important;
+}
+html.sidebar-collapsed #app-sidebar [data-nav="label"],
+html.sidebar-collapsed #app-sidebar [data-profile="info"],
+html.sidebar-collapsed #app-sidebar [data-profile="logout"] {
+    display: none !important;
+}
+html.sidebar-collapsed #app-sidebar [data-header="brand-toggle"] {
+    justify-content: center !important;
+}
+html.sidebar-collapsed #app-sidebar [data-profile="card"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+html.sidebar-collapsed #app-sidebar [data-profile="container"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.25rem !important;
+}

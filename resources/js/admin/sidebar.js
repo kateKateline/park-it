@@ -89,62 +89,20 @@ class SidebarController {
      */
     applyInitialState() {
         const sidebar = this.sidebar;
-        const originalSidebarTransition = sidebar.style.transition;
-
-        // Matikan transition sementara di sidebar dan elemen-elemen terkait
-        sidebar.style.transition = 'none';
-        const affectedSelectors = [
-            this.selectors.navLabels,
-            this.selectors.profileInfo,
-            this.selectors.profileLogout,
-            this.selectors.profileCard,
-            this.selectors.profileContainer,
-            this.selectors.brandFull
-        ];
-
-        const originalTransitions = new Map();
-        affectedSelectors.forEach(selector => {
-            if (!selector) return;
-            document.querySelectorAll(selector).forEach(el => {
-                originalTransitions.set(el, el.style.transition);
-                el.style.transition = 'none';
-            });
-        });
-
+        // Terapkan state tanpa animasi via CSS gating (data-ready="false" + class pada html)
         if (this.state.collapsed) {
-            // Lebar dan state awal collapse
             sidebar.style.width = this.dimensions.collapsed;
             sidebar.setAttribute('data-state', 'collapsed');
-
-            this.hideElements(this.selectors.navLabels);
-            this.hideElements(this.selectors.profileInfo);
-            this.hideElements(this.selectors.profileLogout);
-            this.hideElements(this.selectors.brandFull);
+            document.documentElement.classList.add('sidebar-collapsed');
         } else {
-            // Lebar dan state awal expanded
             sidebar.style.width = this.dimensions.expanded;
             sidebar.setAttribute('data-state', 'expanded');
-
-            this.showElements(this.selectors.navLabels);
-            this.showElements(this.selectors.profileInfo);
-            this.showElements(this.selectors.profileLogout);
-            this.showElements(this.selectors.brandFull);
+            document.documentElement.classList.remove('sidebar-collapsed');
         }
-
-        // Sidebar sudah siap ditampilkan tanpa glitch
-        sidebar.classList.remove('opacity-0');
+        // Tandai siap: aktifkan kembali transition via CSS (tanpa setTimeout)
         sidebar.dataset.ready = 'true';
-
-        // Paksa reflow lalu kembalikan transition
-        // eslint-disable-next-line no-unused-expressions
-        sidebar.offsetHeight;
-        sidebar.style.transition = originalSidebarTransition;
-
-        // Kembalikan transition elemen-elemen lain
-        originalTransitions.forEach((value, el) => {
-            el.style.transition = value;
-        });
     }
+
 
     /**
      * Attach event listeners
@@ -203,22 +161,8 @@ class SidebarController {
         this.hideElements(this.selectors.profileInfo);
         this.hideElements(this.selectors.profileLogout);
 
-        // Pusatkan avatar saat collapse (lebih compact)
-        document.querySelectorAll(this.selectors.profileCard).forEach(el => {
-            el.classList.add('flex', 'flex-col', 'items-center', 'justify-center', 'p-2');
-        });
-        document.querySelectorAll(this.selectors.profileContainer).forEach(el => {
-            el.classList.add('flex', 'flex-col', 'items-center', 'justify-center', 'gap-1');
-        });
-
-        // Sembunyikan brand saat collapse
-        this.hideElements(this.selectors.brandFull);
-
-        // Pusatkan header (hanya hamburger) saat collapse
-        document.querySelectorAll(this.selectors.header).forEach(el => {
-            el.classList.remove('justify-between');
-            el.classList.add('justify-center');
-        });
+        // CSS mengatur layout brand/header/profile saat collapse via html.sidebar-collapsed
+        document.documentElement.classList.add('sidebar-collapsed');
         
         // Update sidebar width and state attribute
         this.sidebar.style.width = this.dimensions.collapsed;
@@ -240,23 +184,8 @@ class SidebarController {
         this.sidebar.style.width = this.dimensions.expanded;
         this.sidebar.setAttribute('data-state', 'expanded');
 
-        // Kembalikan layout profile normal (row)
-        document.querySelectorAll(this.selectors.profileCard).forEach(el => {
-            el.classList.remove('flex', 'flex-col', 'items-center', 'justify-center');
-        });
-        document.querySelectorAll(this.selectors.profileContainer).forEach(el => {
-            el.classList.remove('flex', 'flex-col', 'items-center', 'justify-center', 'gap-2');
-            el.classList.add('flex', 'items-center', 'gap-3');
-        });
-
-        // Tampilkan kembali brand label
-        this.showElements(this.selectors.brandFull);
-
-        // Kembalikan header ke posisi brand kiri, hamburger kanan
-        document.querySelectorAll(this.selectors.header).forEach(el => {
-            el.classList.remove('justify-center');
-            el.classList.add('justify-between');
-        });
+        // CSS mengatur layout brand/header/profile saat expanded via html class
+        document.documentElement.classList.remove('sidebar-collapsed');
         
         // Show navigation labels after width transition starts
         setTimeout(() => {
