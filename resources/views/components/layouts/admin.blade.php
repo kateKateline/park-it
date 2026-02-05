@@ -101,10 +101,10 @@
                     <form action="{{ route('logout') }}" method="POST" id="logout-form">
                         @csrf
                         <button type="submit" 
-                                class="w-full px-3 py-2 bg-red-50 text-red-700 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
-                                id="logout-button">
+                                class="w-10 h-10 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center"
+                                id="logout-button"
+                                aria-label="Logout">
                             <i class="fas fa-sign-out-alt text-sm"></i>
-                            <span data-profile="logout" class="transition-opacity duration-200">Logout</span>
                         </button>
                     </form>
                 </div>
@@ -119,13 +119,7 @@
             <!-- Top Header Bar -->
             <header class="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold text-gray-900">
-                        @auth
-                            Welcome back, {{ Auth::user()->name }}
-                        @else
-                            Dashboard
-                        @endauth
-                    </h1>
+                    <div></div>
                 </div>
             </header>
 
