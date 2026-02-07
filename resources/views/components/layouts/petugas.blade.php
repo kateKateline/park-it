@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Petugas' }}</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
         try {
             var k = 'parkitSidebarState';
@@ -12,11 +16,8 @@
             else { document.documentElement.classList.remove('sidebar-collapsed'); }
         } catch (e) {}
     </script>
-    @vite(['resources/css/app.css','resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-    </head>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
 <body class="bg-gray-50 text-gray-900">
     <div class="flex h-screen overflow-hidden">
         <aside id="app-sidebar" class="bg-white border-gray-200 border-r flex-shrink-0 transition-all duration-300 ease-in-out fixed md:static inset-y-0 left-0 z-50"
@@ -47,10 +48,24 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('petugas.transaksi.demo') }}"
-                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.transaksi.demo') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
-                                <i class="fas fa-ticket w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Transaksi</span>
+                            <a href="{{ route('petugas.transaksi.masuk') }}"
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.transaksi.masuk') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                                <i class="fas fa-sign-in-alt w-5 text-center flex-shrink-0"></i>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Kendaraan Masuk</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('petugas.transaksi.keluar') }}"
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.transaksi.keluar') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                                <i class="fas fa-sign-out-alt w-5 text-center flex-shrink-0"></i>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Kendaraan Keluar</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('petugas.transaksi.index') }}"
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.transaksi.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                                <i class="fas fa-list w-5 text-center flex-shrink-0"></i>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Daftar Transaksi</span>
                             </a>
                         </li>
                     </ul>

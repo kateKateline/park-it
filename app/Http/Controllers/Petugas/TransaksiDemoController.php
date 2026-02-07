@@ -14,10 +14,9 @@ class TransaksiDemoController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(15);
 
-        return view('petugas.transaksi-demo', [
+        return view('petugas.transaksi.demo', [
             'user' => $request->user(),
             'items' => $items,
         ]);
     }
 }
-

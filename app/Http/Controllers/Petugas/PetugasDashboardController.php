@@ -10,14 +10,16 @@ class PetugasDashboardController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $petugas = $request->user();
+        $today = now()->toDateString();
 
         return view('petugas.dashboard', [
-            'user' => $petugas,
+            'user' => $request->user(),
             'counts' => [
-                'hari_ini' => Transaksi::whereDate('waktu_masuk', now()->toDateString())->count(),
+                'hari_ini' => Transaksi::whereDate('waktu_masuk', $today)->count(),
                 'sedang_parkir' => Transaksi::where('status', 'masuk')->count(),
-                'selesai' => Transaksi::where('status', 'selesai')->count(),
+                'selesai' => Transaksi::where('status', 'selesai')
+                    ->whereDate('waktu_keluar', $today)
+                    ->count(),
             ],
         ]);
     }
