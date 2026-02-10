@@ -1,4 +1,4 @@
-<x-layouts.petugas :title="'Karcis Parkir - ' . $transaksi->qr_code">
+<x-layouts.petugas :title="'Karcis Parkir - ' . $transaksi->barcode">
     <div class="space-y-6">
         @include('partials.flash')
 
@@ -19,7 +19,7 @@
                 <div class="flex justify-between">
                     <span>Ticket Code</span>
                     <span class="font-mono font-semibold">
-                        {{ $transaksi->qr_code }}
+                        {{ $transaksi->barcode }}
                     </span>
                 </div>
 
@@ -57,7 +57,7 @@
             <!-- Barcode (dipisah & aman) -->
             <div class="my-4 pt-3 border-t border-dashed">
                 <img
-                    src="https://bwipjs-api.metafloor.com/?bcid=code128&text={{ urlencode($transaksi->qr_code) }}&scale=2&height=10&includetext&textxalign=center"
+                    src="https://bwipjs-api.metafloor.com/?bcid=code128&text={{ urlencode($transaksi->barcode) }}&scale=2&height=10&includetext&textxalign=center"
                     alt="Barcode Karcis"
                     class="w-full"
                 />

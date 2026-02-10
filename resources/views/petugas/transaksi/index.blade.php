@@ -27,7 +27,7 @@
                                     {{ $t->status }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 font-mono text-xs">{{ $t->qr_code }}</td>
+                            <td class="px-4 py-3 font-mono text-xs">{{ $t->barcode }}</td>
                             <td class="px-4 py-3 whitespace-nowrap">{{ $t->waktu_masuk?->format('d/m/Y H:i') }}</td>
                             <td class="px-4 py-3 whitespace-nowrap">{{ $t->waktu_keluar?->format('d/m/Y H:i') ?? '-' }}</td>
                             <td class="px-4 py-3">

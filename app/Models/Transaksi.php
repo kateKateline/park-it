@@ -29,7 +29,7 @@ class Transaksi extends Model
         'total_bayar',
         'status',
         'metode_pembayaran',
-        'qr_code',
+        'barcode',
     ];
 
     protected function casts(): array

@@ -75,7 +75,7 @@ class TransaksiSeeder extends Seeder
                 'total_bayar' => $totalBayar,
                 'status' => $row['status'],
                 'metode_pembayaran' => 'cash',
-                'qr_code' => (string) Str::uuid(),
+                'barcode' => (string) Str::uuid(),
             ]);
         }
     }

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->enum('status', ['masuk', 'selesai']);
             $table->enum('metode_pembayaran', ['cash'])->default('cash');
 
-            $table->string('qr_code')->unique();
+            $table->string('barcode')->unique();
             $table->timestamps();
         });
     }

@@ -29,7 +29,7 @@
                 <div class="rounded-xl border border-dashed border-slate-300 p-4 bg-slate-50">
                     <p class="text-xs text-slate-500 mb-2">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Alternatif: Upload gambar karcis untuk scan QR.
+                        Alternatif: Upload gambar karcis untuk scan barcode.
                     </p>
                     <input type="file" name="karcis_file" accept="image/*" capture="environment"
                            class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />

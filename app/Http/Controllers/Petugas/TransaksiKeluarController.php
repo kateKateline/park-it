@@ -25,7 +25,7 @@ class TransaksiKeluarController extends Controller
         $kode = trim($request->kode_karcis);
 
         $transaksi = Transaksi::with(['kendaraan', 'areaParkir'])
-            ->where('qr_code', $kode)
+            ->where('barcode', $kode)
             ->where('status', 'masuk')
             ->first();
 

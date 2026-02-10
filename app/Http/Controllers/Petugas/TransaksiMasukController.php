@@ -51,7 +51,7 @@ class TransaksiMasukController extends Controller
             ]);
         }
 
-        $qrCode = 'PARK-'.strtoupper(Str::random(10)).'-'.now()->format('His');
+        $barcode = 'PARK-'.strtoupper(Str::random(10)).'-'.now()->format('His');
 
         $transaksi = Transaksi::create([
             'kendaraan_id' => $kendaraan->id,
@@ -59,12 +59,12 @@ class TransaksiMasukController extends Controller
             'petugas_id' => $request->user()->id,
             'waktu_masuk' => now(),
             'status' => 'masuk',
-            'qr_code' => $qrCode,
+            'barcode' => $barcode,
         ]);
 
         LogAktivitas::create([
             'user_id' => $request->user()->id,
-            'aktivitas' => "Transaksi masuk: {$kendaraan->plat_nomor} - Karcis {$qrCode}",
+            'aktivitas' => "Transaksi masuk: {$kendaraan->plat_nomor} - Karcis {$barcode}",
         ]);
 
         return redirect()
