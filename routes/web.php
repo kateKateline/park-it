@@ -15,6 +15,8 @@ use App\Http\Controllers\Petugas\PetugasDashboardController;
 use App\Http\Controllers\Petugas\TransaksiController as PetugasTransaksiController;
 use App\Http\Controllers\Petugas\TransaksiKeluarController;
 use App\Http\Controllers\Petugas\TransaksiMasukController;
+use App\Http\Controllers\Admin\CameraSourceController as AdminCameraSourceController;
+use App\Http\Controllers\Petugas\CameraApiController;
 
 // Landing page = Login
 Route::middleware('guest')->group(function () {
@@ -37,6 +39,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         Route::resource('tarif', AdminTarifController::class)->except(['show']);
         Route::resource('area-parkir', AdminAreaParkirController::class)->except(['show']);
         Route::resource('kendaraan', AdminKendaraanController::class)->except(['show']);
+        Route::resource('camera-sources', AdminCameraSourceController::class)->except(['show']);
 
         Route::get('log-aktivitas', [AdminLogAktivitasController::class, 'index'])->name('log-aktivitas.index');
     });
@@ -66,4 +69,9 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         Route::post('/transaksi-keluar/scan', [TransaksiKeluarController::class, 'scan'])->name('transaksi.keluar.scan');
         Route::post('/transaksi-keluar/bayar', [TransaksiKeluarController::class, 'bayar'])->name('transaksi.keluar.bayar');
     });
+
+    // API sederhana untuk petugas mengambil kamera aktif
+    Route::get('/api/cameras/active', [CameraApiController::class, 'active'])
+        ->name('petugas.cameras.active')
+        ->middleware('role:petugas');
 });
