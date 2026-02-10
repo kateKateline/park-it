@@ -17,22 +17,50 @@ class RekapTransaksiController extends Controller
         $fromDate = $from ? Carbon::parse($from)->startOfDay() : Carbon::now()->subDays(7)->startOfDay();
         $toDate = $to ? Carbon::parse($to)->endOfDay() : Carbon::now()->endOfDay();
 
-        $query = Transaksi::with(['kendaraan', 'areaParkir', 'petugas'])
-            ->where('status', 'selesai')
-            ->whereBetween('waktu_masuk', [$fromDate, $toDate])
-            ->orderBy('waktu_masuk', 'desc');
+        $rekap = Transaksi::where('status', 'selesai')
+            ->whereBetween('waktu_keluar', [$fromDate, $toDate])
+            ->selectRaw('DATE(waktu_keluar) as tanggal')
+            ->selectRaw('COUNT(*) as jumlah')
+            ->selectRaw('COALESCE(SUM(total_bayar), 0) as pendapatan')
+            ->selectRaw('AVG(durasi_menit) as rata_durasi')
+            ->groupBy('tanggal')
+            ->orderBy('tanggal', 'desc')
+            ->get();
 
-        $items = $query->paginate(15)->withQueryString();
-
-        $total = (clone $query)->sum('total_bayar');
+        $total = Transaksi::where('status', 'selesai')
+            ->whereBetween('waktu_keluar', [$fromDate, $toDate])
+            ->sum('total_bayar');
 
         return view('owner.rekap.index', [
             'user' => $request->user(),
-            'items' => $items,
+            'rekap' => $rekap,
             'from' => $fromDate->toDateString(),
             'to' => $toDate->toDateString(),
             'total' => $total,
         ]);
     }
-}
 
+    public function show(string $date, Request $request)
+    {
+        $tanggal = Carbon::parse($date)->toDateString();
+
+        $items = Transaksi::with(['kendaraan', 'areaParkir', 'petugas'])
+            ->where('status', 'selesai')
+            ->whereDate('waktu_keluar', $tanggal)
+            ->orderBy('waktu_keluar', 'desc')
+            ->get();
+
+        $summary = [
+            'jumlah' => $items->count(),
+            'pendapatan' => $items->sum('total_bayar'),
+            'rata_durasi' => (int) round($items->avg('durasi_menit')),
+        ];
+
+        return view('owner.rekap.show', [
+            'user' => $request->user(),
+            'tanggal' => $tanggal,
+            'items' => $items,
+            'summary' => $summary,
+        ]);
+    }
+}
