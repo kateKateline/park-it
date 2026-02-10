@@ -1,12 +1,6 @@
-<x-layouts.guest :title="'Rekap Transaksi - Owner'">
-    <div class="mx-auto max-w-6xl p-6">
-        @include('partials.topbar', [
-            'title' => 'Rekap Transaksi',
-            'subtitle' => 'Owner: rekap transaksi sesuai waktu yang diminta (SPK).',
-        ])
-
-        <div class="mt-6 space-y-4">
-            @include('partials.flash')
+<x-layouts.owner :title="'Rekap Transaksi - Owner'">
+    <div class="space-y-4">
+        @include('partials.flash')
 
             <form class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
                   method="GET" action="{{ route('owner.rekap.index') }}">
@@ -43,40 +37,37 @@
                 <table class="w-full text-sm">
                     <thead class="bg-slate-50 text-slate-600">
                     <tr>
-                        <th class="px-4 py-3 text-left">Waktu Masuk</th>
-                        <th class="px-4 py-3 text-left">Waktu Keluar</th>
-                        <th class="px-4 py-3 text-left">Kendaraan</th>
-                        <th class="px-4 py-3 text-left">Area</th>
-                        <th class="px-4 py-3 text-left">Petugas</th>
-                        <th class="px-4 py-3 text-right">Total</th>
+                        <th class="px-4 py-3 text-left">Tanggal</th>
+                        <th class="px-4 py-3 text-left">Jumlah transaksi</th>
+                        <th class="px-4 py-3 text-left">Rata-rata durasi (menit)</th>
+                        <th class="px-4 py-3 text-right">Total pendapatan</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @forelse ($items as $t)
+                    @forelse ($rekap as $r)
                         <tr class="border-t border-slate-100">
-                            <td class="px-4 py-3 whitespace-nowrap">{{ $t->waktu_masuk?->format('d/m/Y H:i') }}</td>
-                            <td class="px-4 py-3 whitespace-nowrap">{{ $t->waktu_keluar?->format('d/m/Y H:i') }}</td>
-                            <td class="px-4 py-3">
-                                <div class="font-medium">{{ $t->kendaraan?->plat_nomor }}</div>
-                                <div class="text-xs text-slate-500">{{ $t->kendaraan?->jenis_kendaraan }}</div>
-                            </td>
-                            <td class="px-4 py-3">{{ $t->areaParkir?->nama_area }}</td>
-                            <td class="px-4 py-3">{{ $t->petugas?->name }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($r->tanggal)->format('d/m/Y') }}</td>
+                            <td class="px-4 py-3">{{ $r->jumlah }}</td>
+                            <td class="px-4 py-3">{{ (int) round($r->rata_durasi ?? 0) }}</td>
                             <td class="px-4 py-3 text-right font-medium">
-                                Rp {{ number_format($t->total_bayar ?? 0, 0, ',', '.') }}
+                                Rp {{ number_format($r->pendapatan ?? 0, 0, ',', '.') }}
+                            </td>
+                            <td class="px-4 py-3 text-right">
+                                <a href="{{ route('owner.rekap.show', $r->tanggal) }}"
+                                   class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-50">
+                                    Detail
+                                </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-8 text-center text-slate-500">Belum ada transaksi di periode ini.</td>
+                            <td colspan="5" class="px-4 py-8 text-center text-slate-500">Belum ada transaksi di periode ini.</td>
                         </tr>
                     @endforelse
                     </tbody>
                 </table>
             </div>
-
-            <div>{{ $items->links() }}</div>
         </div>
     </div>
-</x-layouts.guest>
-
+</x-layouts.owner>

@@ -49,6 +49,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::prefix('owner')->name('owner.')->middleware('role:owner')->group(function () {
         Route::get('/dashboard', OwnerDashboardController::class)->name('dashboard');
         Route::get('/rekap-transaksi', [RekapTransaksiController::class, 'index'])->name('rekap.index');
+        Route::get('/rekap-transaksi/{date}', [RekapTransaksiController::class, 'show'])->name('rekap.show');
     });
 
     Route::prefix('petugas')->name('petugas.')->middleware('role:petugas')->group(function () {
