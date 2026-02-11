@@ -57,6 +57,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
     Route::prefix('petugas')->name('petugas.')->middleware('role:petugas')->group(function () {
         Route::get('/dashboard', PetugasDashboardController::class)->name('dashboard');
+        Route::get('/kamera', fn () => view('petugas.kamera.index', ['title' => 'Monitoring Kamera - Petugas']))->name('kamera.index');
 
         Route::get('/transaksi', [PetugasTransaksiController::class, 'index'])->name('transaksi.index');
         Route::get('/transaksi/{transaksi}/karcis', [PetugasTransaksiController::class, 'karcis'])->name('transaksi.karcis');

@@ -68,6 +68,13 @@
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Daftar Transaksi</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('petugas.kamera.index') }}"
+                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.kamera.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                                <i class="fas fa-video w-5 text-center flex-shrink-0"></i>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Kamera</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
 

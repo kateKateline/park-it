@@ -61,107 +61,17 @@
         </div>
 
         <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-            <div class="flex items-center justify-between gap-4 mb-4">
+            <div class="flex items-center justify-between gap-4">
                 <div>
                     <h3 class="font-semibold text-gray-900">Monitoring Kamera</h3>
-                    <p class="text-sm text-gray-600 mt-1">
-                        Petugas hanya melihat stream kamera aktif. Status online/offline ditentukan dari browser.
-                    </p>
+                    <p class="text-sm text-gray-600 mt-1">Pantau stream kamera parkir di halaman khusus.</p>
                 </div>
+                <a href="{{ route('petugas.kamera.index') }}"
+                   class="rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 transition inline-flex items-center gap-2">
+                    <i class="fas fa-video"></i>
+                    Buka Kamera
+                </a>
             </div>
-            <div id="camera-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const endpoint = '{{ url('/api/cameras/active') }}';
-            const container = document.getElementById('camera-container');
-
-            async function fetchCameras() {
-                try {
-                    const res = await fetch(endpoint, {
-                        headers: {
-                            'Accept': 'application/json',
-                        },
-                        credentials: 'same-origin',
-                    });
-                    if (!res.ok) {
-                        throw new Error('Gagal mengambil data kamera');
-                    }
-                    const cameras = await res.json();
-                    renderCameras(cameras);
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-
-            function renderCameras(cameras) {
-                if (!container) return;
-                container.innerHTML = '';
-
-                if (!cameras || cameras.length === 0) {
-                    const empty = document.createElement('p');
-                    empty.className = 'text-sm text-gray-500';
-                    empty.innerText = 'Belum ada kamera aktif yang dikonfigurasi admin.';
-                    container.appendChild(empty);
-                    return;
-                }
-
-                cameras.forEach(cam => {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'border rounded-2xl p-3 bg-gray-50 shadow-sm space-y-2';
-
-                    const header = document.createElement('div');
-                    header.className = 'flex items-center justify-between gap-2';
-
-                    const title = document.createElement('h3');
-                    title.className = 'text-sm font-semibold text-gray-900';
-                    title.innerText = cam.name;
-
-                    const statusBadge = document.createElement('span');
-                    statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700';
-                    statusBadge.innerText = 'Memeriksa...';
-
-                    header.appendChild(title);
-                    header.appendChild(statusBadge);
-
-                    const img = document.createElement('img');
-                    img.src = cam.stream_url;
-                    img.alt = cam.name || 'Stream kamera';
-                    img.style.width = '100%';
-                    img.className = 'rounded-lg border border-gray-200 bg-black';
-
-                    let statusSet = false;
-
-                    img.onload = () => {
-                        statusSet = true;
-                        statusBadge.innerText = 'Online';
-                        statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700';
-                    };
-
-                    img.onerror = () => {
-                        statusSet = true;
-                        statusBadge.innerText = 'Offline';
-                        statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700';
-                    };
-
-                    // Timeout fallback: jika tidak load/error dalam waktu tertentu
-                    setTimeout(() => {
-                        if (!statusSet) {
-                            statusBadge.innerText = 'Offline';
-                            statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700';
-                        }
-                    }, 8000);
-
-                    wrapper.appendChild(header);
-                    wrapper.appendChild(img);
-                    container.appendChild(wrapper);
-                });
-            }
-
-            fetchCameras();
-            setInterval(fetchCameras, 5000);
-        });
-    </script>
 </x-layouts.petugas>
