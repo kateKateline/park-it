@@ -3,7 +3,7 @@ import './admin/dashboard';
 import './admin/sidebar';
 import './petugas/sidebar';
 
-// Satu handler konfirmasi logout (menghindari double dialog karena admin + petugas sidebar sama-sama punya #logout-form)
+// logout handler
 (function setupLogoutConfirm() {
     function init() {
         const form = document.getElementById('logout-form');

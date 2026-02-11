@@ -114,7 +114,7 @@ class SidebarController {
             this.toggle();
         });
 
-        // Logout confirm ditangani sekali di app.js (menghindari double dialog)
+        
     }
 
     /**
