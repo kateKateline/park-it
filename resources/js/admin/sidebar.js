@@ -114,16 +114,7 @@ class SidebarController {
             this.toggle();
         });
 
-        // Logout confirmation popup
-        const logoutForm = document.querySelector(this.selectors.logoutForm);
-        if (logoutForm) {
-            logoutForm.addEventListener('submit', (e) => {
-                const confirmed = window.confirm('Apakah Anda yakin ingin logout?');
-                if (!confirmed) {
-                    e.preventDefault();
-                }
-            });
-        }
+        // Logout confirm ditangani sekali di app.js (menghindari double dialog)
     }
 
     /**
