@@ -17,6 +17,7 @@ use App\Http\Controllers\Petugas\TransaksiKeluarController;
 use App\Http\Controllers\Petugas\TransaksiMasukController;
 use App\Http\Controllers\Admin\CameraSourceController as AdminCameraSourceController;
 use App\Http\Controllers\Petugas\CameraApiController;
+use App\Http\Controllers\Petugas\CarDetectionController;
 
 // Landing page = Login
 Route::middleware('guest')->group(function () {
@@ -69,6 +70,11 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         Route::get('/transaksi-keluar', [TransaksiKeluarController::class, 'create'])->name('transaksi.keluar');
         Route::post('/transaksi-keluar/scan', [TransaksiKeluarController::class, 'scan'])->name('transaksi.keluar.scan');
         Route::post('/transaksi-keluar/bayar', [TransaksiKeluarController::class, 'bayar'])->name('transaksi.keluar.bayar');
+
+        // Car Detection API endpoints
+        Route::post('/detect-car', [CarDetectionController::class, 'detectCar'])->name('detect.car');
+        Route::get('/latest-cars', [CarDetectionController::class, 'getLatestCars'])->name('latest.cars');
+        Route::get('/api-health', [CarDetectionController::class, 'healthCheck'])->name('api.health');
     });
 
     // API sederhana untuk petugas mengambil kamera aktif
