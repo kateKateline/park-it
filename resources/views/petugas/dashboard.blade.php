@@ -73,5 +73,74 @@
                 </a>
             </div>
         </div>
+
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" id="detection-test-card">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h3 class="font-semibold text-gray-900">Test Koneksi Detection API</h3>
+                    <p class="text-sm text-gray-600 mt-1">Uji apakah endpoint <code class="rounded bg-gray-100 px-1 py-0.5 text-xs">POST /api/detection</code> dapat menerima data dari Python YOLO.</p>
+                </div>
+                <button type="button"
+                        id="btn-test-detection"
+                        class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition disabled:opacity-60 disabled:pointer-events-none">
+                    <i class="fas fa-plug" id="btn-test-icon"></i>
+                    <span id="btn-test-text">Test Koneksi</span>
+                </button>
+            </div>
+            <div id="detection-test-result" class="mt-4 hidden rounded-xl border p-4 text-sm"></div>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('btn-test-detection');
+            const resultEl = document.getElementById('detection-test-result');
+            const btnIcon = document.getElementById('btn-test-icon');
+            const btnText = document.getElementById('btn-test-text');
+            const detectionUrl = '{{ url("/api/detection") }}';
+
+            if (!btn || !resultEl) return;
+
+            btn.addEventListener('click', async () => {
+                resultEl.classList.add('hidden');
+                btn.disabled = true;
+                btnIcon.className = 'fas fa-spinner fa-spin';
+                btnText.textContent = 'Menguji...';
+
+                const payload = {
+                    vehicle_type: 'car',
+                    color: 'hitam',
+                    confidence: 0.87,
+                    timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                };
+
+                try {
+                    const res = await fetch(detectionUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload),
+                        credentials: 'same-origin'
+                    });
+                    const data = await res.json().catch(() => ({}));
+
+                    resultEl.classList.remove('hidden');
+                    if (res.status === 201 && data.success) {
+                        resultEl.className = 'mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800';
+                        resultEl.innerHTML = '<strong class="flex items-center gap-2"><i class="fas fa-check-circle"></i> Koneksi berhasil</strong><p class="mt-2">Endpoint menerima data. Status ' + res.status + '. Response: ' + (data.message || 'OK') + '</p>';
+                    } else {
+                        resultEl.className = 'mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800';
+                        resultEl.innerHTML = '<strong class="flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i> Response tidak sesuai</strong><p class="mt-2">Status: ' + res.status + '. ' + (data.message || JSON.stringify(data)) + '</p>';
+                    }
+                } catch (e) {
+                    resultEl.classList.remove('hidden');
+                    resultEl.className = 'mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800';
+                    resultEl.innerHTML = '<strong class="flex items-center gap-2"><i class="fas fa-times-circle"></i> Gagal koneksi</strong><p class="mt-2">' + (e.message || String(e)) + '</p>';
+                } finally {
+                    btn.disabled = false;
+                    btnIcon.className = 'fas fa-plug';
+                    btnText.textContent = 'Test Koneksi';
+                }
+            });
+        });
+    </script>
 </x-layouts.petugas>

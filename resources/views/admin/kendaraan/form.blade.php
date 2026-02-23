@@ -19,6 +19,13 @@
                 </div>
             @endif
 
+            @if ($mode === 'create' && !empty($latestDetection ?? null))
+                <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                    <div class="font-medium">Data terakhir dari deteksi (YOLO)</div>
+                    <p class="mt-1">Jenis: {{ $latestDetection['vehicle_type'] ?? '-' }}, Warna: {{ $latestDetection['color'] ?? '-' }}, Confidence: {{ isset($latestDetection['confidence']) ? round($latestDetection['confidence'] * 100) . '%' : '-' }}, Waktu: {{ $latestDetection['detected_at'] ?? '-' }}</p>
+                </div>
+            @endif
+
             <form method="POST"
                   action="{{ $mode === 'create' ? route('admin.kendaraan.store') : route('admin.kendaraan.update', $model) }}"
                   class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -34,20 +41,35 @@
                            required />
                 </div>
 
+                @php
+                    $vehicleTypeMap = ['car' => 'mobil', 'motorcycle' => 'motor', 'truck' => 'truk', 'bus' => 'bus'];
+                    $defaultJenis = $model->jenis_kendaraan;
+                    $defaultWarna = $model->warna;
+                    if ($mode === 'create' && !empty($latestDetection ?? null)) {
+                        $defaultJenis = $vehicleTypeMap[$latestDetection['vehicle_type'] ?? ''] ?? $latestDetection['vehicle_type'] ?? $defaultJenis;
+                        $defaultWarna = $latestDetection['color'] ?? $defaultWarna;
+                    }
+                @endphp
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Jenis Kendaraan</label>
-                        <input name="jenis_kendaraan" value="{{ old('jenis_kendaraan', $model->jenis_kendaraan) }}"
+                        <input name="jenis_kendaraan" value="{{ old('jenis_kendaraan', $defaultJenis) }}"
                                placeholder="mobil / motor"
                                class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
                                required />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Warna (opsional)</label>
-                        <input name="warna" value="{{ old('warna', $model->warna) }}"
+                        <input name="warna" value="{{ old('warna', $defaultWarna) }}"
                                class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
                     </div>
                 </div>
+                @if ($mode === 'create' && !empty($latestDetection ?? null))
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 text-sm text-slate-600">
+                        <div>Confidence deteksi: <strong>{{ isset($latestDetection['confidence']) ? round($latestDetection['confidence'] * 100) . '%' : '-' }}</strong></div>
+                        <div>Waktu deteksi: <strong>{{ $latestDetection['detected_at'] ?? '-' }}</strong></div>
+                    </div>
+                @endif
 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>

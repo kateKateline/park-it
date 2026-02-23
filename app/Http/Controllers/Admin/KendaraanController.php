@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Kendaraan;
 use App\Models\LogAktivitas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class KendaraanController extends Controller
 {
@@ -34,10 +35,13 @@ class KendaraanController extends Controller
 
     public function create(Request $request)
     {
+        $latestDetection = Cache::get('latest_detection');
+
         return view('admin.kendaraan.form', [
             'user' => $request->user(),
             'model' => new Kendaraan(),
             'mode' => 'create',
+            'latestDetection' => $latestDetection,
         ]);
     }
 
@@ -70,6 +74,7 @@ class KendaraanController extends Controller
             'user' => $request->user(),
             'model' => $kendaraan,
             'mode' => 'edit',
+            'latestDetection' => null,
         ]);
     }
 
