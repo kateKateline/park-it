@@ -77,8 +77,8 @@
         <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" id="detection-test-card">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h3 class="font-semibold text-gray-900">Test Koneksi Detection API</h3>
-                    <p class="text-sm text-gray-600 mt-1">Uji apakah endpoint <code class="rounded bg-gray-100 px-1 py-0.5 text-xs">POST /api/detection</code> dapat menerima data dari Python YOLO.</p>
+                    <h3 class="font-semibold text-gray-900">Test Koneksi Python YOLO</h3>
+                    <p class="text-sm text-gray-600 mt-1">Uji apakah layanan Python YOLO (Flask) berjalan di <code class="rounded bg-gray-100 px-1 py-0.5 text-xs">GET /status</code>. URL dikonfigurasi di <code class="rounded bg-gray-100 px-1 py-0.5 text-xs">PYTHON_YOLO_URL</code> (.env).</p>
                 </div>
                 <button type="button"
                         id="btn-test-detection"
@@ -97,7 +97,7 @@
             const resultEl = document.getElementById('detection-test-result');
             const btnIcon = document.getElementById('btn-test-icon');
             const btnText = document.getElementById('btn-test-text');
-            const detectionUrl = '{{ url("/api/detection") }}';
+            const pythonStatusUrl = '{{ route("petugas.python.status") }}';
 
             if (!btn || !resultEl) return;
 
@@ -107,29 +107,21 @@
                 btnIcon.className = 'fas fa-spinner fa-spin';
                 btnText.textContent = 'Menguji...';
 
-                const payload = {
-                    vehicle_type: 'car',
-                    color: 'hitam',
-                    confidence: 0.87,
-                    timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
-                };
-
                 try {
-                    const res = await fetch(detectionUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify(payload),
+                    const res = await fetch(pythonStatusUrl, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
                         credentials: 'same-origin'
                     });
                     const data = await res.json().catch(() => ({}));
 
                     resultEl.classList.remove('hidden');
-                    if (res.status === 201 && data.success) {
+                    if (data.success) {
                         resultEl.className = 'mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800';
-                        resultEl.innerHTML = '<strong class="flex items-center gap-2"><i class="fas fa-check-circle"></i> Koneksi berhasil</strong><p class="mt-2">Endpoint menerima data. Status ' + res.status + '. Response: ' + (data.message || 'OK') + '</p>';
+                        resultEl.innerHTML = '<strong class="flex items-center gap-2"><i class="fas fa-check-circle"></i> Python YOLO terhubung</strong><p class="mt-2">' + (data.message || '') + '</p><p class="mt-1 text-xs">URL: ' + (data.url || '') + '</p>';
                     } else {
-                        resultEl.className = 'mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800';
-                        resultEl.innerHTML = '<strong class="flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i> Response tidak sesuai</strong><p class="mt-2">Status: ' + res.status + '. ' + (data.message || JSON.stringify(data)) + '</p>';
+                        resultEl.className = 'mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800';
+                        resultEl.innerHTML = '<strong class="flex items-center gap-2"><i class="fas fa-times-circle"></i> Tidak terhubung</strong><p class="mt-2">' + (data.message || '') + '</p><p class="mt-1 text-xs">URL: ' + (data.url || '') + '. Pastikan Python YOLO dijalankan (Flask /status).</p>';
                     }
                 } catch (e) {
                     resultEl.classList.remove('hidden');

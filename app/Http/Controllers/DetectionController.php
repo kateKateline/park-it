@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Detection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -11,6 +10,7 @@ class DetectionController extends Controller
 {
     /**
      * Menerima data deteksi dari Python YOLO service.
+     * Data disimpan ke cache untuk auto-fill form kendaraan (pakai model Kendaraan).
      * POST /api/detection
      */
     public function store(Request $request): JsonResponse
@@ -22,18 +22,11 @@ class DetectionController extends Controller
             'timestamp' => ['required', 'date_format:Y-m-d H:i:s'],
         ]);
 
-        $detection = Detection::create([
+        $data = [
             'vehicle_type' => $validated['vehicle_type'],
             'color' => $validated['color'],
             'confidence' => (float) $validated['confidence'],
             'detected_at' => $validated['timestamp'],
-        ]);
-
-        $data = [
-            'vehicle_type' => $detection->vehicle_type,
-            'color' => $detection->color,
-            'confidence' => $detection->confidence,
-            'detected_at' => $detection->detected_at->format('Y-m-d H:i:s'),
         ];
 
         Cache::put('latest_detection', $data, 3600);
