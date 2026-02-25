@@ -12,6 +12,31 @@
             </div>
             <p class="text-sm text-slate-600 mb-6">Isi form saat kendaraan datang. Karcis akan digenerate untuk diberikan ke pengendara.</p>
 
+            @php
+                $vehicleTypeMap = ['car' => 'mobil', 'motorcycle' => 'motor', 'truck' => 'truk', 'bus' => 'bus'];
+                $jenisDefault = old('jenis_kendaraan');
+                $warnaDefault = old('warna');
+                if (($jenisDefault === null || $jenisDefault === '') && !empty($latestDetection ?? null)) {
+                    $jenisDefault = $vehicleTypeMap[$latestDetection['vehicle_type'] ?? ''] ?? null;
+                }
+                if (($warnaDefault === null || $warnaDefault === '') && !empty($latestDetection ?? null)) {
+                    $warnaDefault = $latestDetection['color'] ?? null;
+                }
+            @endphp
+
+            @if (!empty($latestDetection ?? null))
+                <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs text-emerald-800">
+                    <div class="font-medium text-sm">Data terakhir dari deteksi (YOLO)</div>
+                    <p class="mt-1">
+                        Jenis: {{ $latestDetection['vehicle_type'] ?? '-' }},
+                        Warna: {{ $latestDetection['color'] ?? '-' }},
+                        Confidence: {{ isset($latestDetection['confidence']) ? round($latestDetection['confidence'] * 100) . '%' : '-' }},
+                        Waktu: {{ $latestDetection['timestamp'] ?? ($latestDetection['detected_at'] ?? '-') }}
+                    </p>
+                    <p class="mt-1 text-[11px] text-emerald-900/80">Data ini akan otomatis terpakai sekali saat form disimpan, lalu tidak digunakan lagi sampai ada deteksi baru.</p>
+                </div>
+            @endif
+
             <form action="{{ route('petugas.transaksi.masuk.store') }}" method="POST" class="space-y-4">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -30,8 +55,8 @@
                         <select name="jenis_kendaraan" id="jenis_kendaraan" required
                                 class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10">
                             <option value="">Pilih</option>
-                            <option value="motor" {{ old('jenis_kendaraan') === 'motor' ? 'selected' : '' }}>Motor</option>
-                            <option value="mobil" {{ old('jenis_kendaraan') === 'mobil' ? 'selected' : '' }}>Mobil</option>
+                            <option value="motor" {{ $jenisDefault === 'motor' ? 'selected' : '' }}>Motor</option>
+                            <option value="mobil" {{ $jenisDefault === 'mobil' ? 'selected' : '' }}>Mobil</option>
                         </select>
                         @error('jenis_kendaraan')
                             <div class="mt-1 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">{{ $message }}</div>
@@ -40,7 +65,7 @@
                     <div>
                         <label for="warna" class="block text-sm font-medium text-slate-700">Warna</label>
                         <input type="text" name="warna" id="warna"
-                               value="{{ old('warna') }}"
+                               value="{{ $warnaDefault }}"
                                placeholder="Hitam"
                                class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
                     </div>

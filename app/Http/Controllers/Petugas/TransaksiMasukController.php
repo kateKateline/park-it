@@ -10,6 +10,7 @@ use App\Models\Tarif;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class TransaksiMasukController extends Controller
 {
@@ -17,10 +18,12 @@ class TransaksiMasukController extends Controller
     {
         $areas = AreaParkir::orderBy('nama_area')->get();
         $tarif = Tarif::pluck('tarif_per_jam', 'jenis_kendaraan');
+        $latestDetection = Cache::get('latest_detection');
 
         return view('petugas.transaksi.masuk', [
             'areas' => $areas,
             'tarif' => $tarif,
+            'latestDetection' => $latestDetection,
         ]);
     }
 
@@ -66,6 +69,9 @@ class TransaksiMasukController extends Controller
             'user_id' => $request->user()->id,
             'aktivitas' => "Transaksi masuk: {$kendaraan->plat_nomor} - Karcis {$barcode}",
         ]);
+
+        // Detection dari Python hanya dipakai sekali untuk autofill.
+        Cache::forget('latest_detection');
 
         return redirect()
             ->route('petugas.transaksi.karcis', $transaksi)
