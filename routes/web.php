@@ -20,7 +20,8 @@ use App\Http\Controllers\Petugas\CameraApiController;
 
 // Landing page = Login
 Route::middleware('guest')->group(function () {
-    Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+    Route::view('/', 'landing')->name('landing');
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 });
 

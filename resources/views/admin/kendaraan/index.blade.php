@@ -11,6 +11,8 @@
             </a>
         </div>
 
+        @include('partials.flash')
+
         <!-- Search Form -->
         <form method="GET" action="{{ route('admin.kendaraan.index') }}" class="flex gap-2">
             <input type="text" name="q" value="{{ $q }}" placeholder="Cari plat nomor..."

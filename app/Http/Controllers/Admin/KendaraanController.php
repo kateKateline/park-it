@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Kendaraan;
 use App\Models\LogAktivitas;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -105,14 +106,24 @@ class KendaraanController extends Controller
     {
         $id = $kendaraan->id;
         $plat = $kendaraan->plat_nomor;
-        $kendaraan->delete();
+
+        try {
+            $kendaraan->delete();
+        } catch (QueryException $e) {
+            $sqlState = (string) ($e->errorInfo[0] ?? '');
+
+            if ($sqlState === '23000') {
+                return back()->with('error', "Kendaraan {$plat} tidak bisa dihapus karena masih dipakai di data lain.");
+            }
+
+            throw $e;
+        }
 
         LogAktivitas::create([
             'user_id' => $request->user()->id,
             'aktivitas' => "CRUD Kendaraan: menghapus kendaraan #{$id} ({$plat})",
         ]);
 
-        return redirect()->route('admin.kendaraan.index')->with('success', 'Kendaraan berhasil dihapus.');
+        return back()->with('success', 'Kendaraan berhasil dihapus.');
     }
 }
-

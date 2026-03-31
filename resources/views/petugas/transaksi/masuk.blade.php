@@ -42,51 +42,82 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="plat_nomor" class="block text-sm font-medium text-slate-700">Plat Nomor</label>
-                        <input type="text" name="plat_nomor" id="plat_nomor" required
-                               value="{{ old('plat_nomor') }}"
-                               placeholder="B 1234 XYZ"
-                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 uppercase tracking-wider" />
+                        <div class="relative mt-1">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fas fa-id-card text-sm"></i>
+                            </div>
+                            <input type="text" name="plat_nomor" id="plat_nomor" required
+                                   value="{{ old('plat_nomor') }}"
+                                   placeholder="B 1234 XYZ"
+                                   class="w-full rounded-xl border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 uppercase tracking-wider" />
+                        </div>
                         @error('plat_nomor')
                             <div class="mt-1 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">{{ $message }}</div>
                         @enderror
                     </div>
                     <div>
                         <label for="jenis_kendaraan" class="block text-sm font-medium text-slate-700">Jenis Kendaraan</label>
-                        <select name="jenis_kendaraan" id="jenis_kendaraan" required
-                                class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10">
-                            <option value="">Pilih</option>
-                            <option value="motor" {{ $jenisDefault === 'motor' ? 'selected' : '' }}>Motor</option>
-                            <option value="mobil" {{ $jenisDefault === 'mobil' ? 'selected' : '' }}>Mobil</option>
-                        </select>
+                        <div class="relative mt-1">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fas fa-car text-sm"></i>
+                            </div>
+                            <select name="jenis_kendaraan" id="jenis_kendaraan" required
+                                    class="w-full appearance-none rounded-xl border border-slate-300 bg-white py-2 pl-10 pr-10 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10">
+                                <option value="">Pilih</option>
+                                <option value="motor" {{ $jenisDefault === 'motor' ? 'selected' : '' }}>Motor</option>
+                                <option value="mobil" {{ $jenisDefault === 'mobil' ? 'selected' : '' }}>Mobil</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
                         @error('jenis_kendaraan')
                             <div class="mt-1 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">{{ $message }}</div>
                         @enderror
                     </div>
                     <div>
                         <label for="warna" class="block text-sm font-medium text-slate-700">Warna</label>
-                        <input type="text" name="warna" id="warna"
-                               value="{{ $warnaDefault }}"
-                               placeholder="Hitam"
-                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                        <div class="relative mt-1">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fas fa-palette text-sm"></i>
+                            </div>
+                            <input type="text" name="warna" id="warna"
+                                   value="{{ $warnaDefault }}"
+                                   placeholder="Hitam"
+                                   class="w-full rounded-xl border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                        </div>
                     </div>
                     <div>
                         <label for="merk" class="block text-sm font-medium text-slate-700">Merk</label>
-                        <input type="text" name="merk" id="merk"
-                               value="{{ old('merk') }}"
-                               placeholder="Honda, Toyota"
-                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                        <div class="relative mt-1">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fas fa-tag text-sm"></i>
+                            </div>
+                            <input type="text" name="merk" id="merk"
+                                   value="{{ old('merk') }}"
+                                   placeholder="Honda, Toyota"
+                                   class="w-full rounded-xl border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                        </div>
                     </div>
                     <div class="md:col-span-2">
                         <label for="area_parkir_id" class="block text-sm font-medium text-slate-700">Area Parkir</label>
-                        <select name="area_parkir_id" id="area_parkir_id" required
-                                class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10">
-                            <option value="">Pilih area</option>
-                            @foreach ($areas as $a)
-                                <option value="{{ $a->id }}" {{ old('area_parkir_id') == $a->id ? 'selected' : '' }}>
-                                    {{ $a->nama_area }} (Kapasitas: {{ $a->kapasitas }})
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="relative mt-1">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fas fa-location-dot text-sm"></i>
+                            </div>
+                            <select name="area_parkir_id" id="area_parkir_id" required
+                                    class="w-full appearance-none rounded-xl border border-slate-300 bg-white py-2 pl-10 pr-10 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10">
+                                <option value="">Pilih area</option>
+                                @foreach ($areas as $a)
+                                    <option value="{{ $a->id }}" {{ old('area_parkir_id') == $a->id ? 'selected' : '' }}>
+                                        {{ $a->nama_area }} (Kapasitas: {{ $a->kapasitas }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
                         @error('area_parkir_id')
                             <div class="mt-1 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">{{ $message }}</div>
                         @enderror

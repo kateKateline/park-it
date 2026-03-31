@@ -1,10 +1,21 @@
 <x-layouts.guest :title="'Login - Park-It'">
-    <div class="min-h-screen flex items-center justify-center p-6">
-        <div class="w-full max-w-md">
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-                <div class="mb-6">
-                    <h1 class="text-2xl font-semibold tracking-tight">Park-It</h1>
-                    <p class="text-sm text-slate-600 mt-1">Silakan login untuk masuk dashboard.</p>
+    <div class="relative min-h-screen overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-50 via-slate-50 to-white"></div>
+        <div class="pointer-events-none absolute inset-0">
+            <div class="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl"></div>
+            <div class="absolute top-24 -right-24 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl"></div>
+        </div>
+
+        <div class="relative flex min-h-screen items-center justify-center p-6">
+            <div class="w-full max-w-md">
+                <div class="bg-white/80 border border-slate-200 rounded-2xl shadow-sm p-6 backdrop-blur">
+                <a href="{{ route('landing') }}" class="inline-flex items-center gap-2 text-xs font-medium text-slate-600 hover:text-slate-900 transition">
+                    <i class="fas fa-arrow-left text-[10px]"></i>
+                    Kembali
+                </a>
+                <div class="mb-6 mt-4">
+                    <h1 class="text-xl font-semibold tracking-tight text-slate-900">Login</h1>
+                    <p class="mt-1 text-sm text-slate-600">Masuk untuk mengakses dashboard.</p>
                 </div>
 
                 @if ($errors->any())
@@ -53,11 +64,17 @@
                     </button>
                 </form>
 
-                <p class="mt-6 text-xs text-slate-500">
-                    Role yang tersedia: admin, petugas, owner.
-                </p>
+                <div class="mt-6 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+                    <div class="inline-flex items-center gap-2">
+                        <i class="fas fa-shield-halved text-[11px]"></i>
+                        Role: admin, petugas, owner
+                    </div>
+                    <div class="inline-flex items-center gap-2">
+                        <i class="fas fa-lock text-[11px]"></i>
+                        Session secured
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </x-layouts.guest>
-

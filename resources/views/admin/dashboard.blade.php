@@ -1,151 +1,145 @@
 <x-layouts.admin :title="'Dashboard'">
     <div class="space-y-6">
-        <!-- Header Row -->
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-xl font-semibold text-gray-900">Dashboard</h2>
-            <div class="text-sm text-gray-600">
-                <span class="font-medium">{{ now()->format('F d, Y') }}</span>
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <div class="text-xs text-gray-500">Admin Panel</div>
+                <h2 class="mt-1 text-xl font-semibold text-gray-900">Dashboard</h2>
+                <div class="mt-1 text-sm text-gray-600">{{ now()->format('d F Y, H:i') }}</div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ route('admin.users.index') }}"
+                   class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 transition">
+                    <i class="fas fa-users text-sm text-gray-500"></i>
+                    Users
+                </a>
+                <a href="{{ route('admin.tarif.index') }}"
+                   class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 transition">
+                    <i class="fas fa-tags text-sm text-gray-500"></i>
+                    Tarif
+                </a>
+                <a href="{{ route('admin.area-parkir.index') }}"
+                   class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 transition">
+                    <i class="fas fa-location-dot text-sm text-gray-500"></i>
+                    Area
+                </a>
+                <a href="{{ route('admin.kendaraan.index') }}"
+                   class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 transition">
+                    <i class="fas fa-car text-sm text-gray-500"></i>
+                    Kendaraan
+                </a>
+                <a href="{{ route('admin.log-aktivitas.index') }}"
+                   class="inline-flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 transition">
+                    <i class="fas fa-clock-rotate-left text-sm"></i>
+                    Log
+                </a>
             </div>
         </div>
 
-        <!-- KPI Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Transaksi Aktif -->
-            @php
-                $transaksiAktifKemarin = $kpi['transaksi_aktif_kemarin'] ?? 0;
-                $transaksiAktifNow = $kpi['transaksi_aktif'] ?? 0;
-                $p1 = $transaksiAktifKemarin > 0 ? round((($transaksiAktifNow - $transaksiAktifKemarin) / $transaksiAktifKemarin) * 100) : ($transaksiAktifNow > 0 ? 100 : 0);
-            @endphp
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <div>
-                        <p class="text-gray-700 font-semibold text-sm">Transaksi Aktif</p>
-                        <p class="text-4xl font-bold text-gray-900 mt-3">{{ $transaksiAktifNow }}</p>
-                    </div>
-                    <div class="flex flex-col items-end">
-                        <span class="{{ $p1 >= 0 ? 'text-green-600' : 'text-red-600' }} text-sm font-semibold flex items-center">
-                            <i class="fas {{ $p1 >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
-                            {{ abs($p1) }}%
-                        </span>
-                    </div>
-                </div>
-                <p class="text-gray-500 text-xs">Dari {{ $kpi['kapasitas_total'] ?? 0 }} kapasitas total</p>
-            </div>
+        @php
+            $capacity = (int) ($kpi['kapasitas_total'] ?? 0);
+            $active = (int) ($kpi['transaksi_aktif'] ?? 0);
+            $rate = $capacity > 0 ? (int) round(($active / $capacity) * 100) : 0;
+        @endphp
 
-            <!-- Transaksi Hari Ini -->
-            @php
-                $transaksiHariIniKemarin = $kpi['transaksi_hari_ini_kemarin'] ?? 0;
-                $transaksiHariIniNow = $kpi['transaksi_hari_ini'] ?? 0;
-                $p2 = $transaksiHariIniKemarin > 0 ? round((($transaksiHariIniNow - $transaksiHariIniKemarin) / $transaksiHariIniKemarin) * 100) : ($transaksiHariIniNow > 0 ? 100 : 0);
-            @endphp
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <div>
-                        <p class="text-gray-700 font-semibold text-sm">Transaksi Hari Ini</p>
-                        <p class="text-4xl font-bold text-gray-900 mt-3">{{ $transaksiHariIniNow }}</p>
-                    </div>
-                    <div class="flex flex-col items-end">
-                        <span class="{{ $p2 >= 0 ? 'text-green-600' : 'text-red-600' }} text-sm font-semibold flex items-center">
-                            <i class="fas {{ $p2 >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
-                            {{ abs($p2) }}%
-                        </span>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">Transaksi aktif</div>
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                        <i class="fas fa-bolt text-sm"></i>
                     </div>
                 </div>
-                <p class="text-gray-500 text-xs">Transaksi masuk hari ini</p>
+                <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900">{{ $kpi['transaksi_aktif'] ?? 0 }}</div>
+                <div class="mt-2 text-xs text-gray-500">Okupansi: {{ $rate }}%</div>
             </div>
-
-            <!-- Pendapatan Hari Ini -->
-            @php
-                $pendapatanKemarin = $kpi['pendapatan_kemarin'] ?? 0;
-                $pendapatanSekarang = $kpi['pendapatan_hari_ini'] ?? 0;
-                $p3 = $pendapatanKemarin > 0 ? round((($pendapatanSekarang - $pendapatanKemarin) / $pendapatanKemarin) * 100) : ($pendapatanSekarang > 0 ? 100 : 0);
-            @endphp
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <div>
-                        <p class="text-gray-700 font-semibold text-sm">Pendapatan Hari Ini</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-3">Rp {{ number_format($pendapatanSekarang, 0, ',', '.') }}</p>
-                    </div>
-                    <div class="flex flex-col items-end">
-                        <span class="{{ $p3 >= 0 ? 'text-green-600' : 'text-red-600' }} text-sm font-semibold flex items-center">
-                            <i class="fas {{ $p3 >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
-                            {{ abs($p3) }}%
-                        </span>
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">Transaksi hari ini</div>
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                        <i class="fas fa-arrow-right-to-bracket text-sm"></i>
                     </div>
                 </div>
-                <p class="text-gray-500 text-xs">Total pendapatan</p>
+                <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900">{{ $kpi['transaksi_hari_ini'] ?? 0 }}</div>
+                <div class="mt-2 text-xs text-gray-500">Masuk hari ini</div>
+            </div>
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">Pendapatan hari ini</div>
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
+                        <i class="fas fa-receipt text-sm"></i>
+                    </div>
+                </div>
+                <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">
+                    Rp {{ number_format((int) ($kpi['pendapatan_hari_ini'] ?? 0), 0, ',', '.') }}
+                </div>
+                <div class="mt-2 text-xs text-gray-500">Total transaksi selesai</div>
+            </div>
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">Data master</div>
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-slate-700">
+                        <i class="fas fa-layer-group text-sm"></i>
+                    </div>
+                </div>
+                <div class="mt-3 text-sm font-semibold text-gray-900">
+                    Users: {{ $counts['users'] ?? 0 }} · Area: {{ $counts['area'] ?? 0 }}
+                </div>
+                <div class="mt-1 text-sm font-semibold text-gray-900">
+                    Kendaraan: {{ $counts['kendaraan'] ?? 0 }} · Tarif: {{ $counts['tarif'] ?? 0 }}
+                </div>
             </div>
         </div>
 
-        <!-- Charts Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Occupancy Levels -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Occupancy Levels</h3>
-                <div class="space-y-4">
+        <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-sm">
+                <div class="border-b border-gray-200 px-6 py-4">
+                    <div class="text-sm font-semibold text-gray-900">Okupansi area</div>
+                    <div class="mt-1 text-xs text-gray-500">Kendaraan aktif per area</div>
+                </div>
+                <div class="px-6 py-5 space-y-4">
                     @forelse ($areas as $area)
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <p class="text-sm font-medium text-gray-700">{{ $area['nama_area'] }}</p>
-                                <p class="text-sm font-semibold text-gray-900">{{ $area['occupied'] }}/{{ $area['kapasitas'] }}</p>
+                            <div class="flex items-center justify-between text-sm">
+                                <div class="font-medium text-gray-900">{{ $area['nama_area'] }}</div>
+                                <div class="text-xs text-gray-600">{{ $area['occupied'] }}/{{ $area['kapasitas'] }} · {{ $area['status_text'] }}</div>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                                <div class="h-full {{ $area['bar_color'] }} rounded-full" style="width: {{ $area['percentage'] }}%"></div>
+                            <div class="mt-2 h-2 w-full rounded-full bg-gray-100">
+                                <div class="h-2 rounded-full {{ $area['bar_color'] }}" style="width: {{ $area['percentage'] }}%"></div>
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-500 text-sm">Tidak ada data area parkir</p>
+                        <div class="text-sm text-gray-500">Belum ada area.</div>
                     @endforelse
                 </div>
             </div>
 
-            <!-- Tingkat Okupansi Summary -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Occupancy Rate</h3>
-                @php
-                    $capacity = (int) ($kpi['kapasitas_total'] ?? 0);
-                    $active = (int) ($kpi['transaksi_aktif'] ?? 0);
-                    $rate = $capacity > 0 ? round(($active / $capacity) * 100) : 0;
-                @endphp
-                <div class="flex flex-col items-center justify-center py-8">
-                    <div class="relative w-40 h-40 rounded-full flex items-center justify-center bg-gray-100">
-                        <div class="text-center">
-                            <p class="text-4xl font-bold text-gray-900">{{ $rate }}%</p>
-                            <p class="text-xs text-gray-600 mt-1">{{ $active }}/{{ $capacity }} slots</p>
-                        </div>
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+                    <div>
+                        <div class="text-sm font-semibold text-gray-900">Transaksi terbaru</div>
+                        <div class="mt-1 text-xs text-gray-500">Update terakhir</div>
                     </div>
-                    <div class="mt-6 w-full">
-                        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                            <div class="h-full bg-blue-600 rounded-full" style="width: {{ $rate }}%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Recent Transactions -->
-            <div class="lg:col-span-2 bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Recent Transactions</h3>
+                    <a href="{{ route('admin.log-aktivitas.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 transition inline-flex items-center gap-2">
+                        Log aktivitas
+                        <i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
-                        <thead>
-                            <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="px-6 py-3 text-left font-medium text-gray-700 text-xs">Plat Nomor</th>
-                                <th class="px-6 py-3 text-left font-medium text-gray-700 text-xs">Area</th>
-                                <th class="px-6 py-3 text-left font-medium text-gray-700 text-xs">Waktu Masuk</th>
-                                <th class="px-6 py-3 text-left font-medium text-gray-700 text-xs">Status</th>
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Plat</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Area</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Masuk</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Status</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                            @forelse ($recent['transaksi'] ?? [] as $t)
+                            @forelse ($recent['transaksi'] ?? collect() as $t)
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 font-medium text-gray-900">{{ $t->kendaraan?->plat_nomor ?? '-' }}</td>
                                     <td class="px-6 py-4 text-gray-700">{{ $t->areaParkir?->nama_area ?? '-' }}</td>
-                                    <td class="px-6 py-4 text-gray-600 whitespace-nowrap">{{ $t->waktu_masuk?->format('d/m H:i') ?? '-' }}</td>
+                                    <td class="px-6 py-4 text-gray-600 whitespace-nowrap text-xs">{{ $t->waktu_masuk?->format('d/m H:i') ?? '-' }}</td>
                                     <td class="px-6 py-4">
                                         @php
                                             $statusColor = match($t->status) {
@@ -154,65 +148,44 @@
                                                 default => 'bg-gray-100 text-gray-700'
                                             };
                                         @endphp
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusColor }}">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $statusColor }}">
                                             {{ ucfirst($t->status) }}
                                         </span>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-6 py-8 text-center text-gray-500">Tidak ada transaksi</td>
+                                    <td colspan="4" class="px-6 py-10 text-center text-gray-500">Belum ada transaksi.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- Summary Stats -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6">Data Master</h3>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                        <span class="text-sm text-gray-700">Total Users</span>
-                        <span class="font-bold text-gray-900 text-lg">{{ $counts['users'] ?? 0 }}</span>
-                    </div>
-                    <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                        <span class="text-sm text-gray-700">Total Area</span>
-                        <span class="font-bold text-gray-900 text-lg">{{ $counts['area'] ?? 0 }}</span>
-                    </div>
-                    <div class="flex items-center justify-between py-3 border-b border-gray-200">
-                        <span class="text-sm text-gray-700">Total Kendaraan</span>
-                        <span class="font-bold text-gray-900 text-lg">{{ $counts['kendaraan'] ?? 0 }}</span>
-                    </div>
-                    <div class="flex items-center justify-between py-3">
-                        <span class="text-sm text-gray-700">Total Tarif</span>
-                        <span class="font-bold text-gray-900 text-lg">{{ $counts['tarif'] ?? 0 }}</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- Recent Activities -->
-        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-900">Recent Activities</h3>
-                <a href="{{ route('admin.log-aktivitas.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
-                    View All
-                    <i class="fas fa-arrow-right text-xs"></i>
+        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+            <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+                <div>
+                    <div class="text-sm font-semibold text-gray-900">Aktivitas terbaru</div>
+                    <div class="mt-1 text-xs text-gray-500">Audit trail sistem</div>
+                </div>
+                <a href="{{ route('admin.log-aktivitas.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 transition inline-flex items-center gap-2">
+                    Lihat semua
+                    <i class="fas fa-arrow-right text-[10px]"></i>
                 </a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-gray-200">
-                            <th class="px-6 py-3 text-left font-medium text-gray-700 text-xs">Waktu</th>
-                            <th class="px-6 py-3 text-left font-medium text-gray-700 text-xs">User</th>
-                            <th class="px-6 py-3 text-left font-medium text-gray-700 text-xs">Aktivitas</th>
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Waktu</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Aktivitas</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @forelse (($recent['logs'] ?? collect())->take(5) as $log)
+                        @forelse (($recent['logs'] ?? collect()) as $log)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 text-gray-600 whitespace-nowrap text-xs">{{ $log->created_at?->format('d/m H:i') }}</td>
                                 <td class="px-6 py-4">
@@ -223,7 +196,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="px-6 py-8 text-center text-gray-500">Tidak ada aktivitas</td>
+                                <td colspan="3" class="px-6 py-10 text-center text-gray-500">Belum ada aktivitas.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -232,4 +205,3 @@
         </div>
     </div>
 </x-layouts.admin>
-

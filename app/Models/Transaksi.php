@@ -44,7 +44,7 @@ class Transaksi extends Model
 
     public function kendaraan(): BelongsTo
     {
-        return $this->belongsTo(Kendaraan::class, 'kendaraan_id');
+        return $this->belongsTo(Kendaraan::class, 'kendaraan_id')->withTrashed();
     }
 
     public function areaParkir(): BelongsTo
@@ -67,4 +67,3 @@ class Transaksi extends Model
         return $this->hasMany(DeteksiAi::class, 'transaksi_id');
     }
 }
-
