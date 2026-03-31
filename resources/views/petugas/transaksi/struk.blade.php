@@ -60,9 +60,9 @@
             <!-- Barcode -->
             <div class="my-4 pt-3 border-t border-dashed text-center">
                 <img
-                    src="https://bwipjs-api.metafloor.com/?bcid=code128&text={{ urlencode($transaksi->barcode) }}&scale=2&height=10&includetext&textxalign=center"
-                    alt="Barcode"
-                    class="w-full"
+                    src="https://bwipjs-api.metafloor.com/?bcid=qrcode&text={{ urlencode($transaksi->barcode) }}&scale=5"
+                    alt="QR"
+                    class="mx-auto w-40"
                 />
             </div>
 
