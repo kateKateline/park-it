@@ -60,9 +60,8 @@ class TransaksiSeeder extends Seeder
 
             if ($row['status'] === 'selesai' && $row['waktu_keluar']) {
                 $durasiMenit = Carbon::parse($row['waktu_masuk'])->diffInMinutes(Carbon::parse($row['waktu_keluar']));
-                // Total bayar demo: 2000 per jam dibulatkan ke atas per jam
-                $jam = (int) ceil(max(1, $durasiMenit) / 60);
-                $totalBayar = $jam * 2000;
+                $menitDitagih = max(0, $durasiMenit - 5);
+                $totalBayar = $menitDitagih === 0 ? 0 : (int) ceil(($menitDitagih * 2000) / 60);
             }
 
             Transaksi::create([
@@ -80,4 +79,3 @@ class TransaksiSeeder extends Seeder
         }
     }
 }
-

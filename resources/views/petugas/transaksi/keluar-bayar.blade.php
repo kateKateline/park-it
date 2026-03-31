@@ -31,11 +31,23 @@
                 </div>
                 <div class="flex items-center justify-between py-2 border-b border-slate-200">
                     <span class="text-slate-600">Durasi</span>
-                    <span>{{ $durasi_menit }} menit ({{ $jam }} jam)</span>
+                    <span>{{ $durasi_menit }} menit</span>
                 </div>
                 <div class="flex items-center justify-between py-2 border-b border-slate-200">
                     <span class="text-slate-600">Tarif per jam</span>
                     <span>Rp {{ number_format($tarif_per_jam, 0, ',', '.') }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-slate-200">
+                    <span class="text-slate-600">Tarif per menit</span>
+                    <span>Rp {{ number_format($tarif_per_menit, 2, ',', '.') }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-slate-200">
+                    <span class="text-slate-600">Gratis</span>
+                    <span>{{ $gratis_menit }} menit</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-slate-200">
+                    <span class="text-slate-600">Menit ditagih</span>
+                    <span>{{ $menit_ditagih }} menit</span>
                 </div>
                 <div class="flex items-center justify-between py-4 bg-emerald-50 rounded-xl px-4">
                     <span class="text-emerald-800 font-semibold">Total Bayar</span>

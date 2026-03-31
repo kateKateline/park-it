@@ -11,9 +11,27 @@ use Illuminate\Http\Request;
 
 class TransaksiKeluarController extends Controller
 {
+    private const GRATIS_MENIT = 5;
+
     public function create(Request $request)
     {
         return view('petugas.transaksi.keluar');
+    }
+
+    private function hitungPembayaran($waktuMasuk, $waktuKeluar, int $tarifPerJam): array
+    {
+        $durasiMenit = max(0, (int) $waktuMasuk->diffInMinutes($waktuKeluar));
+        $menitDitagih = max(0, $durasiMenit - self::GRATIS_MENIT);
+        $totalBayar = $menitDitagih === 0 ? 0 : (int) ceil(($menitDitagih * $tarifPerJam) / 60);
+
+        return [
+            'durasi_menit' => $durasiMenit,
+            'gratis_menit' => self::GRATIS_MENIT,
+            'menit_ditagih' => $menitDitagih,
+            'tarif_per_jam' => $tarifPerJam,
+            'tarif_per_menit' => $tarifPerJam / 60,
+            'total_bayar' => $totalBayar,
+        ];
     }
 
     public function scan(Request $request)
@@ -38,18 +56,18 @@ class TransaksiKeluarController extends Controller
 
         $waktuMasuk = $transaksi->waktu_masuk;
         $waktuKeluar = now();
-        $durasiMenit = (int) $waktuMasuk->diffInMinutes($waktuKeluar);
-        $jam = max(1, (int) ceil($durasiMenit / 60));
-        $totalBayar = $jam * $tarifPerJam;
+        $hasil = $this->hitungPembayaran($waktuMasuk, $waktuKeluar, $tarifPerJam);
 
         return view('petugas.transaksi.keluar-bayar', [
             'transaksi' => $transaksi,
             'waktu_masuk' => $waktuMasuk,
             'waktu_keluar' => $waktuKeluar,
-            'durasi_menit' => $durasiMenit,
-            'jam' => $jam,
-            'tarif_per_jam' => $tarifPerJam,
-            'total_bayar' => $totalBayar,
+            'durasi_menit' => $hasil['durasi_menit'],
+            'gratis_menit' => $hasil['gratis_menit'],
+            'menit_ditagih' => $hasil['menit_ditagih'],
+            'tarif_per_jam' => $hasil['tarif_per_jam'],
+            'tarif_per_menit' => $hasil['tarif_per_menit'],
+            'total_bayar' => $hasil['total_bayar'],
         ]);
     }
 
@@ -68,14 +86,12 @@ class TransaksiKeluarController extends Controller
         $tarifPerJam = $tarif ? $tarif->tarif_per_jam : 5000;
 
         $waktuKeluar = now();
-        $durasiMenit = (int) $transaksi->waktu_masuk->diffInMinutes($waktuKeluar);
-        $jam = max(1, (int) ceil($durasiMenit / 60));
-        $totalBayar = $jam * $tarifPerJam;
+        $hasil = $this->hitungPembayaran($transaksi->waktu_masuk, $waktuKeluar, $tarifPerJam);
 
         $transaksi->update([
             'waktu_keluar' => $waktuKeluar,
-            'durasi_menit' => $durasiMenit,
-            'total_bayar' => $totalBayar,
+            'durasi_menit' => $hasil['durasi_menit'],
+            'total_bayar' => $hasil['total_bayar'],
             'status' => 'selesai',
         ]);
 
@@ -86,7 +102,7 @@ class TransaksiKeluarController extends Controller
 
         LogAktivitas::create([
             'user_id' => $request->user()->id,
-            'aktivitas' => "Transaksi selesai: {$transaksi->kendaraan->plat_nomor} - Rp ".number_format($totalBayar, 0, ',', '.'),
+            'aktivitas' => "Transaksi selesai: {$transaksi->kendaraan->plat_nomor} - Rp ".number_format($hasil['total_bayar'], 0, ',', '.'),
         ]);
 
         return redirect()
