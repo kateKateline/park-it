@@ -128,7 +128,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200">
-                            @forelse(array_reverse($series) as $r)
+                            @forelse(($rekap['series'] ?? []) as $r)
                                 <tr class="hover:bg-slate-50">
                                     <td class="px-6 py-4 text-slate-700">{{ \Carbon\Carbon::parse($r['tanggal'])->format('d M Y') }}</td>
                                     <td class="px-6 py-4 font-semibold text-slate-900">{{ (int) ($r['jumlah'] ?? 0) }}</td>
@@ -191,4 +191,3 @@
         </div>
     </div>
 </x-layouts.owner>
-
