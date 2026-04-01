@@ -66,7 +66,6 @@
                     <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <div class="flex items-center justify-between">
                             <div class="text-sm font-semibold text-slate-900">Data Kendaraan</div>
-                            <span class="text-xs text-slate-500">Wajib: plat + jenis</span>
                         </div>
 
                         <div class="mt-5">
