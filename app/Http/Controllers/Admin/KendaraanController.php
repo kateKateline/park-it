@@ -49,7 +49,7 @@ class KendaraanController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'plat_nomor' => ['required', 'string', 'max:255', 'unique:tb_kendaraan,plat_nomor'],
+            'plat_nomor' => ['required', 'string', 'min:3', 'max:10', 'unique:tb_kendaraan,plat_nomor'],
             'warna' => ['nullable', 'string', 'max:255'],
             'jenis_kendaraan' => ['required', 'string', 'max:255'],
             'merk' => ['nullable', 'string', 'max:255'],
@@ -82,7 +82,7 @@ class KendaraanController extends Controller
     public function update(Request $request, Kendaraan $kendaraan)
     {
         $data = $request->validate([
-            'plat_nomor' => ['required', 'string', 'max:255', 'unique:tb_kendaraan,plat_nomor,' . $kendaraan->id],
+            'plat_nomor' => ['required', 'string', 'min:3', 'max:10', 'unique:tb_kendaraan,plat_nomor,' . $kendaraan->id],
             'warna' => ['nullable', 'string', 'max:255'],
             'jenis_kendaraan' => ['required', 'string', 'max:255'],
             'merk' => ['nullable', 'string', 'max:255'],
