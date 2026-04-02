@@ -62,6 +62,55 @@ class TransaksiMasukController extends Controller
         ]);
     }
 
+    public function checkPlate(Request $request): JsonResponse
+    {
+        $raw = (string) $request->query('plat', '');
+        $plat = strtoupper(preg_replace('/\s+/', '', trim($raw)));
+        $len = strlen($plat);
+
+        if ($plat === '' || $len < 3 || $len > 10) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'plat' => $plat,
+                    'input_valid' => false,
+                    'exists' => false,
+                    'is_terdaftar' => false,
+                    'parked' => false,
+                    'active' => null,
+                ],
+            ]);
+        }
+
+        $kendaraan = Kendaraan::query()
+            ->where('plat_nomor', $plat)
+            ->first();
+
+        $activeTransaksi = Transaksi::query()
+            ->with('areaParkir')
+            ->where('status', 'masuk')
+            ->whereHas('kendaraan', fn ($q) => $q->where('plat_nomor', $plat))
+            ->latest('id')
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'plat' => $plat,
+                'input_valid' => true,
+                'exists' => (bool) $kendaraan,
+                'is_terdaftar' => (bool) ($kendaraan?->is_terdaftar ?? false),
+                'parked' => (bool) $activeTransaksi,
+                'active' => $activeTransaksi ? [
+                    'id' => $activeTransaksi->id,
+                    'barcode' => $activeTransaksi->barcode,
+                    'area' => $activeTransaksi->areaParkir?->nama_area,
+                    'waktu_masuk' => $activeTransaksi->waktu_masuk?->toIso8601String(),
+                ] : null,
+            ],
+        ]);
+    }
+
     public function store(Request $request)
     {
         $valid = $request->validate([
@@ -71,6 +120,21 @@ class TransaksiMasukController extends Controller
             'merk' => 'nullable|string|max:100',
             'area_parkir_id' => 'required|exists:tb_area_parkir,id',
         ]);
+
+        $plat = strtoupper(preg_replace('/\s+/', '', trim((string) $valid['plat_nomor'])));
+        $activeTransaksi = Transaksi::query()
+            ->with('areaParkir')
+            ->where('status', 'masuk')
+            ->whereHas('kendaraan', fn ($q) => $q->where('plat_nomor', $plat))
+            ->latest('id')
+            ->first();
+
+        if ($activeTransaksi) {
+            $areaName = $activeTransaksi->areaParkir?->nama_area ? " di area {$activeTransaksi->areaParkir->nama_area}" : '';
+            return back()
+                ->withErrors(['plat_nomor' => "Kendaraan {$plat} sudah terparkir{$areaName} (Karcis {$activeTransaksi->barcode})."])
+                ->withInput();
+        }
 
         $area = AreaParkir::query()->findOrFail($valid['area_parkir_id']);
         $kapasitas = (int) ($area->kapasitas ?? 0);
@@ -86,7 +150,7 @@ class TransaksiMasukController extends Controller
         }
 
         $kendaraan = Kendaraan::firstOrCreate(
-            ['plat_nomor' => strtoupper(str_replace(' ', '', $valid['plat_nomor']))],
+            ['plat_nomor' => $plat],
             [
                 'jenis_kendaraan' => $valid['jenis_kendaraan'],
                 'warna' => $valid['warna'] ?? null,
