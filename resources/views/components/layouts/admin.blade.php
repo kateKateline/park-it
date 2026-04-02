@@ -53,51 +53,51 @@
                     <ul class="space-y-1">
                         <li>
                             <a href="{{ route('admin.dashboard') }}"
-                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.dashboard') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.dashboard') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-chart-line w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Dashboard</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Dashboard</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.users.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.users')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.users')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-users w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Users</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Users</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.area-parkir.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.area-parkir')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.area-parkir')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-map-location-dot w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Area Parkir</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Area Parkir</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.camera-sources.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.camera-sources.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.camera-sources.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-video w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Kamera</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kamera</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.kendaraan.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.kendaraan')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.kendaraan')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-car w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Kendaraan</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kendaraan</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.tarif.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.tarif')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.tarif')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-receipt w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Tarif</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Tarif</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.log-aktivitas.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.log-aktivitas')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.log-aktivitas')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-history w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-xs">Log</span>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Log</span>
                             </a>
                         </li>
                     </ul>
