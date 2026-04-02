@@ -90,6 +90,7 @@
                             @error('plat_nomor')
                                 <div class="mt-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">{{ $message }}</div>
                             @enderror
+                            <div id="plateRealtimeInfo" class="mt-2 hidden rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700"></div>
                             <div class="mt-2 text-xs text-slate-500">Tips: input cepat tanpa spasi juga bisa (contoh: B1234XYZ).</div>
                         </div>
 
@@ -230,11 +231,13 @@
     <script>
         (function () {
             var availabilityUrl = @json(route('petugas.transaksi.masuk.availability'));
+            var checkPlateUrl = @json(route('petugas.transaksi.masuk.check-plate'));
             var areas = @json($areasInitial);
 
             var formEl = document.getElementById('masukForm');
             var plateEl = document.getElementById('plat_nomor');
             var clearPlateEl = document.getElementById('clearPlate');
+            var plateInfoEl = document.getElementById('plateRealtimeInfo');
             var jenisHiddenEl = document.getElementById('jenis_kendaraan');
             var jenisButtons = Array.prototype.slice.call(document.querySelectorAll('.jenisBtn'));
             var areaHiddenEl = document.getElementById('area_parkir_id');
@@ -243,6 +246,8 @@
             var selectedAvailableEl = document.getElementById('selectedAvailable');
             var selectedActiveEl = document.getElementById('selectedActive');
             var submitBtnEl = document.getElementById('submitBtn');
+            var plateCheckTimer = null;
+            var plateIsParked = false;
 
             function buildAreasMap(list) {
                 var map = {};
@@ -288,6 +293,91 @@
 
                 if (selectedAvailableEl) selectedAvailableEl.textContent = selectedArea ? String(selectedArea.tersedia) : '-';
                 if (selectedActiveEl) selectedActiveEl.textContent = selectedArea ? String(selectedArea.aktif) : '-';
+            }
+
+            function normalizePlate(v) {
+                return String(v || '')
+                    .trim()
+                    .replace(/\s+/g, '')
+                    .toUpperCase();
+            }
+
+            function hidePlateInfo() {
+                if (!plateInfoEl) return;
+                plateInfoEl.className = 'mt-2 hidden rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700';
+                plateInfoEl.textContent = '';
+            }
+
+            function setPlateInfo(type, text) {
+                if (!plateInfoEl) return;
+                var base = 'mt-2 rounded-xl px-3 py-2 text-xs';
+                if (type === 'error') {
+                    plateInfoEl.className = base + ' border border-red-200 bg-red-50 text-red-800';
+                } else if (type === 'success') {
+                    plateInfoEl.className = base + ' border border-emerald-200 bg-emerald-50 text-emerald-800';
+                } else {
+                    plateInfoEl.className = base + ' border border-slate-200 bg-white text-slate-700';
+                }
+                plateInfoEl.textContent = text;
+            }
+
+            function setSubmitDisabled(disabled, text) {
+                if (!submitBtnEl) return;
+                if (disabled) {
+                    submitBtnEl.disabled = true;
+                    submitBtnEl.className = 'rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white opacity-70';
+                    if (text) submitBtnEl.textContent = text;
+                } else {
+                    submitBtnEl.disabled = false;
+                    submitBtnEl.className = 'rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800';
+                    submitBtnEl.textContent = 'Generate Karcis';
+                }
+            }
+
+            function schedulePlateCheck() {
+                if (!plateEl) return;
+                if (plateCheckTimer) clearTimeout(plateCheckTimer);
+
+                plateCheckTimer = setTimeout(function () {
+                    var plat = normalizePlate(plateEl.value);
+                    plateIsParked = false;
+                    setSubmitDisabled(false);
+
+                    if (plat.length < 3 || plat.length > 10) {
+                        hidePlateInfo();
+                        return;
+                    }
+
+                    fetch(checkPlateUrl + '?plat=' + encodeURIComponent(plat), { headers: { 'Accept': 'application/json' } })
+                        .then(function (r) { return r.json(); })
+                        .then(function (json) {
+                            if (!json || json.success !== true || !json.data) return;
+                            var d = json.data;
+                            if (d.parked) {
+                                plateIsParked = true;
+                                var msg = 'Kendaraan ' + (d.plat || plat) + ' sudah terparkir';
+                                if (d.active && d.active.area) msg += ' di area ' + d.active.area;
+                                if (d.active && d.active.barcode) msg += ' (Karcis ' + d.active.barcode + ')';
+                                msg += '.';
+                                setPlateInfo('error', msg);
+                                setSubmitDisabled(true, 'Plat sedang parkir');
+                                return;
+                            }
+
+                            if (d.is_terdaftar) {
+                                setPlateInfo('success', 'Plat ' + (d.plat || plat) + ' terdaftar di sistem.');
+                                return;
+                            }
+
+                            if (d.exists) {
+                                setPlateInfo('info', 'Plat ' + (d.plat || plat) + ' pernah tercatat di sistem.');
+                                return;
+                            }
+
+                            hidePlateInfo();
+                        })
+                        .catch(function () {});
+                }, 350);
             }
 
             function updateAreaButtonsUI(map) {
@@ -393,12 +483,14 @@
                 plateEl.focus();
                 plateEl.addEventListener('input', function () {
                     plateEl.value = String(plateEl.value || '').toUpperCase();
+                    schedulePlateCheck();
                 });
                 plateEl.addEventListener('blur', function () {
                     plateEl.value = String(plateEl.value || '')
                         .replace(/\s+/g, ' ')
                         .trim()
                         .toUpperCase();
+                    schedulePlateCheck();
                 });
             }
 
@@ -406,6 +498,9 @@
                 clearPlateEl.addEventListener('click', function () {
                     plateEl.value = '';
                     plateEl.focus();
+                    plateIsParked = false;
+                    setSubmitDisabled(false);
+                    hidePlateInfo();
                 });
             }
 
@@ -441,6 +536,12 @@
 
             if (formEl) {
                 formEl.addEventListener('submit', function (e) {
+                    if (plateIsParked) {
+                        if (plateEl) plateEl.focus();
+                        e.preventDefault();
+                        return;
+                    }
+
                     var areaId = getSelectedAreaId();
                     if (!areaId) {
                         if (areaClientErrorEl) {
@@ -462,6 +563,7 @@
             applyAreas(areas);
             refreshAvailability();
             setInterval(refreshAvailability, 5000);
+            schedulePlateCheck();
         })();
     </script>
 </x-layouts.petugas>

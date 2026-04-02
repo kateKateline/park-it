@@ -86,20 +86,44 @@
             </div>
         </div>
 
-        <div class="flex justify-center gap-3">
+        <div class="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <a href="{{ route('petugas.transaksi.keluar') }}"
+               class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50 inline-flex items-center gap-2">
+                <i class="fas fa-arrow-left text-[12px]"></i>
+                Kembali ke Keluar
+            </a>
             <button
+                type="button"
                 onclick="window.print()"
-                class="rounded-xl bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                class="rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700"
             >
                 <i class="fas fa-print mr-2"></i>
                 Cetak Struk
             </button>
+            <div class="text-xs text-slate-500">Tekan Enter untuk cetak</div>
         </div>
     </div>
 
+    <script>
+        (function () {
+            var focusEl = document.getElementById('struk-print');
+            if (focusEl) focusEl.setAttribute('tabindex', '-1');
+            if (focusEl) focusEl.focus();
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    window.print();
+                }
+            });
+        })();
+    </script>
+
     <style media="print">
+        @page { size: 80mm auto; margin: 0; }
+        html, body { width: 80mm; margin: 0; padding: 0; }
         body * { visibility: hidden; }
         #struk-print, #struk-print * { visibility: visible; }
-        #struk-print { position: absolute; left: 0; top: 0; width: 100%; }
+        #struk-print { position: absolute; left: 0; top: 0; width: 80mm; max-width: 80mm; border: 0; border-radius: 0; box-shadow: none; }
     </style>
 </x-layouts.petugas>
