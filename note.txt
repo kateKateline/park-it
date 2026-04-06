@@ -26,3 +26,10 @@ List of devices attached
 C:\adb>adb forward tcp:8080 tcp:8080
 
 C:\adb>
+
+
+composer install
+npm install
+
+cp .env.example .env
+php artisan key:generate    
