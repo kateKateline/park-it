@@ -33,24 +33,24 @@
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Masuk hari ini</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
                         <i class="fas fa-arrow-right-to-bracket text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900">{{ $counts['hari_ini'] ?? 0 }}</div>
-                <div class="mt-2 text-xs text-amber-700/90">Total transaksi masuk</div>
+                <div class="mt-2 text-xs text-gray-500">Total transaksi masuk</div>
             </div>
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Sedang parkir</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
                         <i class="fas fa-car-side text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900">{{ $counts['sedang_parkir'] ?? 0 }}</div>
-                <div class="mt-2 flex items-center gap-2 text-xs text-amber-700/90">
-                    <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800 ring-1 ring-amber-200/80">
-                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                <div class="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                         Live
                     </span>
                     <span>aktif sekarang</span>
@@ -59,24 +59,24 @@
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Selesai hari ini</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-slate-700">
                         <i class="fas fa-check text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900">{{ $counts['selesai'] ?? 0 }}</div>
-                <div class="mt-2 text-xs text-emerald-700/90">Transaksi selesai</div>
+                <div class="mt-2 text-xs text-gray-500">Transaksi selesai</div>
             </div>
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Pendapatan hari ini</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
                         <i class="fas fa-receipt text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">
                     Rp {{ number_format((int) ($kpi['pendapatan_hari_ini'] ?? 0), 0, ',', '.') }}
                 </div>
-                <div class="mt-2 text-xs text-emerald-700/90">
+                <div class="mt-2 text-xs text-gray-500">
                     Rata-rata durasi: {{ (int) ($kpi['rata_durasi_hari_ini'] ?? 0) }} menit
                 </div>
             </div>
@@ -101,7 +101,7 @@
                                 <div class="text-xs text-gray-600">{{ $aktif }}/{{ $cap }}</div>
                             </div>
                             <div class="mt-2 h-2 w-full rounded-full bg-gray-100">
-                                <div class="h-2 rounded-full bg-blue-600" style="width: {{ $pct }}%"></div>
+                                <div class="h-2 rounded-full bg-gradient-to-r from-emerald-500 to-blue-600" style="width: {{ $pct }}%"></div>
                             </div>
                         </div>
                     @empty
