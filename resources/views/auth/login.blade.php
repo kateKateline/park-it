@@ -1,10 +1,6 @@
 <x-layouts.guest :title="'Login - Park-It'">
     <div class="relative min-h-screen overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-slate-50 via-slate-50 to-white"></div>
-        <div class="pointer-events-none absolute inset-0">
-            <div class="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl"></div>
-            <div class="absolute top-24 -right-24 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl"></div>
-        </div>
+        <div class="absolute inset-0 bg-slate-50"></div>
 
         <div class="relative flex min-h-screen items-center justify-center p-6">
             <div class="w-full max-w-md">
