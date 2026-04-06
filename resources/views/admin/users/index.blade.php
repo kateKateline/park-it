@@ -11,14 +11,11 @@
             </a>
         </div>
 
-        <!-- Search -->
-        <form method="GET" action="{{ route('admin.users.index') }}" class="flex gap-2">
-            <input type="text" name="q" value="{{ $q }}" placeholder="Cari nama atau username..."
-                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
-            <button type="submit" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
+        @include('admin.partials.index-search', [
+            'action' => route('admin.users.index'),
+            'placeholder' => 'Cari nama, username, atau role...',
+            'q' => $q,
+        ])
 
         <!-- Table -->
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">

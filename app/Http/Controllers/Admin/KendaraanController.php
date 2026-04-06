@@ -16,13 +16,13 @@ class KendaraanController extends Controller
         $q = (string) $request->query('q', '');
 
         $items = Kendaraan::query()
-            ->when($q !== '', fn ($query) => $query
-                ->where('plat_nomor', 'like', "%{$q}%")
-                ->orWhere('jenis_kendaraan', 'like', "%{$q}%")
-                ->orWhere('warna', 'like', "%{$q}%")
-                ->orWhere('merk', 'like', "%{$q}%")
-                ->orWhere('pemilik', 'like', "%{$q}%")
-            )
+            ->when($q !== '', fn ($query) => $query->where(function ($sub) use ($q) {
+                $sub->where('plat_nomor', 'like', "%{$q}%")
+                    ->orWhere('jenis_kendaraan', 'like', "%{$q}%")
+                    ->orWhere('warna', 'like', "%{$q}%")
+                    ->orWhere('merk', 'like', "%{$q}%")
+                    ->orWhere('pemilik', 'like', "%{$q}%");
+            }))
             ->orderBy('id', 'desc')
             ->paginate(10)
             ->withQueryString();

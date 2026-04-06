@@ -16,6 +16,7 @@ use App\Http\Controllers\Petugas\TransaksiController as PetugasTransaksiControll
 use App\Http\Controllers\Petugas\TransaksiKeluarController;
 use App\Http\Controllers\Petugas\TransaksiMasukController;
 use App\Http\Controllers\Admin\CameraSourceController as AdminCameraSourceController;
+use App\Http\Controllers\Admin\AdminTransaksiController;
 use App\Http\Controllers\Petugas\CameraApiController;
 
 // Landing page = Login
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         Route::resource('camera-sources', AdminCameraSourceController::class)->except(['show']);
 
         Route::get('log-aktivitas', [AdminLogAktivitasController::class, 'index'])->name('log-aktivitas.index');
+        Route::get('transaksi', [AdminTransaksiController::class, 'index'])->name('transaksi.index');
     });
 
 

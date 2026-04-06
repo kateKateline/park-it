@@ -11,6 +11,12 @@
             </a>
         </div>
 
+        @include('admin.partials.index-search', [
+            'action' => route('admin.tarif.index'),
+            'placeholder' => 'Cari jenis kendaraan...',
+            'q' => $q,
+        ])
+
         <!-- Table -->
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">

@@ -11,6 +11,12 @@
             </a>
         </div>
 
+        @include('admin.partials.index-search', [
+            'action' => route('admin.camera-sources.index'),
+            'placeholder' => 'Cari nama kamera atau URL stream...',
+            'q' => $q,
+        ])
+
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">

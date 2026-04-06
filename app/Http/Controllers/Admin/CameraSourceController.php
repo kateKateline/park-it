@@ -11,11 +11,23 @@ class CameraSourceController extends Controller
 {
     public function index(Request $request)
     {
-        $items = CameraSource::orderBy('id', 'desc')->paginate(10);
+        $q = trim((string) $request->query('q', ''));
+
+        $items = CameraSource::query()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('name', 'like', "%{$q}%")
+                        ->orWhere('stream_url', 'like', "%{$q}%");
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.camera-sources.index', [
             'user' => $request->user(),
             'items' => $items,
+            'q' => $q,
         ]);
     }
 

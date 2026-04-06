@@ -147,10 +147,15 @@
         </div>
 
         <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-            <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
                 <div>
                     <div class="text-sm font-semibold text-gray-900">Transaksi terbaru</div>
-                    <div class="mt-1 text-xs text-gray-500">Update terakhir</div>
+                    <div class="mt-1 text-xs text-gray-500">
+                        Status:
+                        <span class="font-medium text-amber-700">masuk</span>
+                        ·
+                        <span class="font-medium text-emerald-700">selesai</span>
+                    </div>
                 </div>
                 <a href="{{ route('petugas.transaksi.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 transition inline-flex items-center gap-2">
                     Lihat semua
@@ -179,13 +184,13 @@
                                 <td class="px-6 py-4 text-gray-700">{{ $t->areaParkir?->nama_area ?? '-' }}</td>
                                 <td class="px-6 py-4">
                                     @if ($t->status === 'masuk')
-                                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                                        <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800 ring-1 ring-amber-200/80">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
                                             Masuk
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-slate-500"></span>
+                                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-200/80">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                                             Selesai
                                         </span>
                                     @endif

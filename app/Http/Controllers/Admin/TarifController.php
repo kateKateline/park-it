@@ -11,11 +11,18 @@ class TarifController extends Controller
 {
     public function index(Request $request)
     {
-        $tarif = Tarif::orderBy('id', 'desc')->paginate(10);
+        $q = trim((string) $request->query('q', ''));
+
+        $tarif = Tarif::query()
+            ->when($q !== '', fn ($query) => $query->where('jenis_kendaraan', 'like', "%{$q}%"))
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.tarif.index', [
             'user' => $request->user(),
             'tarif' => $tarif,
+            'q' => $q,
         ]);
     }
 

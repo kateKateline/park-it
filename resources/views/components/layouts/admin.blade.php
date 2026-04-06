@@ -59,6 +59,13 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ route('admin.transaksi.index') }}"
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'admin.transaksi.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                                <i class="fas fa-list-ul w-5 text-center flex-shrink-0"></i>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Transaksi</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('admin.users.index') }}"
                                class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(str_starts_with(Route::currentRouteName(), 'admin.users')) bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
                                 <i class="fas fa-users w-5 text-center flex-shrink-0"></i>

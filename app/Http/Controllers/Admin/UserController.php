@@ -16,11 +16,11 @@ class UserController extends Controller
         $q = (string) $request->query('q', '');
 
         $users = User::query()
-            ->when($q !== '', fn ($query) => $query
-                ->where('name', 'like', "%{$q}%")
-                ->orWhere('username', 'like', "%{$q}%")
-                ->orWhere('role', 'like', "%{$q}%")
-            )
+            ->when($q !== '', fn ($query) => $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('username', 'like', "%{$q}%")
+                    ->orWhere('role', 'like', "%{$q}%");
+            }))
             ->orderBy('id', 'desc')
             ->paginate(10)
             ->withQueryString();

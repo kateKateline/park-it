@@ -11,11 +11,23 @@ class AreaParkirController extends Controller
 {
     public function index(Request $request)
     {
-        $items = AreaParkir::orderBy('id', 'desc')->paginate(10);
+        $q = trim((string) $request->query('q', ''));
+
+        $items = AreaParkir::query()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('nama_area', 'like', "%{$q}%")
+                        ->orWhere('keterangan', 'like', "%{$q}%");
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.area-parkir.index', [
             'user' => $request->user(),
             'items' => $items,
+            'q' => $q,
         ]);
     }
 

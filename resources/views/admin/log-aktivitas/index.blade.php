@@ -3,8 +3,14 @@
         <!-- Header -->
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Log Aktivitas</h1>
-            <p class="text-gray-600 text-sm mt-1\">Total: {{ $items->total() }} aktivitas</p>
+            <p class="text-gray-600 text-sm mt-1">Total: {{ $items->total() }} aktivitas</p>
         </div>
+
+        @include('admin.partials.index-search', [
+            'action' => route('admin.log-aktivitas.index'),
+            'placeholder' => 'Cari teks aktivitas, nama atau username user...',
+            'q' => $q,
+        ])
 
         <!-- Table -->
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">

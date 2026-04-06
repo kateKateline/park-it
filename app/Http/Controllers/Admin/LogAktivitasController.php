@@ -10,13 +10,27 @@ class LogAktivitasController extends Controller
 {
     public function index(Request $request)
     {
-        $items = LogAktivitas::with('user')
+        $q = trim((string) $request->query('q', ''));
+
+        $items = LogAktivitas::query()
+            ->with('user')
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('aktivitas', 'like', "%{$q}%")
+                        ->orWhereHas('user', function ($uq) use ($q) {
+                            $uq->where('name', 'like', "%{$q}%")
+                                ->orWhere('username', 'like', "%{$q}%");
+                        });
+                });
+            })
             ->orderBy('id', 'desc')
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.log-aktivitas.index', [
             'user' => $request->user(),
             'items' => $items,
+            'q' => $q,
         ]);
     }
 }
