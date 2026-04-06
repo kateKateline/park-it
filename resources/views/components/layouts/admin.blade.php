@@ -36,10 +36,7 @@
                 
                 <!-- Brand + Toggle Section -->
                 <div class="h-16 border-b border-gray-200 px-4 flex items-center justify-between flex-shrink-0 gap-2" data-header="brand-toggle">
-                    <div data-brand="full" class="transition-opacity duration-200">
-                        <h2 class="text-sm font-bold text-gray-900 whitespace-nowrap">PARK-IT</h2>
-                        <p class="text-[10px] text-gray-500 whitespace-nowrap">Parking System</p>
-                    </div>
+                    <x-layouts.sidebar-brand role="Admin" />
                     <button type="button" 
                             id="toggle-sidebar-btn" 
                             class="flex items-center justify-center w-10 h-10 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"

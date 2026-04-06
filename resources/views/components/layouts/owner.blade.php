@@ -25,10 +25,7 @@
                style="width: 256px; overflow: hidden;">
             <div class="h-full flex flex-col">
                 <div class="h-16 border-b border-gray-200 px-4 flex items-center justify-between flex-shrink-0 gap-2" data-header="brand-toggle">
-                    <div data-brand="full" class="transition-opacity duration-200">
-                        <h2 class="text-sm font-bold text-gray-900 whitespace-nowrap">PARK-IT</h2>
-                        <p class="text-[10px] text-gray-500 whitespace-nowrap">Owner Panel</p>
-                    </div>
+                    <x-layouts.sidebar-brand role="Owner" />
                     <button type="button"
                             id="toggle-sidebar-btn"
                             class="flex items-center justify-center w-10 h-10 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
@@ -60,7 +57,7 @@
                 <div class="border-t border-gray-200 p-3 shrink-0">
                     <div data-profile="card" class="mb-3 p-2.5 bg-gray-50 rounded-lg transition-all duration-200">
                         <div class="flex items-center gap-2.5 min-w-0" data-profile="container">
-                            <div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">
+                            <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">
                                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                             </div>
                             <div data-profile="info" class="flex-1 min-w-0 overflow-hidden transition-opacity duration-200">
