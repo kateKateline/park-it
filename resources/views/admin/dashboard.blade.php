@@ -28,12 +28,12 @@
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Transaksi hari ini</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
                         <i class="fas fa-arrow-right-to-bracket text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900">{{ $kpi['transaksi_hari_ini'] ?? 0 }}</div>
-                <div class="mt-2 text-xs text-amber-700/90">Masuk hari ini</div>
+                <div class="mt-2 text-xs text-blue-700/90">Masuk hari ini</div>
             </div>
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">

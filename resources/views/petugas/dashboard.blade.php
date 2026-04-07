@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900">{{ $counts['hari_ini'] ?? 0 }}</div>
-                <div class="mt-2 text-xs text-gray-500">Total transaksi masuk</div>
+                <div class="mt-2 text-xs text-blue-700/90">Total transaksi masuk</div>
             </div>
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
@@ -69,14 +69,14 @@
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Pendapatan hari ini</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
                         <i class="fas fa-receipt text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">
                     Rp {{ number_format((int) ($kpi['pendapatan_hari_ini'] ?? 0), 0, ',', '.') }}
                 </div>
-                <div class="mt-2 text-xs text-gray-500">
+                <div class="mt-2 text-xs text-emerald-700/90">
                     Rata-rata durasi: {{ (int) ($kpi['rata_durasi_hari_ini'] ?? 0) }} menit
                 </div>
             </div>

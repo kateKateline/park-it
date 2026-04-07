@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="mt-3 text-3xl font-semibold tracking-tight text-slate-900">{{ $metrics['transaksi_hari_ini'] }}</div>
-                <div class="mt-2 text-xs text-slate-500">Transaksi selesai</div>
+                <div class="mt-2 text-xs text-blue-700/90">Transaksi selesai</div>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="mt-3 text-2xl font-semibold tracking-tight text-slate-900">Rp {{ number_format($metrics['pendapatan_hari_ini'], 0, ',', '.') }}</div>
-                <div class="mt-2 text-xs text-slate-500">Total pendapatan</div>
+                <div class="mt-2 text-xs text-emerald-700/90">Total pendapatan</div>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
