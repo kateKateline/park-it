@@ -17,6 +17,61 @@ use Illuminate\Support\Str;
 
 class TransaksiMasukController extends Controller
 {
+    private function tryFetchSingleJpegFromUrl(string $url): array
+    {
+        $startedAt = microtime(true);
+        $maxBytes = 6 * 1024 * 1024; // 6MB
+        $buffer = '';
+
+        /** @var \Illuminate\Http\Client\Response $response */
+        $response = Http::timeout(20)
+            ->accept('image/*')
+            ->withOptions(['stream' => true])
+            ->get($url);
+
+        if (! $response->successful()) {
+            return ['ok' => false, 'error' => 'HTTP ' . $response->status(), 'bytes' => 0];
+        }
+
+        // If it's already an image response (snapshot endpoint), body() should be safe/finite.
+        $contentType = strtolower((string) ($response->header('Content-Type') ?? ''));
+        if (str_contains($contentType, 'image/')) {
+            $bin = $response->body();
+            if (is_string($bin) && $bin !== '') {
+                return ['ok' => true, 'binary' => $bin, 'bytes' => strlen($bin), 'ms' => (int) round((microtime(true) - $startedAt) * 1000)];
+            }
+        }
+
+        // For MJPEG streams, read until first JPEG frame found.
+        $psr = $response->toPsrResponse();
+        $stream = $psr->getBody();
+
+        while (! $stream->eof() && strlen($buffer) < $maxBytes) {
+            // keep total time bounded so we don't hang on slow streams
+            if ((microtime(true) - $startedAt) > 8.0) break;
+
+            $chunk = $stream->read(8192);
+            if ($chunk === '' || $chunk === null) {
+                usleep(15_000);
+                continue;
+            }
+
+            $buffer .= $chunk;
+
+            $start = strpos($buffer, "\xFF\xD8"); // SOI
+            if ($start === false) continue;
+            $end = strpos($buffer, "\xFF\xD9", $start); // EOI
+            if ($end === false) continue;
+
+            $jpeg = substr($buffer, $start, ($end - $start) + 2);
+            if (is_string($jpeg) && $jpeg !== '') {
+                return ['ok' => true, 'binary' => $jpeg, 'bytes' => strlen($jpeg), 'ms' => (int) round((microtime(true) - $startedAt) * 1000)];
+            }
+        }
+
+        return ['ok' => false, 'error' => 'no_jpeg_frame', 'bytes' => strlen($buffer), 'ms' => (int) round((microtime(true) - $startedAt) * 1000)];
+    }
+
     public function create(Request $request)
     {
         $areas = AreaParkir::query()
@@ -141,20 +196,29 @@ class TransaksiMasukController extends Controller
         }
 
         try {
-            /** @var \Illuminate\Http\Client\Response $snapshotResp */
-            $snapshotResp = Http::timeout(12)->get($streamUrl);
-            if (! $snapshotResp->successful()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal mengambil gambar dari IP webcam (HTTP ' . $snapshotResp->status() . ').',
-                ], 502);
+            $candidates = [$streamUrl];
+            if (preg_match('~(/video)(\\?.*)?$~i', $streamUrl)) {
+                $candidates[] = preg_replace('~(/video)(\\?.*)?$~i', '/shot.jpg', $streamUrl);
+                $candidates[] = preg_replace('~(/video)(\\?.*)?$~i', '/photo.jpg', $streamUrl);
             }
 
-            $imageBinary = $snapshotResp->body();
+            $imageBinary = null;
+            $fetchMeta = null;
+            foreach (array_values(array_unique($candidates)) as $u) {
+                $attempt = $this->tryFetchSingleJpegFromUrl($u);
+                if (($attempt['ok'] ?? false) === true) {
+                    $imageBinary = $attempt['binary'];
+                    $fetchMeta = ['url' => $u, 'bytes' => $attempt['bytes'] ?? null, 'ms' => $attempt['ms'] ?? null];
+                    break;
+                }
+                $fetchMeta = ['url' => $u, 'error' => $attempt['error'] ?? 'failed', 'bytes' => $attempt['bytes'] ?? null, 'ms' => $attempt['ms'] ?? null];
+            }
+
             if (! is_string($imageBinary) || $imageBinary === '') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gambar dari kamera kosong.',
+                    'message' => 'Gagal mengambil 1 frame JPEG dari kamera. Jika URL mengarah ke stream (contoh: /video), pastikan kamera mendukung snapshot (/shot.jpg).',
+                    'debug' => $fetchMeta,
                 ], 502);
             }
 
@@ -162,10 +226,6 @@ class TransaksiMasukController extends Controller
             $analyzeUrl = $baseUrl . '/analyze';
 
             $http = Http::timeout(120)->acceptJson();
-            $apiKey = (string) config('services.python_yolo.api_key', '');
-            if ($apiKey !== '') {
-                $http = $http->withHeaders(['X-API-Key' => $apiKey]);
-            }
 
             /** @var \Illuminate\Http\Client\Response $analyzeResp */
             $analyzeResp = $http->attach(
@@ -200,6 +260,7 @@ class TransaksiMasukController extends Controller
                     'id' => $camera->id,
                     'name' => $camera->name,
                 ],
+                'snapshot' => $fetchMeta,
                 'data' => $result,
                 'autofill' => $detectionForCache,
             ]);

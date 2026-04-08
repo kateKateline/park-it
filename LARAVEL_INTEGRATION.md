@@ -1,6 +1,12 @@
 # Integrasi Laravel ↔ YOLO Service (upload gambar → analisis → balikan Laravel)
 
-Arsitektur utama: **Laravel** mengambil foto (tombol / kamera / upload file), mengirim gambar ke **Python (Flask)** lewat **POST multipart**, menerima **JSON hasil deteksi** dalam response yang sama. Opsional: Python **juga** mem-**POST** callback ke endpoint Laravel (server-to-server) jika diaktifkan.
+Arsitektur utama: **Laravel** mengambil foto (tombol / kamera / upload file), mengirim gambar ke **Python (Flask)** lewat **POST multipart**, menerima **JSON hasil deteksi** dalam response yang sama. Hasil sekarang mencakup:
+
+- deteksi kendaraan (`detections`)
+- plat nomor (`plate_number`, opsional)
+- **QR code** (`qr_codes` + `qr_texts`)
+
+Opsional: Python **juga** mem-**POST** callback ke endpoint Laravel (server-to-server) jika diaktifkan.
 
 Alur lama **IP Webcam di sisi Python** tetap didukung lewat env `ENABLE_WEBCAM=1` (lihat bagian akhir).
 
@@ -27,7 +33,7 @@ Laravel mengirim **multipart/form-data** dengan field file bernama **`image`** (
 | Method | `POST` |
 | URL    | `http://127.0.0.1:5000/analyze` |
 | Body   | `multipart/form-data`, field **`image`** = file gambar |
-| Header opsional | `X-API-Key: <secret>` — hanya jika di Python di-set env `YOLO_SERVICE_API_KEY` |
+| Headers | (tidak perlu API key) |
 
 ### Response 200 (sukses) — contoh ada kendaraan
 
@@ -46,6 +52,13 @@ Laravel mengirim **multipart/form-data** dengan field file bernama **`image`** (
       "bbox": [100, 200, 400, 500]
     }
   ],
+  "qr_codes": [
+    {
+      "text": "PARKING-A1-2026",
+      "points": [[12, 34], [120, 30], [122, 140], [14, 142]]
+    }
+  ],
+  "qr_texts": ["PARKING-A1-2026"],
   "plate_number": "B1234XYZ",
   "vehicle_type": "car",
   "color": "hitam",
@@ -54,6 +67,11 @@ Laravel mengirim **multipart/form-data** dengan field file bernama **`image`** (
 ```
 
 Field **`vehicle_type`**, **`color`**, **`confidence`** di root menyalin **kendaraan pertama** (kompatibel dengan endpoint Laravel lama). **`detections`** berisi semua kendaraan terdeteksi pada gambar.
+
+Field QR:
+
+- `qr_codes`: array detail QR (`text` + `points` sudut QR jika tersedia).
+- `qr_texts`: array string praktis untuk dipakai langsung di form/validasi Laravel.
 
 ### Response 200 — tidak ada kendaraan
 
@@ -64,6 +82,8 @@ Field **`vehicle_type`**, **`color`**, **`confidence`** di root menyalin **kenda
   "updated_at": "2026-04-08T14:30:00.123456",
   "photo": null,
   "detections": [],
+  "qr_codes": [],
+  "qr_texts": [],
   "plate_number": null,
   "vehicle_type": null,
   "color": null,
@@ -80,7 +100,6 @@ Jika opsi hapus foto tanpa kendaraan aktif di Python, `photo` akan `null`.
 |------|-------------------|------------|
 | 400  | `missing_file`    | Field `image` tidak ada |
 | 400  | `invalid_image`   | Bukan gambar yang valid |
-| 401  | `unauthorized`    | API key salah / tidak ada |
 | 500  | `detection_failed`| Gagal inferensi (lihat `message`) |
 
 ---
@@ -124,11 +143,15 @@ Digunakan jika:
   "color": "hitam",
   "confidence": 0.87,
   "timestamp": "2026-04-08 14:00:00",
-  "plate_number": "B1234XYZ"
+  "plate_number": "B1234XYZ",
+  "qr_codes": [
+    { "text": "PARKING-A1-2026", "points": [[12, 34], [120, 30], [122, 140], [14, 142]] }
+  ],
+  "qr_texts": ["PARKING-A1-2026"]
 }
 ```
 
-**Body (callback dari `/analyze` — lengkap):** bisa menyertakan `success`, `detections`, `photo`, `source`, `updated_at`, dll. seperti response `/analyze`. Tim Laravel disarankan menerima **JSON fleksibel** dan menyimpan `detections` array jika ada.
+**Body (callback dari `/analyze` — lengkap):** bisa menyertakan `success`, `detections`, `photo`, `source`, `updated_at`, `plate_number`, `qr_codes`, `qr_texts`, dll. seperti response `/analyze`. Tim Laravel disarankan menerima **JSON fleksibel** dan menyimpan `detections` + data QR.
 
 ---
 
@@ -154,10 +177,7 @@ public function analyzeFrame(Request $request)
 
     $path = $request->file('image')->getRealPath();
 
-    $http = Http::timeout(120)
-        ->withHeaders([
-            // 'X-API-Key' => config('services.yolo.api_key'), // jika dipakai
-        ]);
+    $http = Http::timeout(120);
 
     $response = $http->attach(
         'image',
@@ -172,7 +192,7 @@ public function analyzeFrame(Request $request)
     $data = $response->json();
 
     // Simpan ke DB / tampilkan di UI
-    // $data['detections'], $data['plate_number'], $data['vehicle_type'], ...
+    // $data['detections'], $data['plate_number'], $data['qr_codes'], $data['qr_texts'], ...
 
     return response()->json($data);
 }
@@ -199,7 +219,6 @@ Atribut `capture` membantu perangkat mobile membuka kamera; untuk desktop tetap 
 | `LARAVEL_URL` | URL endpoint Laravel untuk callback (default `http://localhost:8000/api/detection`) |
 | `LARAVEL_CALLBACK_AFTER_ANALYZE` | `true` / `false` — POST hasil ke `LARAVEL_URL` setelah `/analyze` |
 | `PLATERECOGNIZER_TOKEN` | Token PlateRecognizer (opsional); tanpa token, plat tidak dibaca |
-| `YOLO_SERVICE_API_KEY` | Jika di-set, request `/analyze` wajib header `X-API-Key` |
 | `CORS_ALLOW_ORIGIN` | Default `*` (untuk browser yang memanggil langsung) |
 | `PORT` | Port Flask (default `5000`) |
 | `ENABLE_WEBCAM` | `1` = aktifkan loop IP Webcam di Python (default mati) |
@@ -228,7 +247,7 @@ Model **yolov8m.pt**: jika belum ada di folder project, **Ultralytics akan mengu
 Implementasi:
 - Form upload foto (atau capture kamera) → POST multipart ke backend Laravel.
 - Backend Laravel forward file ke Python POST http://127.0.0.1:5000/analyze dengan field "image".
-- Baca JSON response: success, detections[], vehicle_type, color, confidence, plate_number, photo.
+- Baca JSON response: success, detections[], vehicle_type, color, confidence, plate_number, qr_codes[], qr_texts[], photo.
 - Simpan ke database / tampilkan di UI.
 - Opsional: sediakan POST /api/detection yang menerima JSON callback jika Python di-set LARAVEL_CALLBACK_AFTER_ANALYZE=true.
 ```
@@ -239,7 +258,7 @@ Implementasi:
 
 1. User klik tombol di Laravel → foto di-upload ke Laravel.
 2. Laravel memanggil **POST /analyze** ke Python dengan field **`image`**.
-3. Python mengembalikan **JSON** dalam response → Laravel menyimpan/menampilkan.
+3. Python mengembalikan **JSON** (kendaraan + plat + QR code) dalam response → Laravel menyimpan/menampilkan.
 4. (Opsional) Python mem-POST ulang ke Laravel jika `LARAVEL_CALLBACK_AFTER_ANALYZE=true`.
 
 Alur lama: Python polling **IP Webcam** tetap bisa dengan `ENABLE_WEBCAM=1` dan dokumentasi env di atas.
