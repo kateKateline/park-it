@@ -68,6 +68,25 @@
                             <div class="text-sm font-semibold text-slate-900">Data Kendaraan</div>
                         </div>
 
+                        <div class="mt-5 rounded-2xl border border-blue-200 bg-blue-50 p-4">
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                    <div class="text-sm font-semibold text-blue-900">Ambil gambar dari IP Webcam</div>
+                                    <div class="mt-1 text-xs text-blue-900/80">Deteksi dari YOLO akan autofill plat, jenis kendaraan, dan warna.</div>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <select id="cameraSelect" class="rounded-xl border border-blue-200 bg-white px-3 py-2 text-xs font-medium text-slate-700">
+                                        <option value="">Pilih kamera aktif</option>
+                                    </select>
+                                    <button type="button" id="btnCaptureAnalyze" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition">
+                                        <i class="fas fa-camera" id="btnCaptureAnalyzeIcon"></i>
+                                        <span id="btnCaptureAnalyzeText">Ambil & Analisis</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="captureAnalyzeResult" class="mt-3 hidden rounded-xl border px-3 py-2 text-xs"></div>
+                        </div>
+
                         <div class="mt-5">
                             <label for="plat_nomor" class="text-xs font-semibold uppercase tracking-wide text-slate-600">Plat Nomor</label>
                             <div class="mt-2 flex items-stretch gap-2">
@@ -232,10 +251,15 @@
         (function () {
             var availabilityUrl = @json(route('petugas.transaksi.masuk.availability'));
             var checkPlateUrl = @json(route('petugas.transaksi.masuk.check-plate'));
+            var captureAnalyzeUrl = @json(route('petugas.transaksi.masuk.capture-analyze'));
+            var cameraActiveUrl = @json(route('petugas.cameras.active'));
             var areas = @json($areasInitial);
+            var csrfToken = @json(csrf_token());
+            var vehicleTypeMap = { car: 'mobil', motorcycle: 'motor', truck: 'mobil', bus: 'mobil' };
 
             var formEl = document.getElementById('masukForm');
             var plateEl = document.getElementById('plat_nomor');
+            var warnaEl = document.getElementById('warna');
             var clearPlateEl = document.getElementById('clearPlate');
             var plateInfoEl = document.getElementById('plateRealtimeInfo');
             var jenisHiddenEl = document.getElementById('jenis_kendaraan');
@@ -246,6 +270,11 @@
             var selectedAvailableEl = document.getElementById('selectedAvailable');
             var selectedActiveEl = document.getElementById('selectedActive');
             var submitBtnEl = document.getElementById('submitBtn');
+            var cameraSelectEl = document.getElementById('cameraSelect');
+            var btnCaptureAnalyzeEl = document.getElementById('btnCaptureAnalyze');
+            var btnCaptureAnalyzeIconEl = document.getElementById('btnCaptureAnalyzeIcon');
+            var btnCaptureAnalyzeTextEl = document.getElementById('btnCaptureAnalyzeText');
+            var captureAnalyzeResultEl = document.getElementById('captureAnalyzeResult');
             var plateCheckTimer = null;
             var plateIsParked = false;
 
@@ -332,6 +361,75 @@
                     submitBtnEl.className = 'rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800';
                     submitBtnEl.textContent = 'Generate Karcis';
                 }
+            }
+
+            function setCaptureState(loading) {
+                if (!btnCaptureAnalyzeEl) return;
+                btnCaptureAnalyzeEl.disabled = !!loading;
+                if (loading) {
+                    btnCaptureAnalyzeEl.className = 'inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white opacity-70';
+                    if (btnCaptureAnalyzeIconEl) btnCaptureAnalyzeIconEl.className = 'fas fa-spinner fa-spin';
+                    if (btnCaptureAnalyzeTextEl) btnCaptureAnalyzeTextEl.textContent = 'Menganalisis...';
+                    return;
+                }
+
+                btnCaptureAnalyzeEl.className = 'inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition';
+                if (btnCaptureAnalyzeIconEl) btnCaptureAnalyzeIconEl.className = 'fas fa-camera';
+                if (btnCaptureAnalyzeTextEl) btnCaptureAnalyzeTextEl.textContent = 'Ambil & Analisis';
+            }
+
+            function setCaptureResult(type, text) {
+                if (!captureAnalyzeResultEl) return;
+                var base = 'mt-3 rounded-xl border px-3 py-2 text-xs';
+                if (type === 'success') {
+                    captureAnalyzeResultEl.className = base + ' border-emerald-200 bg-emerald-50 text-emerald-800';
+                } else if (type === 'error') {
+                    captureAnalyzeResultEl.className = base + ' border-red-200 bg-red-50 text-red-800';
+                } else {
+                    captureAnalyzeResultEl.className = base + ' border-blue-200 bg-blue-50 text-blue-900';
+                }
+                captureAnalyzeResultEl.textContent = text;
+            }
+
+            function fillFromDetection(payload) {
+                if (!payload) return;
+
+                var plate = payload.plate_number ? normalizePlate(payload.plate_number) : '';
+                var jenis = payload.vehicle_type ? (vehicleTypeMap[String(payload.vehicle_type)] || '') : '';
+                var warna = payload.color ? String(payload.color).trim() : '';
+
+                if (plateEl && plate) {
+                    plateEl.value = plate;
+                    schedulePlateCheck();
+                }
+                if (jenisHiddenEl && jenis) {
+                    jenisHiddenEl.value = jenis;
+                    updateJenisUI();
+                }
+                if (warnaEl && warna) {
+                    warnaEl.value = warna;
+                }
+            }
+
+            function loadActiveCameras() {
+                if (!cameraSelectEl) return;
+                fetch(cameraActiveUrl, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+                    .then(function (r) { return r.json(); })
+                    .then(function (list) {
+                        if (!Array.isArray(list)) return;
+                        cameraSelectEl.innerHTML = '<option value="">Pilih kamera aktif</option>';
+                        for (var i = 0; i < list.length; i++) {
+                            var c = list[i];
+                            var opt = document.createElement('option');
+                            opt.value = String(c.id);
+                            opt.textContent = c.name || ('Kamera #' + c.id);
+                            cameraSelectEl.appendChild(opt);
+                        }
+                        if (list.length > 0) {
+                            cameraSelectEl.value = String(list[0].id);
+                        }
+                    })
+                    .catch(function () {});
             }
 
             function schedulePlateCheck() {
@@ -560,7 +658,57 @@
                 });
             }
 
+            if (btnCaptureAnalyzeEl) {
+                btnCaptureAnalyzeEl.addEventListener('click', function () {
+                    setCaptureState(true);
+                    setCaptureResult('info', 'Mengambil gambar dari IP webcam...');
+
+                    var payload = {};
+                    if (cameraSelectEl && cameraSelectEl.value) {
+                        payload.camera_id = Number(cameraSelectEl.value);
+                    }
+
+                    fetch(captureAnalyzeUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(payload),
+                    })
+                    .then(function (r) {
+                        return r.json().then(function (json) {
+                            return { ok: r.ok, status: r.status, json: json };
+                        }).catch(function () {
+                            return { ok: r.ok, status: r.status, json: {} };
+                        });
+                    })
+                    .then(function (res) {
+                        if (!res.ok || !res.json || res.json.success !== true) {
+                            setCaptureResult('error', (res.json && res.json.message) ? res.json.message : ('Gagal analisis (HTTP ' + res.status + ').'));
+                            return;
+                        }
+
+                        var auto = res.json.autofill || res.json.data || {};
+                        fillFromDetection(auto);
+                        var vt = auto.vehicle_type ? String(auto.vehicle_type) : '-';
+                        var clr = auto.color ? String(auto.color) : '-';
+                        var plt = auto.plate_number ? String(auto.plate_number) : '-';
+                        setCaptureResult('success', 'Autofill berhasil. Plat: ' + plt + ', Jenis: ' + vt + ', Warna: ' + clr + '.');
+                    })
+                    .catch(function (e) {
+                        setCaptureResult('error', 'Terjadi kesalahan: ' + (e && e.message ? e.message : 'unknown'));
+                    })
+                    .finally(function () {
+                        setCaptureState(false);
+                    });
+                });
+            }
+
             applyAreas(areas);
+            loadActiveCameras();
             refreshAvailability();
             setInterval(refreshAvailability, 5000);
             schedulePlateCheck();

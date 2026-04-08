@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Petugas;
 
 use App\Http\Controllers\Controller;
 use App\Models\AreaParkir;
+use App\Models\CameraSource;
 use App\Models\Kendaraan;
 use App\Models\LogAktivitas;
 use App\Models\Tarif;
 use App\Models\Transaksi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class TransaksiMasukController extends Controller
 {
@@ -109,6 +111,104 @@ class TransaksiMasukController extends Controller
                 ] : null,
             ],
         ]);
+    }
+
+    public function captureAndAnalyze(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'camera_id' => ['nullable', 'integer', 'exists:camera_sources,id'],
+        ]);
+
+        $camera = CameraSource::query()
+            ->where('is_active', true)
+            ->when(isset($validated['camera_id']), fn ($q) => $q->where('id', (int) $validated['camera_id']))
+            ->orderBy('id')
+            ->first();
+
+        if (! $camera) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kamera aktif tidak ditemukan.',
+            ], 404);
+        }
+
+        $streamUrl = (string) ($camera->stream_url ?? '');
+        if ($streamUrl === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'URL stream kamera tidak valid.',
+            ], 422);
+        }
+
+        try {
+            /** @var \Illuminate\Http\Client\Response $snapshotResp */
+            $snapshotResp = Http::timeout(12)->get($streamUrl);
+            if (! $snapshotResp->successful()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengambil gambar dari IP webcam (HTTP ' . $snapshotResp->status() . ').',
+                ], 502);
+            }
+
+            $imageBinary = $snapshotResp->body();
+            if (! is_string($imageBinary) || $imageBinary === '') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gambar dari kamera kosong.',
+                ], 502);
+            }
+
+            $baseUrl = rtrim((string) config('services.python_yolo.url', 'http://127.0.0.1:5000'), '/');
+            $analyzeUrl = $baseUrl . '/analyze';
+
+            $http = Http::timeout(120)->acceptJson();
+            $apiKey = (string) config('services.python_yolo.api_key', '');
+            if ($apiKey !== '') {
+                $http = $http->withHeaders(['X-API-Key' => $apiKey]);
+            }
+
+            /** @var \Illuminate\Http\Client\Response $analyzeResp */
+            $analyzeResp = $http->attach(
+                'image',
+                $imageBinary,
+                'capture-' . now()->format('Ymd-His') . '.jpg'
+            )->post($analyzeUrl);
+
+            if (! $analyzeResp->successful()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'YOLO service error (' . $analyzeResp->status() . ').',
+                    'body' => $analyzeResp->json() ?? $analyzeResp->body(),
+                ], 502);
+            }
+
+            $result = $analyzeResp->json() ?: [];
+
+            $detectionForCache = [
+                'vehicle_type' => $result['vehicle_type'] ?? null,
+                'color' => $result['color'] ?? null,
+                'confidence' => isset($result['confidence']) ? (float) $result['confidence'] : null,
+                'plate_number' => $result['plate_number'] ?? null,
+                'timestamp' => $result['timestamp'] ?? now()->format('Y-m-d H:i:s'),
+            ];
+            Cache::put('latest_detection', $detectionForCache, 3600);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Gambar berhasil dianalisis.',
+                'camera' => [
+                    'id' => $camera->id,
+                    'name' => $camera->name,
+                ],
+                'data' => $result,
+                'autofill' => $detectionForCache,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal koneksi ke kamera/Python YOLO: ' . $e->getMessage(),
+            ], 503);
+        }
     }
 
     public function store(Request $request)

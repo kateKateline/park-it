@@ -37,6 +37,7 @@ return [
 
     'python_yolo' => [
         'url' => env('PYTHON_YOLO_URL', 'http://127.0.0.1:5000'),
+        'api_key' => env('PYTHON_YOLO_API_KEY'),
     ],
 
 ];

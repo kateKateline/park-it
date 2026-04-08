@@ -69,6 +69,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
         Route::get('/transaksi-masuk', [TransaksiMasukController::class, 'create'])->name('transaksi.masuk');
         Route::post('/transaksi-masuk', [TransaksiMasukController::class, 'store'])->name('transaksi.masuk.store');
+        Route::post('/transaksi-masuk/capture-analyze', [TransaksiMasukController::class, 'captureAndAnalyze'])->name('transaksi.masuk.capture-analyze');
         Route::get('/transaksi-masuk/availability', [TransaksiMasukController::class, 'availability'])->name('transaksi.masuk.availability');
         Route::get('/transaksi-masuk/check-plate', [TransaksiMasukController::class, 'checkPlate'])->name('transaksi.masuk.check-plate');
 

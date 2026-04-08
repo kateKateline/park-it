@@ -1,35 +1,19 @@
----
-!. petugas dashboard - priority
 
 
+adb devices
 
 
-C:\Users\PC-2>cd /adb
-
-C:\adb>adb devices
-List of devices attached
-3425162019000H9 device
+#List of devices attached
+#3425162019000H9 device
 
 
-C:\adb>adb forward tcp:8080 tcp:8080
-8080
+adb forward tcp:8080 tcp:8080
 
-C:\adb>
-C:\adb>adb forward tcp:8080 tcp:8080
-
-C:\adb>
-C:\adb>adb devices
-List of devices attached
-3425162019000H9 device
-
-
-C:\adb>adb forward tcp:8080 tcp:8080
-
-C:\adb>
-
+#8080
 
 composer install
 npm install
 
 cp .env.example .env
 php artisan key:generate    
+
