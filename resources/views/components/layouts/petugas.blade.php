@@ -43,35 +43,35 @@
                     <ul class="space-y-1">
                         <li>
                             <a href="{{ route('petugas.dashboard') }}"
-                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.dashboard') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(Route::currentRouteName() === 'petugas.dashboard') bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-chart-line w-5 text-center flex-shrink-0"></i>
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Dashboard</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('petugas.transaksi.masuk') }}"
-                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.transaksi.masuk') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(Route::currentRouteName() === 'petugas.transaksi.masuk') bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-sign-in-alt w-5 text-center flex-shrink-0"></i>
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kendaraan Masuk</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('petugas.transaksi.keluar') }}"
-                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.transaksi.keluar') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(Route::currentRouteName() === 'petugas.transaksi.keluar') bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-sign-out-alt w-5 text-center flex-shrink-0"></i>
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kendaraan Keluar</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('petugas.transaksi.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.transaksi.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(Route::currentRouteName() === 'petugas.transaksi.index') bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-list w-5 text-center flex-shrink-0"></i>
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Daftar Transaksi</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('petugas.kamera.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm transition-colors hover:bg-gray-100 @if(Route::currentRouteName() === 'petugas.kamera.index') bg-blue-50 border-l-4 border-blue-600 text-blue-700 @endif">
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(Route::currentRouteName() === 'petugas.kamera.index') bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-video w-5 text-center flex-shrink-0"></i>
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kamera</span>
                             </a>
