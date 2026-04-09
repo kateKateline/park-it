@@ -297,7 +297,7 @@
                     var active = btn.getAttribute('data-value') === v;
                     btn.setAttribute('aria-pressed', active ? 'true' : 'false');
                     btn.className = active
-                        ? 'jenisBtn group rounded-2xl border border-blue-600 bg-blue-600 text-white px-4 py-4 text-left'
+                        ? 'jenisBtn group rounded-2xl border border-slate-900 bg-slate-900 text-white px-4 py-4 text-left'
                         : 'jenisBtn group rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left hover:bg-slate-50';
                     var iconWrap = btn.querySelector('div > div');
                     if (iconWrap) {
@@ -498,7 +498,7 @@
                     btn.setAttribute('aria-pressed', active ? 'true' : 'false');
 
                     if (active) {
-                        btn.className = 'areaBtn group rounded-2xl border border-blue-600 bg-blue-600 px-4 py-4 text-left text-white';
+                        btn.className = 'areaBtn group rounded-2xl border border-slate-900 bg-slate-900 px-4 py-4 text-left text-white';
                     } else if (full) {
                         btn.className = 'areaBtn group rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-left text-slate-400 cursor-not-allowed';
                     } else {
@@ -540,9 +540,8 @@
                     var barEl = btn.querySelector('[data-role="bar"]');
                     if (barEl) {
                         barEl.style.width = pct + '%';
-                        barEl.className = active
-                            ? 'h-2 rounded-full bg-white/80'
-                            : ('h-2 rounded-full ' + (pct >= 90 ? 'bg-rose-500' : pct >= 70 ? 'bg-amber-500' : 'bg-emerald-500'));
+                        // Jangan hilangkan warna okupansi saat dipilih.
+                        barEl.className = 'h-2 rounded-full ' + (pct >= 90 ? 'bg-rose-500' : pct >= 70 ? 'bg-amber-500' : 'bg-emerald-500');
                     }
                 }
             }

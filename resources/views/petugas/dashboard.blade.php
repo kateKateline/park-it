@@ -101,7 +101,7 @@
                                 <div class="text-xs text-gray-600">{{ $aktif }}/{{ $cap }}</div>
                             </div>
                             <div class="mt-2 h-2 w-full rounded-full bg-gray-100">
-                                <div class="h-2 rounded-full bg-gradient-to-r from-emerald-500 to-blue-600" style="width: {{ $pct }}%"></div>
+                                <div class="h-2 rounded-full bg-slate-900" style="width: {{ $pct }}%"></div>
                             </div>
                         </div>
                     @empty
@@ -183,7 +183,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-gray-700">{{ $t->areaParkir?->nama_area ?? '-' }}</td>
                                 <td class="px-6 py-4">
-                                    @if ($t->status === 'masuk')
+                                    @if ($t->status === 'mSasuk')
                                         <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800 ring-1 ring-amber-200/80">
                                             <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
                                             Masuk
