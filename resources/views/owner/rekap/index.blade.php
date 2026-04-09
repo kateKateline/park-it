@@ -25,6 +25,12 @@
                        class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50">
                         Reset
                     </a>
+                    <a href="{{ route('owner.rekap.pdf', ['from' => $from, 'to' => $to]) }}"
+                       target="_blank"
+                       rel="noopener"
+                       class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-50">
+                        PDF
+                    </a>
                 </div>
             </form>
 
@@ -47,14 +53,14 @@
                     <tbody>
                     @forelse ($rekap as $r)
                         <tr class="border-t border-slate-100">
-                            <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($r->tanggal)->format('d/m/Y') }}</td>
-                            <td class="px-4 py-3">{{ $r->jumlah }}</td>
-                            <td class="px-4 py-3">{{ (int) round($r->rata_durasi ?? 0) }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($r['tanggal'])->format('d/m/Y') }}</td>
+                            <td class="px-4 py-3">{{ (int) ($r['jumlah'] ?? 0) }}</td>
+                            <td class="px-4 py-3">{{ (int) ($r['rata_durasi'] ?? 0) }}</td>
                             <td class="px-4 py-3 text-right font-medium">
-                                Rp {{ number_format($r->pendapatan ?? 0, 0, ',', '.') }}
+                                Rp {{ number_format((int) ($r['pendapatan'] ?? 0), 0, ',', '.') }}
                             </td>
                             <td class="px-4 py-3 text-right">
-                                <a href="{{ route('owner.rekap.show', $r->tanggal) }}"
+                                <a href="{{ route('owner.rekap.show', $r['tanggal']) }}"
                                    class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-50">
                                     Detail
                                 </a>
