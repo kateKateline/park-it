@@ -66,6 +66,13 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ route('admin.tarif.index') }}"
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(str_starts_with(Route::currentRouteName(), 'admin.tarif')) bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
+                                <i class="fas fa-receipt w-5 text-center flex-shrink-0"></i>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Tarif</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('admin.users.index') }}"
                                class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(str_starts_with(Route::currentRouteName(), 'admin.users')) bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-users w-5 text-center flex-shrink-0"></i>
@@ -91,13 +98,6 @@
                                class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(str_starts_with(Route::currentRouteName(), 'admin.kendaraan')) bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-car w-5 text-center flex-shrink-0"></i>
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kendaraan</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.tarif.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(str_starts_with(Route::currentRouteName(), 'admin.tarif')) bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
-                                <i class="fas fa-receipt w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Tarif</span>
                             </a>
                         </li>
                         <li>
