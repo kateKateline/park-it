@@ -75,94 +75,6 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-            <div class="border-b border-gray-200 bg-gray-50/80 px-6 py-4">
-                <div class="text-sm font-semibold text-gray-900">Data master &amp; referensi</div>
-                <div class="mt-1 text-xs text-gray-500">Kelola pengguna, area, kendaraan, tarif, dan pantau log sistem</div>
-            </div>
-            <div class="p-5">
-                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    <a href="{{ route('admin.users.index') }}"
-                       class="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm transition hover:border-gray-300 hover:bg-gray-50">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
-                            <i class="fas fa-users text-sm"></i>
-                        </span>
-                        <span class="min-w-0 text-left">
-                            <span class="block text-sm font-semibold text-gray-900">Users</span>
-                            <span class="block text-xs text-gray-500">Pengguna sistem</span>
-                        </span>
-                        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-gray-600"></i>
-                    </a>
-                    <a href="{{ route('admin.tarif.index') }}"
-                       class="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm transition hover:border-gray-300 hover:bg-gray-50">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-700">
-                            <i class="fas fa-tags text-sm"></i>
-                        </span>
-                        <span class="min-w-0 text-left">
-                            <span class="block text-sm font-semibold text-gray-900">Tarif</span>
-                            <span class="block text-xs text-gray-500">Tarif per jenis</span>
-                        </span>
-                        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-gray-600"></i>
-                    </a>
-                    <a href="{{ route('admin.area-parkir.index') }}"
-                       class="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm transition hover:border-gray-300 hover:bg-gray-50">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
-                            <i class="fas fa-location-dot text-sm"></i>
-                        </span>
-                        <span class="min-w-0 text-left">
-                            <span class="block text-sm font-semibold text-gray-900">Area parkir</span>
-                            <span class="block text-xs text-gray-500">Kapasitas &amp; zona</span>
-                        </span>
-                        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-gray-600"></i>
-                    </a>
-                    <a href="{{ route('admin.kendaraan.index') }}"
-                       class="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm transition hover:border-gray-300 hover:bg-gray-50">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700">
-                            <i class="fas fa-car text-sm"></i>
-                        </span>
-                        <span class="min-w-0 text-left">
-                            <span class="block text-sm font-semibold text-gray-900">Kendaraan</span>
-                            <span class="block text-xs text-gray-500">Data plat &amp; jenis</span>
-                        </span>
-                        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-gray-600"></i>
-                    </a>
-                    <a href="{{ route('admin.camera-sources.index') }}"
-                       class="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm transition hover:border-gray-300 hover:bg-gray-50">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-700">
-                            <i class="fas fa-video text-sm"></i>
-                        </span>
-                        <span class="min-w-0 text-left">
-                            <span class="block text-sm font-semibold text-gray-900">Kamera</span>
-                            <span class="block text-xs text-gray-500">Sumber &amp; konfigurasi</span>
-                        </span>
-                        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-gray-600"></i>
-                    </a>
-                    <a href="{{ route('admin.transaksi.index') }}"
-                       class="group flex items-center gap-3 rounded-xl border border-amber-100 bg-amber-50/50 px-4 py-3 shadow-sm transition hover:border-amber-200 hover:bg-amber-50">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-800">
-                            <i class="fas fa-list text-sm"></i>
-                        </span>
-                        <span class="min-w-0 text-left">
-                            <span class="block text-sm font-semibold text-gray-900">Transaksi</span>
-                            <span class="block text-xs text-gray-600">Lihat saja (tanpa CRUD)</span>
-                        </span>
-                        <i class="fas fa-chevron-right ml-auto text-xs text-amber-600/80 group-hover:text-amber-800"></i>
-                    </a>
-                    <a href="{{ route('admin.log-aktivitas.index') }}"
-                       class="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm transition hover:border-gray-300 hover:bg-gray-50">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-900 text-white">
-                            <i class="fas fa-clock-rotate-left text-sm"></i>
-                        </span>
-                        <span class="min-w-0 text-left">
-                            <span class="block text-sm font-semibold text-gray-900">Log aktivitas</span>
-                            <span class="block text-xs text-gray-500">Audit trail</span>
-                        </span>
-                        <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-gray-600"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
         <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <div class="rounded-2xl border border-gray-200 bg-white shadow-sm">
                 <div class="border-b border-gray-200 px-6 py-4">
@@ -190,7 +102,6 @@
                 <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
                     <div>
                         <div class="text-sm font-semibold text-gray-900">Transaksi terbaru</div>
-                        <div class="mt-1 text-xs text-gray-500">Status: <span class="font-medium text-amber-700">masuk</span> · <span class="font-medium text-emerald-700">selesai</span></div>
                     </div>
                     <a href="{{ route('admin.transaksi.index') }}" class="text-xs font-semibold text-gray-700 hover:text-gray-900 transition inline-flex items-center gap-2">
                         Lihat semua

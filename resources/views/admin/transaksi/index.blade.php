@@ -4,13 +4,8 @@
             <div>
                 <div class="text-xs text-gray-500">Admin Panel</div>
                 <h2 class="mt-1 text-xl font-semibold text-gray-900">Transaksi</h2>
-                <p class="mt-1 text-sm text-gray-600">Ringkasan semua transaksi parkir (hanya tampilan).</p>
+                <p class="mt-1 text-sm text-gray-600">Ringkasan semua transaksi parkir</p>
             </div>
-            <a href="{{ route('admin.dashboard') }}"
-               class="inline-flex items-center gap-2 self-start rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 transition">
-                <i class="fas fa-arrow-left text-sm text-gray-500"></i>
-                Kembali ke dashboard
-            </a>
         </div>
 
         @include('admin.partials.index-search', [
