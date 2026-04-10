@@ -260,6 +260,7 @@
             var formEl = document.getElementById('masukForm');
             var plateEl = document.getElementById('plat_nomor');
             var warnaEl = document.getElementById('warna');
+            var merkEl = document.getElementById('merk');
             var clearPlateEl = document.getElementById('clearPlate');
             var plateInfoEl = document.getElementById('plateRealtimeInfo');
             var jenisHiddenEl = document.getElementById('jenis_kendaraan');
@@ -462,13 +463,26 @@
                                 return;
                             }
 
+                            if (d.exists && d.vehicle) {
+                                if (jenisHiddenEl && d.vehicle.jenis_kendaraan) {
+                                    jenisHiddenEl.value = d.vehicle.jenis_kendaraan;
+                                    updateJenisUI();
+                                }
+                                if (warnaEl && d.vehicle.warna) {
+                                    warnaEl.value = d.vehicle.warna;
+                                }
+                                if (merkEl && d.vehicle.merk) {
+                                    merkEl.value = d.vehicle.merk;
+                                }
+                            }
+
                             if (d.is_terdaftar) {
-                                setPlateInfo('success', 'Plat ' + (d.plat || plat) + ' terdaftar di sistem.');
+                                setPlateInfo('success', 'Plat ' + (d.plat || plat) + ' terdaftar di sistem (Autofill aktif).');
                                 return;
                             }
 
                             if (d.exists) {
-                                setPlateInfo('info', 'Plat ' + (d.plat || plat) + ' pernah tercatat di sistem.');
+                                setPlateInfo('info', 'Plat ' + (d.plat || plat) + ' pernah tercatat di sistem (Autofill aktif).');
                                 return;
                             }
 
@@ -632,6 +646,25 @@
             }
 
             if (formEl) {
+                formEl.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        var target = e.target;
+                        if (target.tagName.toLowerCase() === 'input') {
+                            var plat = normalizePlate(plateEl.value);
+                            var jenis = jenisHiddenEl.value;
+                            var area = getSelectedAreaId();
+
+                            if (plat && jenis && area && !plateIsParked) {
+                                e.preventDefault();
+                                formEl.dispatchEvent(new Event('submit', { cancelable: true }));
+                                if (!e.defaultPrevented) {
+                                    formEl.submit();
+                                }
+                            }
+                        }
+                    }
+                });
+
                 formEl.addEventListener('submit', function (e) {
                     if (plateIsParked) {
                         if (plateEl) plateEl.focus();

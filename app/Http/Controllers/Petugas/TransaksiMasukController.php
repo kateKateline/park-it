@@ -158,6 +158,11 @@ class TransaksiMasukController extends Controller
                 'exists' => (bool) $kendaraan,
                 'is_terdaftar' => (bool) ($kendaraan?->is_terdaftar ?? false),
                 'parked' => (bool) $activeTransaksi,
+                'vehicle' => $kendaraan ? [
+                    'jenis_kendaraan' => $kendaraan->jenis_kendaraan,
+                    'warna' => $kendaraan->warna,
+                    'merk' => $kendaraan->merk,
+                ] : null,
                 'active' => $activeTransaksi ? [
                     'id' => $activeTransaksi->id,
                     'barcode' => $activeTransaksi->barcode,
