@@ -40,8 +40,8 @@
                 <nav class="flex-1 overflow-y-auto px-4 py-6">
                     <ul class="space-y-1">
                         <li>
-                            <a href="{{ route('owner.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(in_array(Route::currentRouteName(), ['owner.index', 'owner.dashboard'], true)) bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
+                            <a href="{{ route('owner.dashboard') }}"
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(Route::currentRouteName() === 'owner.dashboard') bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-chart-line w-5 text-center flex-shrink-0"></i>
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Dashboard</span>
                             </a>

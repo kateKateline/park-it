@@ -10,40 +10,23 @@
                     {{ now()->format('d F Y, H:i') }}
                 </div>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
-                <a href="{{ route('petugas.transaksi.masuk') }}"
-                   class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition">
-                    <i class="fas fa-sign-in-alt text-sm"></i>
-                    Kendaraan Masuk
-                </a>
-                <a href="{{ route('petugas.transaksi.keluar') }}"
-                   class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 transition">
-                    <i class="fas fa-sign-out-alt text-sm"></i>
-                    Kendaraan Keluar
-                </a>
-                <a href="{{ route('petugas.transaksi.index') }}"
-                   class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 transition">
-                    <i class="fas fa-list text-sm text-gray-500"></i>
-                    Transaksi
-                </a>
-            </div>
         </div>
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Masuk hari ini</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
                         <i class="fas fa-arrow-right-to-bracket text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900">{{ $counts['hari_ini'] ?? 0 }}</div>
-                <div class="mt-2 text-xs text-blue-700/90">Total transaksi masuk</div>
+                <div class="mt-2 text-xs text-gray-500">Total transaksi masuk</div>
             </div>
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Sedang parkir</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
                         <i class="fas fa-car-side text-sm"></i>
                     </div>
                 </div>
@@ -59,7 +42,7 @@
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Selesai hari ini</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-slate-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
                         <i class="fas fa-check text-sm"></i>
                     </div>
                 </div>
@@ -69,14 +52,14 @@
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Pendapatan hari ini</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
                         <i class="fas fa-receipt text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">
                     Rp {{ number_format((int) ($kpi['pendapatan_hari_ini'] ?? 0), 0, ',', '.') }}
                 </div>
-                <div class="mt-2 text-xs text-emerald-700/90">
+                <div class="mt-2 text-xs text-gray-500">
                     Rata-rata durasi: {{ (int) ($kpi['rata_durasi_hari_ini'] ?? 0) }} menit
                 </div>
             </div>

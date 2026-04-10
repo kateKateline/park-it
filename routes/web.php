@@ -53,7 +53,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
 
     Route::prefix('owner')->name('owner.')->middleware('role:owner')->group(function () {
-        Route::get('/', OwnerDashboardController::class)->name('index');
+        Route::get('/', fn () => redirect()->route('owner.dashboard'))->name('index');
         Route::get('/dashboard', OwnerDashboardController::class)->name('dashboard');
         Route::get('/rekap-transaksi', [RekapTransaksiController::class, 'index'])->name('rekap.index');
         Route::get('/rekap-transaksi/pdf', [RekapTransaksiController::class, 'pdf'])->name('rekap.pdf');

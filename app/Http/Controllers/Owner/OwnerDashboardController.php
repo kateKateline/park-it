@@ -70,7 +70,7 @@ class OwnerDashboardController extends Controller
             ->limit(10)
             ->get();
 
-        return view('owner.dashboard.index', [
+        return view('owner.dashboard', [
             'user' => $request->user(),
             'metrics' => [
                 'transaksi_hari_ini' => (int) $transaksiHariIni,
