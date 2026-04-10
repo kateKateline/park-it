@@ -18,8 +18,8 @@
                 <div class="mt-1 text-2xl font-semibold">Rp {{ number_format($summary['pendapatan'], 0, ',', '.') }}</div>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div class="text-sm text-slate-600">Rata durasi (menit)</div>
-                <div class="mt-1 text-2xl font-semibold">{{ $summary['rata_durasi'] }}</div>
+                <div class="text-sm text-slate-600">Rata-rata durasi</div>
+                <div class="mt-1 text-2xl font-semibold">{{ \App\Support\DurationDisplay::fromMinutes($summary['rata_durasi'] ?? 0) }}</div>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
                     <th class="px-4 py-3 text-left">Jenis</th>
                     <th class="px-4 py-3 text-left">Masuk</th>
                     <th class="px-4 py-3 text-left">Keluar</th>
-                    <th class="px-4 py-3 text-left">Durasi (menit)</th>
+                    <th class="px-4 py-3 text-left">Durasi</th>
                     <th class="px-4 py-3 text-right">Biaya</th>
                 </tr>
                 </thead>
@@ -44,7 +44,7 @@
                         <td class="px-4 py-3 capitalize">{{ $t->kendaraan?->jenis_kendaraan }}</td>
                         <td class="px-4 py-3 whitespace-nowrap">{{ $t->waktu_masuk?->format('d/m/Y H:i') }}</td>
                         <td class="px-4 py-3 whitespace-nowrap">{{ $t->waktu_keluar?->format('d/m/Y H:i') }}</td>
-                        <td class="px-4 py-3">{{ $t->durasi_menit ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ \App\Support\DurationDisplay::fromMinutes($t->durasi_menit) }}</td>
                         <td class="px-4 py-3 text-right font-medium">Rp {{ number_format($t->total_bayar ?? 0, 0, ',', '.') }}</td>
                     </tr>
                 @empty

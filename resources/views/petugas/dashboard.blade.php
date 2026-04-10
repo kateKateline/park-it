@@ -60,7 +60,7 @@
                     Rp {{ number_format((int) ($kpi['pendapatan_hari_ini'] ?? 0), 0, ',', '.') }}
                 </div>
                 <div class="mt-2 text-xs text-gray-500">
-                    Rata-rata durasi: {{ (int) ($kpi['rata_durasi_hari_ini'] ?? 0) }} menit
+                    Rata-rata durasi: {{ \App\Support\DurationDisplay::fromMinutes($kpi['rata_durasi_hari_ini'] ?? 0) }}
                 </div>
             </div>
         </div>

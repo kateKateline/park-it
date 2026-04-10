@@ -114,7 +114,7 @@
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-slate-700">Tanggal</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-slate-700">Transaksi</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700">Rata durasi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700">Rata-rata durasi</th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-slate-700">Pendapatan</th>
                             </tr>
                         </thead>
@@ -123,7 +123,7 @@
                                 <tr class="hover:bg-slate-50">
                                     <td class="px-6 py-4 text-slate-700">{{ \Carbon\Carbon::parse($r['tanggal'])->format('d M Y') }}</td>
                                     <td class="px-6 py-4 font-semibold text-slate-900">{{ (int) ($r['jumlah'] ?? 0) }}</td>
-                                    <td class="px-6 py-4 text-slate-700">{{ (int) ($r['rata_durasi'] ?? 0) }} menit</td>
+                                    <td class="px-6 py-4 text-slate-700">{{ \App\Support\DurationDisplay::fromMinutes($r['rata_durasi'] ?? 0) }}</td>
                                     <td class="px-6 py-4 text-right font-semibold text-slate-900">Rp {{ number_format((int) ($r['pendapatan'] ?? 0), 0, ',', '.') }}</td>
                                 </tr>
                             @empty

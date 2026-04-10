@@ -45,7 +45,7 @@
                     <tr>
                         <th class="px-4 py-3 text-left">Tanggal</th>
                         <th class="px-4 py-3 text-left">Jumlah transaksi</th>
-                        <th class="px-4 py-3 text-left">Rata-rata durasi (menit)</th>
+                        <th class="px-4 py-3 text-left">Rata-rata durasi</th>
                         <th class="px-4 py-3 text-right">Total pendapatan</th>
                         <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
@@ -55,7 +55,7 @@
                         <tr class="border-t border-slate-100">
                             <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($r['tanggal'])->format('d/m/Y') }}</td>
                             <td class="px-4 py-3">{{ (int) ($r['jumlah'] ?? 0) }}</td>
-                            <td class="px-4 py-3">{{ (int) ($r['rata_durasi'] ?? 0) }}</td>
+                            <td class="px-4 py-3">{{ \App\Support\DurationDisplay::fromMinutes($r['rata_durasi'] ?? 0) }}</td>
                             <td class="px-4 py-3 text-right font-medium">
                                 Rp {{ number_format((int) ($r['pendapatan'] ?? 0), 0, ',', '.') }}
                             </td>

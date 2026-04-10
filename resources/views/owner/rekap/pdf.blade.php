@@ -22,9 +22,9 @@
         </caption>
         <thead>
         <tr>
-            <th style="width: 22%;">Tanggal</th>
-            <th class="num" style="width: 18%;">Jumlah</th>
-            <th class="num" style="width: 20%;">Rata durasi (menit)</th>
+            <th style="width: 20%;">Tanggal</th>
+            <th class="num" style="width: 14%;">Jumlah</th>
+            <th class="num" style="width: 26%;">Rata-rata durasi</th>
             <th class="num" style="width: 40%;">Pendapatan</th>
         </tr>
         </thead>
@@ -33,7 +33,7 @@
             <tr>
                 <td>{{ \Carbon\Carbon::parse($r['tanggal'])->format('d/m/Y') }}</td>
                 <td class="num">{{ (int) ($r['jumlah'] ?? 0) }}</td>
-                <td class="num">{{ (int) ($r['rata_durasi'] ?? 0) }}</td>
+                <td class="num">{{ \App\Support\DurationDisplay::fromMinutes($r['rata_durasi'] ?? 0) }}</td>
                 <td class="num">Rp {{ number_format((int) ($r['pendapatan'] ?? 0), 0, ',', '.') }}</td>
             </tr>
         @endforeach
