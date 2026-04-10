@@ -9,18 +9,16 @@ class TarifSeeder extends Seeder
 {
     public function run(): void
     {
-        // Minimal tarif sesuai kebutuhan demo (jenis kendaraan: mobil, motor)
-        $rows = [
-            ['jenis_kendaraan' => 'motor', 'tarif_per_jam' => 2000],
+        $tarifs = [
             ['jenis_kendaraan' => 'mobil', 'tarif_per_jam' => 5000],
+            ['jenis_kendaraan' => 'motor', 'tarif_per_jam' => 2000],
         ];
 
-        foreach ($rows as $row) {
+        foreach ($tarifs as $tarif) {
             Tarif::updateOrCreate(
-                ['jenis_kendaraan' => $row['jenis_kendaraan']],
-                ['tarif_per_jam' => $row['tarif_per_jam']]
+                ['jenis_kendaraan' => $tarif['jenis_kendaraan']],
+                ['tarif_per_jam' => $tarif['tarif_per_jam']]
             );
         }
     }
 }
-
