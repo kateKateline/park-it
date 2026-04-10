@@ -9,11 +9,13 @@ use App\Models\Kendaraan;
 use App\Models\LogAktivitas;
 use App\Models\Tarif;
 use App\Models\Transaksi;
+use App\Support\VehicleTypeDisplay;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class TransaksiMasukController extends Controller
 {
@@ -82,11 +84,22 @@ class TransaksiMasukController extends Controller
             ->get();
         $tarif = Tarif::pluck('tarif_per_jam', 'jenis_kendaraan');
         $latestDetection = Cache::get('latest_detection');
+        $allowedJenis = VehicleTypeDisplay::allowedJenisFromTarif();
+        $vehicleTypeOptions = VehicleTypeDisplay::optionsFromTarifs();
+        $yoloVehicleTypeMap = VehicleTypeDisplay::yoloVehicleTypeMapForJs($allowedJenis);
+        $jenisPrefill = null;
+        if (is_array($latestDetection) && ! empty($latestDetection['vehicle_type'] ?? null)) {
+            $jenisPrefill = VehicleTypeDisplay::mapYoloToAllowedJenis((string) $latestDetection['vehicle_type'], $allowedJenis);
+        }
 
         return view('petugas.transaksi.masuk', [
             'areas' => $areas,
             'tarif' => $tarif,
             'latestDetection' => $latestDetection,
+            'vehicleTypeOptions' => $vehicleTypeOptions,
+            'yoloVehicleTypeMap' => $yoloVehicleTypeMap,
+            'allowedJenisTarif' => $allowedJenis,
+            'jenisPrefill' => $jenisPrefill,
         ]);
     }
 
@@ -279,9 +292,16 @@ class TransaksiMasukController extends Controller
 
     public function store(Request $request)
     {
+        $allowedJenis = VehicleTypeDisplay::allowedJenisFromTarif();
+        if ($allowedJenis === []) {
+            return back()
+                ->withInput()
+                ->with('error', 'Belum ada tarif jenis kendaraan. Admin harus menambah data Tarif terlebih dahulu.');
+        }
+
         $valid = $request->validate([
             'plat_nomor' => 'required|string|min:3|max:10',
-            'jenis_kendaraan' => 'required|in:motor,mobil',
+            'jenis_kendaraan' => ['required', 'string', 'max:255', Rule::in($allowedJenis)],
             'warna' => 'nullable|string|max:50',
             'merk' => 'nullable|string|max:100',
             'area_parkir_id' => 'required|exists:tb_area_parkir,id',

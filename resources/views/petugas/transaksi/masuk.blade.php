@@ -1,14 +1,20 @@
 <x-layouts.petugas :title="'Kendaraan Masuk - Petugas'">
     @php
-        $vehicleTypeMap = ['car' => 'mobil', 'motorcycle' => 'motor', 'truck' => 'truk', 'bus' => 'bus'];
-        $jenisDefault = old('jenis_kendaraan');
+        $vehicleTypeOptions = $vehicleTypeOptions ?? [];
+        $jenisDefault = old('jenis_kendaraan', $jenisPrefill ?? '');
         $warnaDefault = old('warna');
-        if (($jenisDefault === null || $jenisDefault === '') && !empty($latestDetection ?? null)) {
-            $jenisDefault = $vehicleTypeMap[$latestDetection['vehicle_type'] ?? ''] ?? null;
-        }
-        if (($warnaDefault === null || $warnaDefault === '') && !empty($latestDetection ?? null)) {
+        if (($warnaDefault === null || $warnaDefault === '') && ! empty($latestDetection ?? null)) {
             $warnaDefault = $latestDetection['color'] ?? null;
         }
+
+        $nJenis = count($vehicleTypeOptions);
+        $jenisGridClass = $nJenis <= 0
+            ? 'grid grid-cols-1 gap-3'
+            : ($nJenis === 1
+                ? 'grid grid-cols-1 gap-3'
+                : ($nJenis === 2
+                    ? 'grid grid-cols-1 gap-3 sm:grid-cols-2'
+                    : 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'));
 
         $areasInitial = collect($areas ?? [])->map(function ($a) {
             $kapasitas = (int) ($a->kapasitas ?? 0);
@@ -115,31 +121,32 @@
 
                         <div class="mt-6">
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-600">Jenis Kendaraan</label>
-                            <input type="hidden" name="jenis_kendaraan" id="jenis_kendaraan" value="{{ $jenisDefault ?? '' }}" />
-                            <div class="mt-2 grid grid-cols-2 gap-3">
-                                <button type="button" class="jenisBtn group rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left hover:bg-slate-50" data-value="motor" aria-pressed="false">
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900/5 text-slate-900 ring-1 ring-slate-900/10">
-                                            <i class="fas fa-motorcycle"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-semibold text-slate-900">Motor</div>
-                                            <div class="mt-0.5 text-xs text-slate-500">Kendaraan roda dua</div>
-                                        </div>
-                                    </div>
-                                </button>
-                                <button type="button" class="jenisBtn group rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left hover:bg-slate-50" data-value="mobil" aria-pressed="false">
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900/5 text-slate-900 ring-1 ring-slate-900/10">
-                                            <i class="fas fa-car-side"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-semibold text-slate-900">Mobil</div>
-                                            <div class="mt-0.5 text-xs text-slate-500">Kendaraan roda empat</div>
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
+                            <p class="mt-1 text-xs text-slate-500">Pilihan mengikuti jenis yang ada di master Tarif (beserta tarif per jam).</p>
+                            <input type="hidden" name="jenis_kendaraan" id="jenis_kendaraan" value="{{ $jenisDefault }}" />
+                            @if (empty($vehicleTypeOptions))
+                                <div class="mt-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                                    Belum ada data Tarif jenis kendaraan. Admin harus menambahnya di menu Tarif terlebih dahulu.
+                                </div>
+                            @else
+                                <div class="mt-2 {{ $jenisGridClass }}">
+                                    @foreach ($vehicleTypeOptions as $opt)
+                                        <button type="button"
+                                                class="jenisBtn group rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left hover:bg-slate-50"
+                                                data-value="{{ $opt['value'] }}"
+                                                aria-pressed="false">
+                                            <div class="flex items-center gap-3">
+                                                <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900/5 text-slate-900 ring-1 ring-slate-900/10">
+                                                    <i class="fas {{ $opt['icon'] }}"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="text-sm font-semibold text-slate-900">{{ $opt['label'] }}</div>
+                                                    <div class="mt-0.5 text-xs text-slate-500">{{ $opt['subtitle'] }}</div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            @endif
                             @error('jenis_kendaraan')
                                 <div class="mt-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">{{ $message }}</div>
                             @enderror
@@ -255,7 +262,8 @@
             var cameraActiveUrl = @json(route('petugas.cameras.active'));
             var areas = @json($areasInitial);
             var csrfToken = @json(csrf_token());
-            var vehicleTypeMap = { car: 'mobil', motorcycle: 'motor', truck: 'mobil', bus: 'mobil' };
+            var vehicleTypeMap = @json($yoloVehicleTypeMap ?? []);
+            var allowedJenisTarif = @json($allowedJenisTarif ?? []);
 
             var formEl = document.getElementById('masukForm');
             var plateEl = document.getElementById('plat_nomor');
@@ -396,7 +404,21 @@
                 if (!payload) return;
 
                 var plate = payload.plate_number ? normalizePlate(payload.plate_number) : '';
-                var jenis = payload.vehicle_type ? (vehicleTypeMap[String(payload.vehicle_type)] || '') : '';
+                var jenis = '';
+                if (payload.vehicle_type) {
+                    var rawVt = String(payload.vehicle_type);
+                    var key = rawVt.toLowerCase();
+                    jenis = vehicleTypeMap[key] || vehicleTypeMap[rawVt] || '';
+                    if (!jenis && allowedJenisTarif && allowedJenisTarif.length) {
+                        for (var ai = 0; ai < allowedJenisTarif.length; ai++) {
+                            var aj = String(allowedJenisTarif[ai]);
+                            if (aj.toLowerCase() === key) {
+                                jenis = aj;
+                                break;
+                            }
+                        }
+                    }
+                }
                 var warna = payload.color ? String(payload.color).trim() : '';
 
                 if (plateEl && plate) {
@@ -624,6 +646,9 @@
                         updateJenisUI();
                     });
                 }
+                if (jenisButtons.length === 0) {
+                    setSubmitDisabled(true, 'Tarif jenis belum diatur');
+                }
             }
 
             if (areaHiddenEl) {
@@ -668,6 +693,11 @@
                 formEl.addEventListener('submit', function (e) {
                     if (plateIsParked) {
                         if (plateEl) plateEl.focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if (!jenisHiddenEl || !String(jenisHiddenEl.value || '').trim()) {
                         e.preventDefault();
                         return;
                     }

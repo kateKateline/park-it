@@ -41,6 +41,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         Route::resource('tarif', AdminTarifController::class)->except(['show']);
         Route::resource('area-parkir', AdminAreaParkirController::class)->except(['show']);
         Route::resource('kendaraan', AdminKendaraanController::class)->except(['show']);
+        Route::delete('kendaraan', [AdminKendaraanController::class, 'bulkDestroy'])->name('kendaraan.bulk-destroy');
         Route::resource('camera-sources', AdminCameraSourceController::class)->except(['show']);
 
         Route::get('log-aktivitas', [AdminLogAktivitasController::class, 'index'])->name('log-aktivitas.index');
