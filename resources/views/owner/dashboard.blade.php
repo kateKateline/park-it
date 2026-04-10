@@ -62,7 +62,6 @@
             <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
                 <div>
                     <div class="text-sm font-semibold text-slate-900">Transaksi terbaru</div>
-                    <div class="mt-1 text-xs text-slate-500">Transaksi selesai</div>
                 </div>
                 <a href="{{ route('owner.rekap.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 transition inline-flex items-center gap-2">
                     Rekap detail

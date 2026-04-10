@@ -133,12 +133,6 @@
                 <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
                 <div>
                     <div class="text-sm font-semibold text-gray-900">Transaksi terbaru</div>
-                    <div class="mt-1 text-xs text-gray-500">
-                        Status:
-                        <span class="font-medium text-amber-700">masuk</span>
-                        ·
-                        <span class="font-medium text-emerald-700">selesai</span>
-                    </div>
                 </div>
                 <a href="{{ route('petugas.transaksi.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 transition inline-flex items-center gap-2">
                     Lihat semua
