@@ -18,154 +18,139 @@
                     : 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'));
     @endphp
 
-    <div class="mx-auto max-w-5xl space-y-6 p-6">
+    <div class="mx-auto max-w-5xl p-6">
         @include('partials.topbar', [
             'title' => $mode === 'create' ? 'Tambah Kendaraan' : 'Edit Kendaraan',
             'subtitle' => 'Kelola data kendaraan dengan tampilan yang konsisten.',
         ])
 
-        @include('partials.flash')
+        <div class="mt-6 space-y-4">
+            @include('partials.flash')
 
-        @if ($errors->any())
-            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-                <div class="font-semibold">Validasi gagal</div>
-                <ul class="mt-1 list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        @if ($mode === 'create' && !empty($latestDetection ?? null))
-            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
-                <div class="font-semibold">Data deteksi terbaru (YOLO)</div>
-                <div class="mt-1 text-xs text-emerald-900/80">
-                    Jenis: <span class="font-semibold">{{ $latestDetection['vehicle_type'] ?? '-' }}</span>,
-                    Warna: <span class="font-semibold">{{ $latestDetection['color'] ?? '-' }}</span>,
-                    Confidence:
-                    <span class="font-semibold">{{ isset($latestDetection['confidence']) ? round($latestDetection['confidence'] * 100) . '%' : '-' }}</span>
+            @if ($errors->any())
+                <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                    <div class="font-medium">Validasi gagal</div>
+                    <ul class="mt-1 list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-            </div>
-        @endif
-
-        <form method="POST"
-              action="{{ $mode === 'create' ? route('admin.kendaraan.store') : route('admin.kendaraan.update', $model) }}"
-              class="space-y-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-            @csrf
-            @if ($mode === 'edit')
-                @method('PUT')
             @endif
 
-            <div class="rounded-2xl border border-slate-100 bg-slate-50 p-5">
-                <div class="text-sm font-semibold text-slate-900">Data Kendaraan</div>
+            @if ($mode === 'create' && !empty($latestDetection ?? null))
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+                    <div class="font-semibold">Data deteksi terbaru (YOLO)</div>
+                    <div class="mt-1 text-xs text-emerald-900/80">
+                        Jenis: <span class="font-semibold">{{ $latestDetection['vehicle_type'] ?? '-' }}</span>,
+                        Warna: <span class="font-semibold">{{ $latestDetection['color'] ?? '-' }}</span>,
+                        Confidence:
+                        <span class="font-semibold">{{ isset($latestDetection['confidence']) ? round($latestDetection['confidence'] * 100) . '%' : '-' }}</span>
+                    </div>
+                </div>
+            @endif
 
-                <div class="mt-5">
-                    <label for="plat_nomor" class="text-xs font-semibold uppercase tracking-wide text-slate-600">Plat Nomor</label>
-                    <div class="mt-2 flex items-stretch gap-2">
-                        <div class="relative flex-1">
-                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                <i class="fas fa-id-card text-sm"></i>
-                            </div>
+            <form method="POST"
+                  action="{{ $mode === 'create' ? route('admin.kendaraan.store') : route('admin.kendaraan.update', $model) }}"
+                  class="space-y-6 rounded-2xl border border-slate-200 bg-white p-8">
+                @csrf
+                @if ($mode === 'edit')
+                    @method('PUT')
+                @endif
+
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label for="plat_nomor" class="block text-sm font-medium text-slate-700">Plat Nomor</label>
+                        <div class="mt-1 flex items-stretch gap-2">
                             <input type="text" name="plat_nomor" id="plat_nomor" required
                                    value="{{ old('plat_nomor', $model->plat_nomor) }}"
                                    minlength="3"
                                    maxlength="10"
                                    placeholder="B 1234 XYZ"
                                    autocomplete="off"
-                                   class="w-full rounded-2xl border border-slate-300 bg-white py-3 pl-12 pr-4 text-base font-semibold uppercase tracking-widest text-slate-900 outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                                   class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base font-semibold uppercase tracking-widest text-slate-900 outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                            <button type="button" id="clearPlate" class="rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                                Clear
+                            </button>
                         </div>
-                        <button type="button" id="clearPlate" class="rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                            Clear
-                        </button>
+                        <p class="mt-1 text-xs text-slate-500">Tips: boleh input tanpa spasi, format akan dinormalisasi otomatis.</p>
                     </div>
-                    <div class="mt-2 text-xs text-slate-500">Tips: boleh input tanpa spasi, format akan dinormalisasi otomatis.</div>
-                </div>
 
-                <div class="mt-6">
-                    <label class="text-xs font-semibold uppercase tracking-wide text-slate-600">Jenis Kendaraan</label>
-                    <p class="mt-1 text-xs text-slate-500">Harus sama dengan salah satu jenis pada master Tarif.</p>
-                    <input type="hidden" name="jenis_kendaraan" id="jenis_kendaraan" value="{{ $defaultJenis }}" />
-                    @if (empty($vehicleTypeOptions))
-                        <div class="mt-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-                            Belum ada data Tarif jenis kendaraan. Tambahkan di menu Tarif terlebih dahulu.
-                        </div>
-                    @else
-                        <div class="mt-2 {{ $jenisGridClass }}">
-                            @foreach ($vehicleTypeOptions as $opt)
-                                <button type="button"
-                                        class="jenisBtn group rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left hover:bg-slate-50"
-                                        data-value="{{ $opt['value'] }}"
-                                        aria-pressed="false">
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900/5 text-slate-900 ring-1 ring-slate-900/10">
-                                            <i class="fas {{ $opt['icon'] }}"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-semibold text-slate-900">{{ $opt['label'] }}</div>
-                                            <div class="mt-0.5 text-xs text-slate-500">{{ $opt['subtitle'] }}</div>
-                                        </div>
-                                    </div>
-                                </button>
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
-
-                <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                        <label for="warna" class="text-xs font-semibold uppercase tracking-wide text-slate-600">Warna (opsional)</label>
-                        <div class="relative mt-2">
-                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                <i class="fas fa-palette text-sm"></i>
+                        <label class="block text-sm font-medium text-slate-700">Jenis Kendaraan</label>
+                        <p class="text-xs text-slate-500">Harus sama dengan salah satu jenis pada master Tarif.</p>
+                        <input type="hidden" name="jenis_kendaraan" id="jenis_kendaraan" value="{{ $defaultJenis }}" />
+                        @if (empty($vehicleTypeOptions))
+                            <div class="mt-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                                Belum ada data Tarif jenis kendaraan. Tambahkan di menu Tarif terlebih dahulu.
                             </div>
+                        @else
+                            <div class="mt-2 {{ $jenisGridClass }}">
+                                @foreach ($vehicleTypeOptions as $opt)
+                                    <button type="button"
+                                            class="jenisBtn group rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left hover:bg-slate-50"
+                                            data-value="{{ $opt['value'] }}"
+                                            aria-pressed="false">
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900/5 text-slate-900 ring-1 ring-slate-900/10">
+                                                <i class="fas {{ $opt['icon'] }}"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-semibold text-slate-900">{{ $opt['label'] }}</div>
+                                                <div class="mt-0.5 text-xs text-slate-500">{{ $opt['subtitle'] }}</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <div>
+                            <label for="warna" class="block text-sm font-medium text-slate-700">Warna (opsional)</label>
                             <input type="text" name="warna" id="warna"
                                    value="{{ $defaultWarna }}"
                                    placeholder="Hitam"
-                                   class="w-full rounded-2xl border border-slate-300 bg-white py-3 pl-12 pr-4 text-sm text-slate-900 outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                                   class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
                         </div>
-                    </div>
-                    <div>
-                        <label for="merk" class="text-xs font-semibold uppercase tracking-wide text-slate-600">Merk (opsional)</label>
-                        <div class="relative mt-2">
-                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                <i class="fas fa-tag text-sm"></i>
-                            </div>
+                        <div>
+                            <label for="merk" class="block text-sm font-medium text-slate-700">Merk (opsional)</label>
                             <input type="text" name="merk" id="merk"
                                    value="{{ old('merk', $model->merk) }}"
                                    placeholder="Honda, Toyota"
-                                   class="w-full rounded-2xl border border-slate-300 bg-white py-3 pl-12 pr-4 text-sm text-slate-900 outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                                   class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
                         </div>
+                    </div>
+
+                    <div>
+                        <label for="pemilik" class="block text-sm font-medium text-slate-700">Pemilik (opsional)</label>
+                        <input type="text" name="pemilik" id="pemilik"
+                               value="{{ old('pemilik', $model->pemilik) }}"
+                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="is_terdaftar" name="is_terdaftar" value="1"
+                               class="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900/20"
+                               @checked(old('is_terdaftar', (bool) $model->is_terdaftar)) />
+                        <label for="is_terdaftar" class="text-sm font-medium text-slate-700">Kendaraan terdaftar</label>
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <label for="pemilik" class="text-xs font-semibold uppercase tracking-wide text-slate-600">Pemilik (opsional)</label>
-                    <input type="text" name="pemilik" id="pemilik"
-                           value="{{ old('pemilik', $model->pemilik) }}"
-                           class="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10" />
+                <div class="flex items-center justify-end gap-2 border-t border-gray-100 pt-4">
+                    <a href="{{ route('admin.kendaraan.index') }}"
+                       class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50">
+                        Batal
+                    </a>
+                    <button type="submit"
+                            class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                            @if (empty($vehicleTypeOptions)) disabled @endif>
+                        Simpan
+                    </button>
                 </div>
-
-                <label class="mt-5 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
-                    <input type="checkbox" name="is_terdaftar" value="1"
-                           class="h-4 w-4 rounded border-slate-300"
-                           @checked(old('is_terdaftar', (bool) $model->is_terdaftar)) />
-                    <span class="text-slate-700">Kendaraan terdaftar</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-                <a href="{{ route('admin.kendaraan.index') }}"
-                   class="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                    Batal
-                </a>
-                <button type="submit"
-                        class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-                        @if (empty($vehicleTypeOptions)) disabled @endif>
-                    Simpan
-                </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -183,10 +168,28 @@
                 jenisButtons.forEach((btn) => {
                     const active = btn.dataset.value === value;
                     btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-                    btn.classList.toggle('border-slate-900', active);
-                    btn.classList.toggle('ring-2', active);
-                    btn.classList.toggle('ring-slate-900/10', active);
-                    btn.classList.toggle('bg-slate-50', active);
+
+                    // Match petugas/transaksi/masuk style (hitam jika dipilih)
+                    btn.className = active
+                        ? 'jenisBtn group rounded-2xl border border-slate-900 bg-slate-900 text-white px-4 py-4 text-left'
+                        : 'jenisBtn group rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left hover:bg-slate-50';
+
+                    const iconWrap = btn.querySelector('div > div');
+                    if (iconWrap) {
+                        iconWrap.className = active
+                            ? 'flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-white ring-1 ring-white/15'
+                            : 'flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900/5 text-slate-900 ring-1 ring-slate-900/10';
+                    }
+
+                    const title = btn.querySelector('div > div + div > div');
+                    if (title) {
+                        title.className = active ? 'text-sm font-semibold text-white' : 'text-sm font-semibold text-slate-900';
+                    }
+
+                    const desc = btn.querySelector('div > div + div > div + div');
+                    if (desc) {
+                        desc.className = active ? 'mt-0.5 text-xs text-white/70' : 'mt-0.5 text-xs text-slate-500';
+                    }
                 });
             };
 

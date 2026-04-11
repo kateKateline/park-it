@@ -2,7 +2,7 @@
     <div class="mx-auto max-w-5xl p-6">
         @include('partials.topbar', [
             'title' => $mode === 'create' ? 'Tambah User' : 'Edit User',
-            'subtitle' => 'CRUD User (Admin). Password boleh dikosongkan saat edit untuk tidak berubah.',
+            'subtitle' => 'Kelola data user dengan tampilan yang konsisten.',
         ])
 
         <div class="mt-6 space-y-4">
@@ -21,46 +21,46 @@
 
             <form method="POST"
                   action="{{ $mode === 'create' ? route('admin.users.store') : route('admin.users.update', $model) }}"
-                  class="space-y-6 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+                  class="space-y-6 rounded-2xl border border-slate-200 bg-white p-8">
                 @csrf
                 @if ($mode === 'edit')
                     @method('PUT')
                 @endif
 
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700">Nama</label>
-                    <input name="name" value="{{ old('name', $model->name) }}"
-                           class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-                           required />
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Nama</label>
+                        <input name="name" value="{{ old('name', $model->name) }}"
+                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                               required />
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700">Username</label>
-                    <input name="username" value="{{ old('username', $model->username) }}"
-                           class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-                           required />
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Username</label>
+                        <input name="username" value="{{ old('username', $model->username) }}"
+                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                               required />
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700">Role</label>
-                    <select name="role"
-                            class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-                            required>
-                        @foreach (['admin', 'petugas', 'owner'] as $role)
-                            <option value="{{ $role }}" @selected(old('role', $model->role) === $role)>{{ $role }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Role</label>
+                        <select name="role"
+                                class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                                required>
+                            @foreach (['admin', 'petugas', 'owner'] as $role)
+                                <option value="{{ $role }}" @selected(old('role', $model->role) === $role)>{{ $role }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700">
-                        Password {{ $mode === 'edit' ? '(opsional)' : '' }}
-                    </label>
-                    <input type="password" name="password"
-                           class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-                           {{ $mode === 'create' ? 'required' : '' }} />
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">
+                            Password {{ $mode === 'edit' ? '(opsional)' : '' }}
+                        </label>
+                        <input type="password" name="password"
+                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                               {{ $mode === 'create' ? 'required' : '' }} />
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-end gap-2 border-t border-gray-100 pt-4">

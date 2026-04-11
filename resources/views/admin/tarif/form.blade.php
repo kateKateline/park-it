@@ -1,8 +1,8 @@
 <x-layouts.admin :title="$mode === 'create' ? 'Tambah Tarif - Admin' : 'Edit Tarif - Admin'">
-    <div class="mx-auto max-w-3xl p-6">
+    <div class="mx-auto max-w-5xl p-6">
         @include('partials.topbar', [
             'title' => $mode === 'create' ? 'Tambah Tarif' : 'Edit Tarif',
-            'subtitle' => 'CRUD Tarif Parkir (Admin).',
+            'subtitle' => 'Kelola data tarif parkir dengan tampilan yang konsisten.',
         ])
 
         <div class="mt-6 space-y-4">
@@ -21,27 +21,29 @@
 
             <form method="POST"
                   action="{{ $mode === 'create' ? route('admin.tarif.store') : route('admin.tarif.update', $model) }}"
-                  class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                  class="space-y-6 rounded-2xl border border-slate-200 bg-white p-8">
                 @csrf
                 @if ($mode === 'edit')
                     @method('PUT')
                 @endif
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700">Jenis Kendaraan</label>
-                    <input name="jenis_kendaraan" value="{{ old('jenis_kendaraan', $model->jenis_kendaraan) }}"
-                           class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-                           required />
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Jenis Kendaraan</label>
+                        <input name="jenis_kendaraan" value="{{ old('jenis_kendaraan', $model->jenis_kendaraan) }}"
+                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                               required />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Tarif Per Jam</label>
+                        <input name="tarif_per_jam" type="number" value="{{ old('tarif_per_jam', $model->tarif_per_jam) }}"
+                               class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                               required />
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-700">Tarif Per Jam</label>
-                    <input name="tarif_per_jam" type="number" value="{{ old('tarif_per_jam', $model->tarif_per_jam) }}"
-                           class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
-                           required />
-                </div>
-
-                <div class="flex items-center justify-end gap-2 pt-2">
+                <div class="flex items-center justify-end gap-2 border-t border-gray-100 pt-4">
                     <a href="{{ route('admin.tarif.index') }}"
                        class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50">
                         Batal
