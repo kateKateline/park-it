@@ -61,17 +61,8 @@
                 </div>
             </div>
 
-            <!-- Barcode -->
-            <div class="my-4 pt-3 border-t border-dashed text-center">
-                <img
-                    src="https://bwipjs-api.metafloor.com/?bcid=qrcode&text={{ urlencode($transaksi->barcode) }}&scale=5"
-                    alt="QR"
-                    class="mx-auto w-40"
-                />
-            </div>
-
             <!-- Footer -->
-            <div class="text-center text-[10px] text-slate-500">
+            <div class="mt-4 pt-3 border-t border-dashed text-center text-[10px] text-slate-500">
                 <p>TRANSAKSI SELESAI</p>
                 <p>TERIMA KASIH</p>
                 <p>SALAM PARK-IT</p>
