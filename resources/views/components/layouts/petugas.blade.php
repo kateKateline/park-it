@@ -94,9 +94,9 @@
                     </div>
                     <form action="{{ route('logout') }}" method="POST" id="logout-form" class="block">
                         @csrf
-                        <button type="submit"
+                        <button type="button"
+                                id="logout-trigger"
                                 class="w-full py-3 bg-red-50 text-red-700 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
-                                id="logout-button"
                                 aria-label="Logout">
                             <i class="fas fa-sign-out-alt text-sm"></i>
                             <span data-profile="logout" class="ml-2 text-xs font-medium">Logout</span>
@@ -115,5 +115,61 @@
             </main>
         </div>
     </div>
+
+    <div id="logout-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4">
+        <div class="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-xl">
+            <div class="flex items-center gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+                    <i class="fas fa-sign-out-alt text-xl text-red-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Keluar dari Akun</h3>
+                    <p class="mt-1 text-sm text-gray-600">Apakah Anda yakin ingin keluar dari akun ini?</p>
+                </div>
+            </div>
+            <div class="mt-6 flex items-center justify-end gap-2">
+                <button type="button" id="logout-cancel"
+                        class="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    Batal
+                </button>
+                <button type="button" id="logout-confirm"
+                        class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
+                    Ya, Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const trigger = document.getElementById('logout-trigger');
+            const form = document.getElementById('logout-form');
+            const modal = document.getElementById('logout-modal');
+            const btnCancel = document.getElementById('logout-cancel');
+            const btnConfirm = document.getElementById('logout-confirm');
+
+            const openModal = () => {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            };
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            };
+
+            trigger?.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
+            });
+
+            btnCancel?.addEventListener('click', closeModal);
+            btnConfirm?.addEventListener('click', () => {
+                form?.submit();
+            });
+            modal?.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        });
+    </script>
 </body>
 </html>

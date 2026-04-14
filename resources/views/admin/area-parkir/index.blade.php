@@ -40,7 +40,8 @@
                                         <a href="{{ route('admin.area-parkir.edit', $a) }}" class="p-2 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition">
                                             <i class="fas fa-pen-to-square"></i>
                                         </a>
-                                        <form action="{{ route('admin.area-parkir.destroy', $a) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus?');">
+                                        <form action="{{ route('admin.area-parkir.destroy', $a) }}" method="POST" class="inline single-delete-form"
+                                              data-name="{{ $a->nama_area }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="p-2 bg-red-50 text-red-600 rounded hover:bg-red-100 transition">
@@ -65,4 +66,53 @@
             {{ $items->links() }}
         </div>
     </div>
+
+    <div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4">
+        <div class="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-xl">
+            <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Hapus</h3>
+            <p id="confirm-message" class="mt-2 text-sm text-gray-600"></p>
+            <div class="mt-6 flex items-center justify-end gap-2">
+                <button type="button" id="confirm-cancel"
+                        class="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    Batal
+                </button>
+                <button type="button" id="confirm-ok"
+                        class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
+                    Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const singleForms = Array.from(document.querySelectorAll('.single-delete-form'));
+            const modal = document.getElementById('confirm-modal');
+            const msg = document.getElementById('confirm-message');
+            const btnCancel = document.getElementById('confirm-cancel');
+            const btnOk = document.getElementById('confirm-ok');
+            let pendingSubmit = null;
+            const openModal = (message, submitFn) => {
+                msg.textContent = message;
+                pendingSubmit = submitFn;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            };
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                pendingSubmit = null;
+            };
+            singleForms.forEach((form) => {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = form.dataset.name || 'item ini';
+                    openModal(`Anda yakin ingin menghapus area "${name}"?`, () => form.submit());
+                });
+            });
+            btnCancel?.addEventListener('click', closeModal);
+            btnOk?.addEventListener('click', () => { if (pendingSubmit) pendingSubmit(); closeModal(); });
+            modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        });
+    </script>
 </x-layouts.admin>
