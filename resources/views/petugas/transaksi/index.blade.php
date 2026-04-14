@@ -3,7 +3,12 @@
         @include('partials.flash')
 
         <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-900">Daftar Transaksi</h2>
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h2 class="mt-1 text-xl font-semibold text-gray-900">Transaksi</h2>
+                    <p class="text-gray-600 text-sm mt-1">Total: {{ $items->total() }} Transaksi </p>
+                </div>
+            </div>
         </div>
 
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
