@@ -21,7 +21,7 @@
     <div class="mx-auto max-w-5xl p-6">
         @include('partials.topbar', [
             'title' => $mode === 'create' ? 'Tambah Kendaraan' : 'Edit Kendaraan',
-            'subtitle' => 'Kelola data kendaraan dengan tampilan yang konsisten.',
+            'subtitle' => '',
         ])
 
         <div class="mt-6 space-y-4">
@@ -73,12 +73,10 @@
                                 Clear
                             </button>
                         </div>
-                        <p class="mt-1 text-xs text-slate-500">Tips: boleh input tanpa spasi, format akan dinormalisasi otomatis.</p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Jenis Kendaraan</label>
-                        <p class="text-xs text-slate-500">Harus sama dengan salah satu jenis pada master Tarif.</p>
                         <input type="hidden" name="jenis_kendaraan" id="jenis_kendaraan" value="{{ $defaultJenis }}" />
                         @if (empty($vehicleTypeOptions))
                             <div class="mt-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -108,7 +106,7 @@
 
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                         <div>
-                            <label for="warna" class="block text-sm font-medium text-slate-700">Warna (opsional)</label>
+                            <label for="warna" class="block text-sm font-medium text-slate-700">Warna</label>
                             <input type="text" name="warna" id="warna"
                                    value="{{ $defaultWarna }}"
                                    placeholder="Hitam"
