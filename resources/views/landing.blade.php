@@ -1,4 +1,7 @@
 <x-layouts.guest :title="'Park-It'">
+    {{-- AOS Library --}}
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
     {{-- Menambahkan flex col dan min-h-screen agar footer bisa nempel di bawah --}}
     <div class="relative min-h-screen flex flex-col overflow-hidden">
         
@@ -16,6 +19,17 @@
             <x-landing.footer />
         </div>
     </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                once: true,
+                easing: 'ease-out-quart'
+            });
+        });
+    </script>
 
     <style>
         @keyframes floatSlow { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(0,14px,0); } }
