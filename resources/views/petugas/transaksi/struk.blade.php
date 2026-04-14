@@ -51,16 +51,8 @@
                     <span>Rp {{ number_format($tarif_per_jam, 0, ',', '.') }}/jam</span>
                 </div>
                 <div class="flex justify-between">
-                    <span>Tariff / minute</span>
-                    <span>Rp {{ number_format($tarif_per_menit, 2, ',', '.') }}</span>
-                </div>
-                <div class="flex justify-between">
                     <span>Free</span>
                     <span>{{ $gratis_menit }} minutes</span>
-                </div>
-                <div class="flex justify-between">
-                    <span>Billable</span>
-                    <span>{{ $menit_ditagih }} minutes</span>
                 </div>
 
                 <div class="flex justify-between font-bold border-t border-dashed pt-1 mt-1">

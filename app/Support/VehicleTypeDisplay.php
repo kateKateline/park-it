@@ -19,7 +19,7 @@ final class VehicleTypeDisplay
             str_contains($k, 'truk') || str_contains($k, 'truck') => 'fa-truck',
             str_contains($k, 'bus') => 'fa-bus',
             str_contains($k, 'mobil') || str_contains($k, 'car') => 'fa-car-side',
-            default => 'fa-car-side',
+            default => 'fa-ellipsis-h',
         };
     }
 

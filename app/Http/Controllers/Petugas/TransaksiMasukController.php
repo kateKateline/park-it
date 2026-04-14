@@ -235,59 +235,82 @@ class TransaksiMasukController extends Controller
             if (! is_string($imageBinary) || $imageBinary === '') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal mengambil 1 frame JPEG dari kamera. Jika URL mengarah ke stream (contoh: /video), pastikan kamera mendukung snapshot (/shot.jpg).',
-                    'debug' => $fetchMeta,
+                    'message' => 'Gagal mengambil gambar dari kamera. Pastikan kamera aktif dan mendukung snapshot.',
                 ], 502);
             }
 
-            $baseUrl = rtrim((string) config('services.python_yolo.url', 'http://127.0.0.1:5000'), '/');
-            $analyzeUrl = $baseUrl . '/analyze';
+            $analyzeResp = $this->proxyToYoloAnalyze($imageBinary, 'capture-' . now()->format('Ymd-His') . '.jpg');
+            $result = $analyzeResp->getData(true);
 
-            $http = Http::timeout(120)->acceptJson();
-
-            /** @var \Illuminate\Http\Client\Response $analyzeResp */
-            $analyzeResp = $http->attach(
-                'image',
-                $imageBinary,
-                'capture-' . now()->format('Ymd-His') . '.jpg'
-            )->post($analyzeUrl);
-
-            if (! $analyzeResp->successful()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'YOLO service error (' . $analyzeResp->status() . ').',
-                    'body' => $analyzeResp->json() ?? $analyzeResp->body(),
-                ], 502);
+            if (! ($result['success'] ?? false)) {
+                return $analyzeResp;
             }
-
-            $result = $analyzeResp->json() ?: [];
-
-            $detectionForCache = [
-                'vehicle_type' => $result['vehicle_type'] ?? null,
-                'color' => $result['color'] ?? null,
-                'confidence' => isset($result['confidence']) ? (float) $result['confidence'] : null,
-                'plate_number' => $result['plate_number'] ?? null,
-                'timestamp' => $result['timestamp'] ?? now()->format('Y-m-d H:i:s'),
-            ];
-            Cache::put('latest_detection', $detectionForCache, 3600);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Gambar berhasil dianalisis.',
-                'camera' => [
-                    'id' => $camera->id,
-                    'name' => $camera->name,
-                ],
-                'snapshot' => $fetchMeta,
-                'data' => $result,
-                'autofill' => $detectionForCache,
+                'data' => $result['data'] ?? [],
+                'autofill' => $result['autofill'] ?? [],
             ]);
         } catch (\Throwable $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal koneksi ke kamera/Python YOLO: ' . $e->getMessage(),
+                'message' => 'Gagal menghubungkan ke layanan kamera atau analisis.',
             ], 503);
         }
+    }
+
+    public function uploadAndAnalyze(Request $request): JsonResponse
+    {
+        $request->validate([
+            'image' => 'required|image|max:10240',
+        ]);
+
+        $file = $request->file('image');
+        $binary = file_get_contents($file->getRealPath());
+        $filename = $file->getClientOriginalName();
+
+        return $this->proxyToYoloAnalyze($binary, $filename);
+    }
+
+    private function proxyToYoloAnalyze(string $binary, string $filename): JsonResponse
+    {
+        $baseUrl = rtrim((string) config('services.python_yolo.url', 'http://127.0.0.1:5000'), '/');
+        $analyzeUrl = $baseUrl . '/analyze';
+
+        $http = Http::timeout(120)->acceptJson();
+
+        /** @var \Illuminate\Http\Client\Response $analyzeResp */
+        $analyzeResp = $http->attach(
+            'image',
+            $binary,
+            $filename
+        )->post($analyzeUrl);
+
+        if (! $analyzeResp->successful()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Layanan analisis sedang tidak tersedia. Silakan coba lagi nanti.',
+            ], 502);
+        }
+
+        $result = $analyzeResp->json() ?: [];
+
+        $detectionForCache = [
+            'vehicle_type' => $result['vehicle_type'] ?? null,
+            'color' => $result['color'] ?? null,
+            'confidence' => isset($result['confidence']) ? (float) $result['confidence'] : null,
+            'plate_number' => $result['plate_number'] ?? null,
+            'timestamp' => $result['timestamp'] ?? now()->format('Y-m-d H:i:s'),
+        ];
+        Cache::put('latest_detection', $detectionForCache, 3600);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Gambar berhasil dianalisis.',
+            'data' => $result,
+            'autofill' => $detectionForCache,
+        ]);
     }
 
     public function store(Request $request)

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
-    private const GRATIS_MENIT = 5;
+    private const GRATIS_MENIT = 10;
 
     public function index(Request $request)
     {

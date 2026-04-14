@@ -2,9 +2,8 @@
     <div class="space-y-6">
         <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-                <div class="text-xs text-gray-500">Admin Panel</div>
                 <h2 class="mt-1 text-xl font-semibold text-gray-900">Transaksi</h2>
-                <p class="mt-1 text-sm text-gray-600">Ringkasan semua transaksi parkir</p>
+                <p class="text-gray-600 text-sm mt-1">Total: {{ $items->total() }} Transaksi </p>
             </div>
         </div>
 

@@ -38,31 +38,8 @@
                 <p class="mt-1 text-sm text-slate-600">Catat kedatangan, pilih area, lalu generate karcis.</p>
             </div>
             <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1">
-                    <i class="fas fa-clock text-[11px]"></i>
-                    <span id="nowClock">{{ now()->format('d/m/Y H:i') }}</span>
-                </span>
             </div>
         </div>
-
-        @if (!empty($latestDetection ?? null))
-            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <div class="font-semibold">Deteksi YOLO terbaru</div>
-                        <div class="mt-1 text-xs text-emerald-900/80">
-                            Jenis: <span class="font-semibold">{{ $latestDetection['vehicle_type'] ?? '-' }}</span>,
-                            Warna: <span class="font-semibold">{{ $latestDetection['color'] ?? '-' }}</span>,
-                            Confidence: <span class="font-semibold">{{ isset($latestDetection['confidence']) ? round($latestDetection['confidence'] * 100) . '%' : '-' }}</span>,
-                            Waktu: <span class="font-semibold">{{ $latestDetection['timestamp'] ?? ($latestDetection['detected_at'] ?? '-') }}</span>
-                        </div>
-                    </div>
-                    <div class="text-xs text-emerald-900/70">
-                        Autofill aktif untuk 1x submit berikutnya
-                    </div>
-                </div>
-            </div>
-        @endif
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
             <div class="lg:col-span-12">
@@ -75,19 +52,37 @@
                         </div>
 
                         <div class="mt-5 rounded-2xl border border-blue-200 bg-blue-50 p-4">
-                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <div>
-                                    <div class="text-sm font-semibold text-blue-900">Ambil gambar dari IP Webcam</div>
-                                    <div class="mt-1 text-xs text-blue-900/80">Deteksi dari YOLO akan autofill plat, jenis kendaraan, dan warna.</div>
-                                </div>
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <select id="cameraSelect" class="rounded-xl border border-blue-200 bg-white px-3 py-2 text-xs font-medium text-slate-700">
-                                        <option value="">Pilih kamera aktif</option>
-                                    </select>
-                                    <button type="button" id="btnCaptureAnalyze" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition">
-                                        <i class="fas fa-camera" id="btnCaptureAnalyzeIcon"></i>
-                                        <span id="btnCaptureAnalyzeText">Ambil & Analisis</span>
-                                    </button>
+                            <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                                <div class="flex-1">
+                                    <div class="text-sm font-semibold text-blue-900">Analisis Kendaraan Otomatis</div>
+                                    
+                                    <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+                                        <div class="flex-1">
+                                            <label class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-blue-800/60">Opsi 1: Dari IP Webcam</label>
+                                            <div class="flex items-center gap-2">
+                                                <select id="cameraSelect" class="flex-1 rounded-xl border border-blue-200 bg-white px-3 py-2 text-xs font-medium text-slate-700">
+                                                    <option value="">Pilih kamera aktif</option>
+                                                </select>
+                                                <button type="button" id="btnCaptureAnalyze" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition">
+                                                    <i class="fas fa-camera" id="btnCaptureAnalyzeIcon"></i>
+                                                    <span id="btnCaptureAnalyzeText">Ambil & Analisis</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="hidden sm:block h-10 w-px bg-blue-200/50"></div>
+
+                                        <div class="flex-1">
+                                            <label class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-blue-800/60">Opsi 2: Upload / Foto</label>
+                                            <div class="relative">
+                                                <input type="file" id="uploadAnalyzeFile" accept="image/*" capture="environment" class="hidden" />
+                                                <button type="button" id="btnUploadAnalyze" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/50 px-4 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100/50 transition">
+                                                    <i class="fas fa-upload" id="btnUploadAnalyzeIcon"></i>
+                                                    <span id="btnUploadAnalyzeText">Pilih / Ambil Foto</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div id="captureAnalyzeResult" class="mt-3 hidden rounded-xl border px-3 py-2 text-xs"></div>
@@ -116,12 +111,10 @@
                                 <div class="mt-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">{{ $message }}</div>
                             @enderror
                             <div id="plateRealtimeInfo" class="mt-2 hidden rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700"></div>
-                            <div class="mt-2 text-xs text-slate-500">Tips: input cepat tanpa spasi juga bisa (contoh: B1234XYZ).</div>
                         </div>
 
                         <div class="mt-6">
                             <label class="text-xs font-semibold uppercase tracking-wide text-slate-600">Jenis Kendaraan</label>
-                            <p class="mt-1 text-xs text-slate-500">Pilihan mengikuti jenis yang ada di master Tarif (beserta tarif per jam).</p>
                             <input type="hidden" name="jenis_kendaraan" id="jenis_kendaraan" value="{{ $jenisDefault }}" />
                             @if (empty($vehicleTypeOptions))
                                 <div class="mt-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -154,7 +147,7 @@
 
                         <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <label for="warna" class="text-xs font-semibold uppercase tracking-wide text-slate-600">Warna (opsional)</label>
+                                <label for="warna" class="text-xs font-semibold uppercase tracking-wide text-slate-600">Warna</label>
                                 <div class="relative mt-2">
                                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
                                         <i class="fas fa-palette text-sm"></i>
@@ -183,7 +176,6 @@
                     <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <div class="flex items-center justify-between">
                             <div class="text-sm font-semibold text-slate-900">Area Parkir</div>
-                            <span class="text-xs text-slate-500">Realtime tersedia</span>
                         </div>
 
                         <div class="mt-5">
@@ -259,6 +251,7 @@
             var availabilityUrl = @json(route('petugas.transaksi.masuk.availability'));
             var checkPlateUrl = @json(route('petugas.transaksi.masuk.check-plate'));
             var captureAnalyzeUrl = @json(route('petugas.transaksi.masuk.capture-analyze'));
+            var uploadAnalyzeUrl = @json(route('petugas.transaksi.masuk.upload-analyze'));
             var cameraActiveUrl = @json(route('petugas.cameras.active'));
             var areas = @json($areasInitial);
             var csrfToken = @json(csrf_token());
@@ -283,6 +276,10 @@
             var btnCaptureAnalyzeEl = document.getElementById('btnCaptureAnalyze');
             var btnCaptureAnalyzeIconEl = document.getElementById('btnCaptureAnalyzeIcon');
             var btnCaptureAnalyzeTextEl = document.getElementById('btnCaptureAnalyzeText');
+            var btnUploadAnalyzeEl = document.getElementById('btnUploadAnalyze');
+            var btnUploadAnalyzeIconEl = document.getElementById('btnUploadAnalyzeIcon');
+            var btnUploadAnalyzeTextEl = document.getElementById('btnUploadAnalyzeText');
+            var uploadAnalyzeFileEl = document.getElementById('uploadAnalyzeFile');
             var captureAnalyzeResultEl = document.getElementById('captureAnalyzeResult');
             var plateCheckTimer = null;
             var plateIsParked = false;
@@ -385,6 +382,21 @@
                 btnCaptureAnalyzeEl.className = 'inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition';
                 if (btnCaptureAnalyzeIconEl) btnCaptureAnalyzeIconEl.className = 'fas fa-camera';
                 if (btnCaptureAnalyzeTextEl) btnCaptureAnalyzeTextEl.textContent = 'Ambil & Analisis';
+            }
+
+            function setUploadState(loading) {
+                if (!btnUploadAnalyzeEl) return;
+                btnUploadAnalyzeEl.disabled = !!loading;
+                if (loading) {
+                    btnUploadAnalyzeEl.className = 'inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/50 px-4 py-2 text-xs font-semibold text-blue-700 opacity-70';
+                    if (btnUploadAnalyzeIconEl) btnUploadAnalyzeIconEl.className = 'fas fa-spinner fa-spin';
+                    if (btnUploadAnalyzeTextEl) btnUploadAnalyzeTextEl.textContent = 'Mengupload...';
+                    return;
+                }
+
+                btnUploadAnalyzeEl.className = 'inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/50 px-4 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100/50 transition';
+                if (btnUploadAnalyzeIconEl) btnUploadAnalyzeIconEl.className = 'fas fa-upload';
+                if (btnUploadAnalyzeTextEl) btnUploadAnalyzeTextEl.textContent = 'Pilih / Ambil Foto';
             }
 
             function setCaptureResult(type, text) {
@@ -758,13 +770,67 @@
                         var vt = auto.vehicle_type ? String(auto.vehicle_type) : '-';
                         var clr = auto.color ? String(auto.color) : '-';
                         var plt = auto.plate_number ? String(auto.plate_number) : '-';
-                        setCaptureResult('success', 'Autofill berhasil. Plat: ' + plt + ', Jenis: ' + vt + ', Warna: ' + clr + '.');
+                        setCaptureResult('success', 'Autofill berhasil (Webcam). Plat: ' + plt + ', Jenis: ' + vt + ', Warna: ' + clr + '.');
                     })
                     .catch(function (e) {
                         setCaptureResult('error', 'Terjadi kesalahan: ' + (e && e.message ? e.message : 'unknown'));
                     })
                     .finally(function () {
                         setCaptureState(false);
+                    });
+                });
+            }
+
+            if (btnUploadAnalyzeEl && uploadAnalyzeFileEl) {
+                btnUploadAnalyzeEl.addEventListener('click', function () {
+                    uploadAnalyzeFileEl.click();
+                });
+
+                uploadAnalyzeFileEl.addEventListener('change', function () {
+                    var file = uploadAnalyzeFileEl.files[0];
+                    if (!file) return;
+
+                    setUploadState(true);
+                    setCaptureResult('info', 'Mengupload dan menganalisis foto...');
+
+                    var formData = new FormData();
+                    formData.append('image', file);
+
+                    fetch(uploadAnalyzeUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        credentials: 'same-origin',
+                        body: formData,
+                    })
+                    .then(function (r) {
+                        return r.json().then(function (json) {
+                            return { ok: r.ok, status: r.status, json: json };
+                        }).catch(function () {
+                            return { ok: r.ok, status: r.status, json: {} };
+                        });
+                    })
+                    .then(function (res) {
+                        if (!res.ok || !res.json || res.json.success !== true) {
+                            setCaptureResult('error', (res.json && res.json.message) ? res.json.message : ('Gagal analisis upload (HTTP ' + res.status + ').'));
+                            return;
+                        }
+
+                        var auto = res.json.autofill || res.json.data || {};
+                        fillFromDetection(auto);
+                        var vt = auto.vehicle_type ? String(auto.vehicle_type) : '-';
+                        var clr = auto.color ? String(auto.color) : '-';
+                        var plt = auto.plate_number ? String(auto.plate_number) : '-';
+                        setCaptureResult('success', 'Autofill berhasil (Upload). Plat: ' + plt + ', Jenis: ' + vt + ', Warna: ' + clr + '.');
+                    })
+                    .catch(function (e) {
+                        setCaptureResult('error', 'Terjadi kesalahan upload: ' + (e && e.message ? e.message : 'unknown'));
+                    })
+                    .finally(function () {
+                        setUploadState(false);
+                        uploadAnalyzeFileEl.value = ''; // Reset for next selection
                     });
                 });
             }

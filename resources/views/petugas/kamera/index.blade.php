@@ -9,12 +9,6 @@
                     Stream kamera parkir aktif.
                 </p>
             </div>
-            <button id="refresh-cameras-btn"
-                    type="button"
-                    class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 transition">
-                <i class="fas fa-sync-alt text-gray-500"></i>
-                Refresh Kamera
-            </button>
         </div>
 
         <div id="camera-container" class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"></div>
@@ -24,7 +18,6 @@
                 <i class="fas fa-video-slash text-2xl text-gray-400"></i>
             </div>
             <h3 class="mt-4 text-sm font-semibold text-gray-900">Belum ada kamera</h3>
-            <p class="mt-2 text-sm text-gray-500">Klik "Refresh Kamera" untuk memuat daftar kamera aktif.</p>
         </div>
     </div>
 
@@ -33,7 +26,6 @@
             const endpoint = '{{ url('/api/cameras/active') }}';
             const container = document.getElementById('camera-container');
             const emptyEl = document.getElementById('camera-empty');
-            const refreshBtn = document.getElementById('refresh-cameras-btn');
 
             async function fetchCameras() {
                 try {
@@ -156,7 +148,6 @@
             }
 
             fetchCameras();
-            if (refreshBtn) refreshBtn.addEventListener('click', () => fetchCameras());
         });
     </script>
 </x-layouts.petugas>

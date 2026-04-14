@@ -185,7 +185,7 @@
                 </table>
             </div>
         </div>
-
+        <!--
         <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between gap-4">
@@ -217,6 +217,7 @@
                 <div id="detection-test-result" class="mt-4 hidden rounded-xl border p-4 text-sm"></div>
             </div>
         </div>
+        -->
     </div>
 
     <script>
