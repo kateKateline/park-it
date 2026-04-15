@@ -55,7 +55,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700">
-                            Password {{ $mode === 'edit' ? '(opsional)' : '' }}
+                            Password {{ $mode === 'edit' ? '(ubah password)' : '' }}
                         </label>
                         <input type="password" name="password"
                                class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
