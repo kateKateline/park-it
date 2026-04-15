@@ -84,7 +84,7 @@
                                 <div class="text-xs text-gray-600">{{ $aktif }}/{{ $cap }}</div>
                             </div>
                             <div class="mt-2 h-2 w-full rounded-full bg-gray-100">
-                                <div class="h-2 rounded-full bg-slate-900" style="width: {{ $pct }}%"></div>
+                                <div class="h-2 rounded-full bg-emerald-600" style="width: {{ $pct }}%"></div>
                             </div>
                         </div>
                     @empty

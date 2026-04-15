@@ -3,8 +3,8 @@
         <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
             <div class="lg:col-span-5" data-aos="fade-up">
                 <a href="{{ route('landing') }}" class="inline-flex items-center gap-3">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-none bg-slate-900 text-white shadow-sm">
-                        <img src="{{ asset('favicon..png') }}" alt="P" class="h-6 w-6 object-contain invert grayscale" />
+                    <div class="flex h-10 w-10 items-center justify-center rounded-none bg-white text-slate-900 ring-1 ring-slate-200 shadow-sm">
+                        <img src="{{ asset('favicon..png') }}" alt="P" class="h-6 w-6 object-contain grayscale" />
                     </div>
                     <div class="leading-tight">
                         <div class="text-sm font-bold tracking-widest text-slate-900 uppercase">PARK-IT</div>

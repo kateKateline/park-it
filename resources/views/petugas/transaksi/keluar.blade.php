@@ -7,12 +7,6 @@
                 <h1 class="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Kendaraan Keluar</h1>
                 <p class="mt-1 text-sm text-slate-600">Scan QR atau masukkan kode karcis untuk menghitung tarif.</p>
             </div>
-            <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1">
-                    <i class="fas fa-clock text-[11px]"></i>
-                    <span>{{ now()->format('d/m/Y H:i') }}</span>
-                </span>
-            </div>
         </div>
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">

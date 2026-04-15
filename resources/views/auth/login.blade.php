@@ -1,24 +1,23 @@
 <x-layouts.guest :title="'Login - Park-It'">
     <div class="relative min-h-screen overflow-hidden flex items-center justify-center bg-slate-50">
         <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 20px 20px;"></div>
-        <div class="absolute top-0 left-0 w-full h-1 bg-slate-900"></div>
 
         <div class="relative w-full max-w-md p-6">
-            <div class="bg-white border border-slate-200 p-8">
-                <a href="{{ route('landing') }}" class="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-slate-900 transition">
-                    <i class="fas fa-arrow-left text-[10px]"></i>
-                    Kembali
-                </a>
+            <div class="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                    <a href="{{ route('landing') }}" class="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-slate-900 transition">
+                        <i class="fas fa-arrow-left text-[10px]"></i>
+                        Kembali
+                    </a>
+                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-900 ring-1 ring-slate-200 shadow-sm">
+                        <img src="{{ asset('favicon..png') }}" alt="P" class="h-5 w-5 object-contain grayscale" />
+                    </div>
+                </div>
 
-                <div class="mt-6 mb-8">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="flex h-10 w-10 items-center justify-center bg-slate-900 text-white">
-                            <img src="{{ asset('favicon..png') }}" alt="P" class="h-6 w-6 object-contain invert grayscale" />
-                        </div>
-                        <div>
-                            <div class="text-base font-bold uppercase tracking-wider text-slate-900">Park-It</div>
-                            <div class="text-[10px] text-slate-500 uppercase tracking-wider">Management System</div>
-                        </div>
+                <div class="mb-8">
+                    <div class="mb-4">
+                        <div class="text-base font-bold uppercase tracking-wider text-slate-900">Park-It</div>
+                        <div class="text-[10px] text-slate-500 uppercase tracking-wider font-medium">Management System</div>
                     </div>
                     <h1 class="text-xl font-bold tracking-tight text-slate-900">Login</h1>
                     <p class="mt-1 text-sm text-slate-500">Masuk untuk mengakses dashboard.</p>
