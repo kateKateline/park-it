@@ -130,27 +130,17 @@ class KendaraanController extends Controller
 
     public function destroy(Request $request, Kendaraan $kendaraan)
     {
-        $id = $kendaraan->id;
-        $plat = $kendaraan->plat_nomor;
+        $kendaraan->is_tangguhkan = !$kendaraan->is_tangguhkan;
+        $kendaraan->save();
 
-        try {
-            $kendaraan->delete();
-        } catch (QueryException $e) {
-            $sqlState = (string) ($e->errorInfo[0] ?? '');
-
-            if ($sqlState === '23000') {
-                return back()->with('error', "Kendaraan {$plat} tidak bisa dihapus karena masih dipakai di data lain.");
-            }
-
-            throw $e;
-        }
+        $status = $kendaraan->is_tangguhkan ? 'ditangguhkan' : 'diaktifkan';
 
         LogAktivitas::create([
             'user_id' => $request->user()->id,
-            'aktivitas' => "CRUD Kendaraan: menghapus kendaraan #{$id} ({$plat})",
+            'aktivitas' => "CRUD Kendaraan: {$status} kendaraan #{$kendaraan->id} ({$kendaraan->plat_nomor})",
         ]);
 
-        return back()->with('success', 'Kendaraan berhasil dihapus.');
+        return back()->with('success', "Kendaraan berhasil {$status}.");
     }
 
     public function bulkDestroy(Request $request)
@@ -161,32 +151,23 @@ class KendaraanController extends Controller
         ]);
 
         $ids = array_values(array_unique(array_map('intval', $data['selected_ids'])));
-        $items = Kendaraan::whereIn('id', $ids)->get(['id', 'plat_nomor']);
+        $items = Kendaraan::whereIn('id', $ids)->get();
 
         if ($items->isEmpty()) {
             return back()->with('error', 'Data kendaraan yang dipilih tidak ditemukan.');
         }
 
+        // Kita tangguhkan semuanya (set is_tangguhkan = true)
+        Kendaraan::whereIn('id', $items->pluck('id'))->update(['is_tangguhkan' => true]);
+
         $plats = $items->pluck('plat_nomor')->all();
         $count = $items->count();
 
-        try {
-            Kendaraan::whereIn('id', $items->pluck('id'))->delete();
-        } catch (QueryException $e) {
-            $sqlState = (string) ($e->errorInfo[0] ?? '');
-
-            if ($sqlState === '23000') {
-                return back()->with('error', 'Sebagian kendaraan tidak bisa dihapus karena masih dipakai di data lain.');
-            }
-
-            throw $e;
-        }
-
         LogAktivitas::create([
             'user_id' => $request->user()->id,
-            'aktivitas' => 'CRUD Kendaraan: hapus massal '.$count.' kendaraan ('.implode(', ', $plats).')',
+            'aktivitas' => 'CRUD Kendaraan: tangguhkan massal '.$count.' kendaraan ('.implode(', ', $plats).')',
         ]);
 
-        return back()->with('success', $count.' kendaraan berhasil dihapus.');
+        return back()->with('success', $count.' kendaraan berhasil ditangguhkan.');
     }
 }

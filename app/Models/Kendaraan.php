@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Kendaraan extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $table = 'tb_kendaraan';
 
@@ -21,12 +20,14 @@ class Kendaraan extends Model
         'merk',
         'pemilik',
         'is_terdaftar',
+        'is_tangguhkan',
     ];
 
     protected function casts(): array
     {
         return [
             'is_terdaftar' => 'boolean',
+            'is_tangguhkan' => 'boolean',
         ];
     }
 

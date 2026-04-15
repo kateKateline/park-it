@@ -86,18 +86,18 @@
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Area Parkir</span>
                             </a>
                         </li>
+                                                <li>
+                            <a href="{{ route('admin.kendaraan.index') }}"
+                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(str_starts_with(Route::currentRouteName(), 'admin.kendaraan')) bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
+                                <i class="fas fa-car w-5 text-center flex-shrink-0"></i>
+                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kendaraan</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="{{ route('admin.camera-sources.index') }}"
                                class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(Route::currentRouteName() === 'admin.camera-sources.index') bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
                                 <i class="fas fa-video w-5 text-center flex-shrink-0"></i>
                                 <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kamera</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.kendaraan.index') }}"
-                               class="nav-link group flex items-center gap-2 px-3.5 py-2.5 rounded-md text-gray-700 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 @if(str_starts_with(Route::currentRouteName(), 'admin.kendaraan')) bg-gray-900/5 text-gray-900 ring-1 ring-inset ring-gray-200 @endif">
-                                <i class="fas fa-car w-5 text-center flex-shrink-0"></i>
-                                <span data-nav="label" class="whitespace-nowrap overflow-hidden transition-opacity duration-200 text-[13px]">Kendaraan</span>
                             </a>
                         </li>
                         <li>

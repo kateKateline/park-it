@@ -368,6 +368,12 @@ class TransaksiMasukController extends Controller
             ]
         );
 
+        if ($kendaraan->is_tangguhkan) {
+            return back()
+                ->withErrors(['plat_nomor' => "Kendaraan dengan plat {$plat} sedang ditangguhkan. Silakan hubungi admin."])
+                ->withInput();
+        }
+
         if (! $kendaraan->wasRecentlyCreated) {
             $kendaraan->update([
                 'jenis_kendaraan' => $valid['jenis_kendaraan'],
