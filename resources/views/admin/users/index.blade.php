@@ -56,15 +56,21 @@
                                         <a href="{{ route('admin.users.edit', $u) }}" class="p-2 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition" title="Edit">
                                             <i class="fas fa-pen-to-square"></i>
                                         </a>
-                                        <form action="{{ route('admin.users.destroy', $u) }}" method="POST" class="inline single-tangguhkan-form"
-                                              data-name="{{ $u->name }}" data-status="{{ $u->is_tangguhkan ? 'aktifkan' : 'tangguhkan' }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="p-2 {{ $u->is_tangguhkan ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-orange-50 text-orange-600 hover:bg-orange-100' }} rounded transition" 
-                                                    title="{{ $u->is_tangguhkan ? 'Aktifkan' : 'Tangguhkan' }}">
-                                                <i class="fas {{ $u->is_tangguhkan ? 'fa-user-check' : 'fa-user-slash' }}"></i>
-                                            </button>
-                                        </form>
+                                        @if ($u->id !== auth()->id())
+                                            <form action="{{ route('admin.users.destroy', $u) }}" method="POST" class="inline single-tangguhkan-form"
+                                                  data-name="{{ $u->name }}" data-status="{{ $u->is_tangguhkan ? 'aktifkan' : 'tangguhkan' }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="p-2 {{ $u->is_tangguhkan ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-orange-50 text-orange-600 hover:bg-orange-100' }} rounded transition" 
+                                                        title="{{ $u->is_tangguhkan ? 'Aktifkan' : 'Tangguhkan' }}">
+                                                    <i class="fas {{ $u->is_tangguhkan ? 'fa-user-check' : 'fa-user-slash' }}"></i>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="p-2 bg-gray-50 text-gray-400 rounded cursor-not-allowed" title="Anda tidak bisa menangguhkan akun sendiri">
+                                                <i class="fas fa-user-lock"></i>
+                                            </span>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

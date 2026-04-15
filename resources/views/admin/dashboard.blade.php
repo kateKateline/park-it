@@ -14,7 +14,7 @@
             $rate = $capacity > 0 ? (int) round(($active / $capacity) * 100) : 0;
         @endphp
 
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">Transaksi aktif</div>
@@ -46,32 +46,6 @@
                     Rp {{ number_format((int) ($kpi['pendapatan_hari_ini'] ?? 0), 0, ',', '.') }}
                 </div>
                 <div class="mt-2 text-xs text-gray-500">Dari transaksi selesai</div>
-            </div>
-            <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <div class="text-sm text-gray-600">Data master</div>
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
-                        <i class="fas fa-layer-group text-sm"></i>
-                    </div>
-                </div>
-                <dl class="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-                    <div class="flex justify-between gap-2 rounded-lg bg-gray-50 px-2.5 py-1.5">
-                        <dt class="text-gray-500">Users</dt>
-                        <dd class="font-semibold text-gray-900">{{ $counts['users'] ?? 0 }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2 rounded-lg bg-gray-50 px-2.5 py-1.5">
-                        <dt class="text-gray-500">Area</dt>
-                        <dd class="font-semibold text-gray-900">{{ $counts['area'] ?? 0 }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2 rounded-lg bg-gray-50 px-2.5 py-1.5">
-                        <dt class="text-gray-500">Kendaraan</dt>
-                        <dd class="font-semibold text-gray-900">{{ $counts['kendaraan'] ?? 0 }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2 rounded-lg bg-gray-50 px-2.5 py-1.5">
-                        <dt class="text-gray-500">Tarif</dt>
-                        <dd class="font-semibold text-gray-900">{{ $counts['tarif'] ?? 0 }}</dd>
-                    </div>
-                </dl>
             </div>
         </div>
 

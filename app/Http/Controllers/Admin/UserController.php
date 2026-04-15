@@ -98,8 +98,8 @@ class UserController extends Controller
 
     public function destroy(Request $request, User $user)
     {
-        if ($user->id === $request->user()->id) {
-            return back()->with('error', 'Tidak bisa menangguhkan akun yang sedang login.');
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Anda tidak bisa menangguhkan akun Anda sendiri.');
         }
 
         $user->is_tangguhkan = !$user->is_tangguhkan;

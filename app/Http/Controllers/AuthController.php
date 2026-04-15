@@ -20,26 +20,30 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        // Cari user terlebih dahulu untuk pengecekan case-sensitive dan status tangguhkan
+        $user = \App\Models\User::where('username', $credentials['username'])->first();
+
+        // Pengecekan case-sensitive manual (username di DB harus sama persis dengan input)
+        if (!$user || $user->username !== $credentials['username']) {
+            return back()
+                ->withErrors(['username' => 'Username atau password salah.'])
+                ->onlyInput('username');
+        }
+
+        if ($user->is_tangguhkan) {
+            return back()
+                ->withErrors(['username' => 'Akun Anda ditangguhkan. Silakan hubungi admin.'])
+                ->onlyInput('username');
+        }
+
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-
-            if ($user->is_tangguhkan) {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-
-                return back()
-                    ->withErrors(['username' => 'Akun Anda ditangguhkan. Silakan hubungi admin.'])
-                    ->onlyInput('username');
-            }
-
             $request->session()->regenerate();
-            if ($user) {
-                LogAktivitas::create([
-                    'user_id' => $user->id,
-                    'aktivitas' => "Login: {$user->username} ({$user->role})",
-                ]);
-            }
+            
+            LogAktivitas::create([
+                'user_id' => $user->id,
+                'aktivitas' => "Login: {$user->username} ({$user->role})",
+            ]);
+            
             return redirect()->intended(route('dashboard'));
         }
 
