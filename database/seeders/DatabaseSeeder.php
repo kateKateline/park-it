@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             AreaParkirSeeder::class,
             TarifSeeder::class,
             ParkingSeeder::class,
+            LiveParkingSeeder::class,
         ]);
     }
 }

@@ -42,9 +42,9 @@ class UsersSeeder extends Seeder
 
         // Tambahan petugas demo
         User::updateOrCreate(
-            ['username' => 'petugas2'],
+            ['username' => 'petugas 2'],
             [
-                'name' => 'Petugas 2',
+                'name' => 'Pak kevin',
                 'password' => Hash::make('123'),
                 'role' => 'petugas',
             ]

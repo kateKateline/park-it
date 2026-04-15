@@ -12,6 +12,7 @@ class AreaParkirSeeder extends Seeder
         $rows = [
             ['nama_area' => 'Area A', 'kapasitas' => 50, 'keterangan' => 'Dekat pintu masuk'],
             ['nama_area' => 'Area B', 'kapasitas' => 40, 'keterangan' => 'Dekat pintu keluar'],
+            ['nama_area' => 'Area C', 'kapasitas' => 40, 'keterangan' => 'lantai 2'],
             ['nama_area' => 'Basement', 'kapasitas' => 60, 'keterangan' => 'Khusus kendaraan roda 4'],
         ];
 

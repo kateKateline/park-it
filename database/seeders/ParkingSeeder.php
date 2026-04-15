@@ -40,11 +40,12 @@ class ParkingSeeder extends Seeder
         $this->command->info('Generating busy parking data for the last month...');
 
         // Pre-generate some vehicles
-        $vehicleTypes = ['mobil', 'motor'];
+        $vehicleTypes = ['mobil', 'motor', 'truk'];
         $colors = ['Hitam', 'Putih', 'Silver', 'Merah', 'Biru', 'Abu-abu'];
         $merks = [
             'mobil' => ['Toyota', 'Honda', 'Suzuki', 'Daihatsu', 'Mitsubishi'],
             'motor' => ['Honda', 'Yamaha', 'Suzuki', 'Kawasaki'],
+            'truk' => ['Volvo', 'Scania', 'Man', 'Mercedes-Benz', 'Daimler'],
         ];
 
         $currentDate = $startDate->copy();
