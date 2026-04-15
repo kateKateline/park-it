@@ -20,10 +20,8 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        // Cari user terlebih dahulu untuk pengecekan case-sensitive dan status tangguhkan
         $user = \App\Models\User::where('username', $credentials['username'])->first();
 
-        // Pengecekan case-sensitive manual (username di DB harus sama persis dengan input)
         if (!$user || $user->username !== $credentials['username']) {
             return back()
                 ->withErrors(['username' => 'Username atau password salah.'])
