@@ -44,7 +44,7 @@ class Transaksi extends Model
 
     public function kendaraan(): BelongsTo
     {
-        return $this->belongsTo(Kendaraan::class, 'kendaraan_id')->withTrashed();
+        return $this->belongsTo(Kendaraan::class, 'kendaraan_id');
     }
 
     public function areaParkir(): BelongsTo
