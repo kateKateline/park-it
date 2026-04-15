@@ -141,44 +141,41 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50 border-b border-gray-200">
+                    <thead class="bg-slate-50 text-slate-600">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Kode</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Kendaraan</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Area</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700">Status</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-700">Total</th>
+                            <th class="px-4 py-3 text-left">Status</th>
+                            <th class="px-4 py-3 text-left">Kode</th>
+                            <th class="px-4 py-3 text-left">Waktu Masuk</th>
+                            <th class="px-4 py-3 text-left">Waktu Keluar</th>
+                            <th class="px-4 py-3 text-left">Kendaraan</th>
+                            <th class="px-4 py-3 text-left">Area</th>
+                            <th class="px-4 py-3 text-right">Total</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200">
+                    <tbody>
                         @forelse(($recent['transaksi'] ?? collect()) as $t)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 font-mono text-xs text-gray-700">{{ $t->barcode }}</td>
-                                <td class="px-6 py-4">
-                                    <div class="font-medium text-gray-900">{{ $t->kendaraan?->plat_nomor ?? '-' }}</div>
-                                    <div class="text-xs text-gray-500">{{ $t->kendaraan?->jenis_kendaraan ?? '-' }}</div>
+                            <tr class="border-t border-slate-100 hover:bg-slate-50 transition">
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center gap-1.5 rounded-full {{ $t->status === 'selesai' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }} px-2.5 py-1 text-xs font-semibold">
+                                        <span class="h-1.5 w-1.5 rounded-full {{ $t->status === 'selesai' ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
+                                        {{ ucfirst($t->status) }}
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 text-gray-700">{{ $t->areaParkir?->nama_area ?? '-' }}</td>
-                                <td class="px-6 py-4">
-                                    @if ($t->status === 'mSasuk')
-                                        <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800 ring-1 ring-amber-200/80">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
-                                            Masuk
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-200/80">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                                            Selesai
-                                        </span>
-                                    @endif
+                                <td class="px-4 py-3 font-mono text-xs">{{ $t->barcode }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap">{{ $t->waktu_masuk?->format('d/m/Y H:i') }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap">{{ $t->waktu_keluar?->format('d/m/Y H:i') ?? '-' }}</td>
+                                <td class="px-4 py-3">
+                                    <div class="font-medium text-slate-900">{{ $t->kendaraan?->plat_nomor }}</div>
+                                    <div class="text-[11px] text-slate-500">{{ $t->kendaraan?->jenis_kendaraan }}</div>
                                 </td>
-                                <td class="px-6 py-4 text-right font-semibold text-gray-900">
-                                    Rp {{ number_format((int) ($t->total_bayar ?? 0), 0, ',', '.') }}
+                                <td class="px-4 py-3 text-slate-600">{{ $t->areaParkir?->nama_area }}</td>
+                                <td class="px-4 py-3 text-right font-semibold text-slate-900">
+                                    Rp {{ number_format($t->total_bayar ?? 0, 0, ',', '.') }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-10 text-center text-gray-500">Belum ada transaksi.</td>
+                                <td colspan="7" class="px-4 py-10 text-center text-slate-500">Belum ada transaksi terbaru.</td>
                             </tr>
                         @endforelse
                     </tbody>

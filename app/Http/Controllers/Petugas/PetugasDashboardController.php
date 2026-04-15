@@ -49,7 +49,7 @@ class PetugasDashboardController extends Controller
 
         $recentTransaksi = Transaksi::with(['kendaraan', 'areaParkir', 'petugas'])
             ->latest('id')
-            ->limit(10)
+            ->limit(5)
             ->get();
 
         return view('petugas.dashboard', [
