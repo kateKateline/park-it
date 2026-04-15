@@ -2,10 +2,18 @@
     <div class="space-y-4">
         <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Detail Rekap {{ \Carbon\Carbon::parse($tanggal)->format('d/m/Y') }}</h2>
-            <a href="{{ route('owner.rekap.index') }}"
-               class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50">
-                Kembali
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('owner.rekap.index') }}"
+                   class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50">
+                    Kembali
+                </a>
+                <a href="{{ route('owner.rekap.pdf', ['from' => $tanggal, 'to' => $tanggal]) }}"
+                   target="_blank"
+                   rel="noopener"
+                   class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-50">
+                    PDF
+                </a>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">

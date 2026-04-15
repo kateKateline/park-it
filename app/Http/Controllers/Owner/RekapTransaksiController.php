@@ -77,6 +77,15 @@ class RekapTransaksiController extends Controller
 
         $series = $this->buildSeries($fromDate, $toDate);
 
+        $items = null;
+        if ($fromDate->toDateString() === $toDate->toDateString()) {
+            $items = Transaksi::with(['kendaraan', 'areaParkir', 'petugas'])
+                ->where('status', 'selesai')
+                ->whereDate('waktu_keluar', $fromDate->toDateString())
+                ->orderBy('waktu_keluar', 'asc')
+                ->get();
+        }
+
         $total = array_reduce($series, fn ($acc, $r) => $acc + (int) ($r['pendapatan'] ?? 0), 0);
         $jumlah = array_reduce($series, fn ($acc, $r) => $acc + (int) ($r['jumlah'] ?? 0), 0);
         $avgDurasi = $jumlah > 0
@@ -88,13 +97,14 @@ class RekapTransaksiController extends Controller
             'from' => $fromDate->toDateString(),
             'to' => $toDate->toDateString(),
             'series' => $series,
+            'items' => $items,
             'summary' => [
                 'jumlah' => $jumlah,
                 'pendapatan' => $total,
                 'rata_durasi' => $avgDurasi,
             ],
             'generated_at' => now()->format('d/m/Y H:i'),
-        ])->setPaper('a4', 'portrait');
+        ])->setPaper('a4', $items ? 'landscape' : 'portrait');
 
         $filename = 'rekap-owner-' . $fromDate->toDateString() . '_to_' . $toDate->toDateString() . '.pdf';
 

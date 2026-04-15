@@ -1,6 +1,14 @@
 <x-layouts.owner :title="'Rekap Transaksi - Owner'">
     <div class="space-y-4">
         @include('partials.flash')
+                <div class="flex items-center justify-between">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h2 class="mt-1 text-xl font-semibold text-gray-900">Rekap</h2>
+                    <p class="text-gray-600 text-sm mt-1">Rekap transaksi  </p>
+                </div>
+            </div>
+        </div>
 
             <form class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
                   method="GET" action="{{ route('owner.rekap.index') }}">
