@@ -9,7 +9,7 @@
                         <i class="fas fa-arrow-left text-[10px]"></i>
                         Kembali
                     </a>
-                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-900 ring-1 ring-slate-200 shadow-sm">
+                    <div class="flex h-8 w-8 items-center justify-center  bg-white text-slate-900 ring-1 ring-slate-200 shadow-sm">
                         <img src="{{ asset('favicon..png') }}" alt="P" class="h-5 w-5 object-contain grayscale" />
                     </div>
                 </div>

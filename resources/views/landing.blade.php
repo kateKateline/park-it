@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
     {{-- Menambahkan flex col dan min-h-screen agar footer bisa nempel di bawah --}}
-    <div class="relative min-h-screen flex flex-col overflow-hidden">
+    <div id="top" class="relative min-h-screen flex flex-col overflow-hidden">
         
         {{-- Background Blobs --}}
         <x-landing.background />
@@ -14,6 +14,9 @@
 
             {{-- Main Content: flex-1 memastikan bagian ini mengambil ruang sisa --}}
             <x-landing.main />
+
+            {{-- Contact Message --}}
+            <x-landing.message />
 
             {{-- Footer: Dikeluarkan dari <main> agar lebarnya full --}}
             <x-landing.footer />
