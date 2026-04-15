@@ -21,8 +21,19 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            if ($user->is_tangguhkan) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()
+                    ->withErrors(['username' => 'Akun Anda ditangguhkan. Silakan hubungi admin.'])
+                    ->onlyInput('username');
+            }
+
             $request->session()->regenerate();
-            $user = $request->user();
             if ($user) {
                 LogAktivitas::create([
                     'user_id' => $user->id,

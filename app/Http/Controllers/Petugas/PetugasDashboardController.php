@@ -33,6 +33,7 @@ class PetugasDashboardController extends Controller
             ->avg('durasi_menit'));
 
         $areas = AreaParkir::query()
+            ->where('is_tangguhkan', false)
             ->withCount([
                 'transaksi as aktif_count' => fn ($q) => $q->where('status', 'masuk'),
             ])

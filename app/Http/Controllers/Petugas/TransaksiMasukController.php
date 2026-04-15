@@ -77,6 +77,7 @@ class TransaksiMasukController extends Controller
     public function create(Request $request)
     {
         $areas = AreaParkir::query()
+            ->where('is_tangguhkan', false)
             ->withCount([
                 'transaksi as aktif_count' => fn ($q) => $q->where('status', 'masuk'),
             ])
@@ -345,7 +346,7 @@ class TransaksiMasukController extends Controller
                 ->withInput();
         }
 
-        $area = AreaParkir::query()->findOrFail($valid['area_parkir_id']);
+        $area = AreaParkir::query()->where('is_tangguhkan', false)->findOrFail($valid['area_parkir_id']);
         $kapasitas = (int) ($area->kapasitas ?? 0);
         $aktif = (int) Transaksi::query()
             ->where('area_parkir_id', $area->id)

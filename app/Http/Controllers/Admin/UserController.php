@@ -99,19 +99,20 @@ class UserController extends Controller
     public function destroy(Request $request, User $user)
     {
         if ($user->id === $request->user()->id) {
-            return back()->with('error', 'Tidak bisa menghapus akun yang sedang login.');
+            return back()->with('error', 'Tidak bisa menangguhkan akun yang sedang login.');
         }
 
-        $id = $user->id;
-        $username = $user->username;
-        $user->delete();
+        $user->is_tangguhkan = !$user->is_tangguhkan;
+        $user->save();
+
+        $status = $user->is_tangguhkan ? 'ditangguhkan' : 'diaktifkan';
 
         LogAktivitas::create([
             'user_id' => $request->user()->id,
-            'aktivitas' => "CRUD User: menghapus user #{$id} ({$username})",
+            'aktivitas' => "CRUD User: {$status} user #{$user->id} ({$user->username})",
         ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+        return redirect()->route('admin.users.index')->with('success', "User berhasil {$status}.");
     }
 }
 

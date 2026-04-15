@@ -17,6 +17,11 @@ class AreaParkir extends Model
         'nama_area',
         'kapasitas',
         'keterangan',
+        'is_tangguhkan',
+    ];
+
+    protected $casts = [
+        'is_tangguhkan' => 'boolean',
     ];
 
     public function transaksi(): HasMany

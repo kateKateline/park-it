@@ -87,16 +87,17 @@ class AreaParkirController extends Controller
 
     public function destroy(Request $request, AreaParkir $area_parkir)
     {
-        $id = $area_parkir->id;
-        $nama = $area_parkir->nama_area;
-        $area_parkir->delete();
+        $area_parkir->is_tangguhkan = !$area_parkir->is_tangguhkan;
+        $area_parkir->save();
+
+        $status = $area_parkir->is_tangguhkan ? 'ditangguhkan' : 'diaktifkan';
 
         LogAktivitas::create([
             'user_id' => $request->user()->id,
-            'aktivitas' => "CRUD Area Parkir: menghapus area #{$id} ({$nama})",
+            'aktivitas' => "CRUD Area Parkir: {$status} area #{$area_parkir->id} ({$area_parkir->nama_area})",
         ]);
 
-        return redirect()->route('admin.area-parkir.index')->with('success', 'Area parkir berhasil dihapus.');
+        return redirect()->route('admin.area-parkir.index')->with('success', "Area parkir berhasil {$status}.");
     }
 }
 
