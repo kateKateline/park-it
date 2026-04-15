@@ -99,32 +99,32 @@
                     <div class="mt-1 text-xs text-gray-500">Sedang parkir</div>
                 </div>
                 @php
-                    $motor = (int) (($kendaraan_aktif['motor'] ?? 0));
-                    $mobil = (int) (($kendaraan_aktif['mobil'] ?? 0));
-                    $totalAktif = $motor + $mobil;
-                    if ($totalAktif <= 0) {
-                        $motorPct = 0;
-                        $mobilPct = 0;
-                    } else {
-                        $motorPct = (int) round(($motor / $totalAktif) * 100);
-                        $mobilPct = (int) round(($mobil / $totalAktif) * 100);
-                    }
+                    $totalAktif = array_sum($kendaraan_aktif ?? []);
+                    $colors = [
+                        'motor' => 'bg-blue-600',
+                        'mobil' => 'bg-emerald-600',
+                        'truk' => 'bg-amber-600',
+                        'default' => 'bg-slate-600'
+                    ];
                 @endphp
-                <div class="px-6 py-5">
-                    <div class="flex items-center justify-between text-sm">
-                        <div class="font-medium text-gray-900">Motor</div>
-                        <div class="text-xs text-gray-600">{{ $motor }}</div>
-                    </div>
-                    <div class="mt-2 h-2 w-full rounded-full bg-gray-100">
-                        <div class="h-2 rounded-full bg-blue-600" style="width: {{ $motorPct }}%"></div>
-                    </div>
-                    <div class="mt-4 flex items-center justify-between text-sm">
-                        <div class="font-medium text-gray-900">Mobil</div>
-                        <div class="text-xs text-gray-600">{{ $mobil }}</div>
-                    </div>
-                    <div class="mt-2 h-2 w-full rounded-full bg-gray-100">
-                        <div class="h-2 rounded-full bg-emerald-600" style="width: {{ $mobilPct }}%"></div>
-                    </div>
+                <div class="px-6 py-5 space-y-4">
+                    @forelse($kendaraan_aktif ?? [] as $jenis => $jumlah)
+                        @php
+                            $pct = $totalAktif > 0 ? (int) round(($jumlah / $totalAktif) * 100) : 0;
+                            $colorClass = $colors[strtolower($jenis)] ?? $colors['default'];
+                        @endphp
+                        <div>
+                            <div class="flex items-center justify-between text-sm">
+                                <div class="font-medium text-gray-900 capitalize">{{ $jenis }}</div>
+                                <div class="text-xs text-gray-600">{{ $jumlah }}</div>
+                            </div>
+                            <div class="mt-2 h-2 w-full rounded-full bg-gray-100">
+                                <div class="h-2 rounded-full {{ $colorClass }}" style="width: {{ $pct }}%"></div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-sm text-gray-500">Tidak ada kendaraan parkir.</div>
+                    @endforelse
                 </div>
             </div>
         </div>
