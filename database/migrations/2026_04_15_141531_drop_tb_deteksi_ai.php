@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('detections');
+        Schema::dropIfExists('tb_deteksi_ai');
     }
 
     /**
@@ -19,12 +19,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::create('detections', function (Blueprint $table) {
+        Schema::create('tb_deteksi_ai', function (Blueprint $table) {
             $table->id();
-            $table->string('vehicle_type');
-            $table->string('color');
-            $table->float('confidence');
-            $table->dateTime('detected_at');
+            $table->foreignId('transaksi_id')->nullable()->constrained('tb_transaksi');
+            $table->string('plat_terdeteksi')->nullable();
+            $table->string('warna_terdeteksi')->nullable();
+            $table->string('sumber')->comment('yolo / plate_recognizer');
             $table->timestamps();
         });
     }

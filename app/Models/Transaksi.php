@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\AreaParkir;
 use App\Models\CetakStruk;
-use App\Models\DeteksiAi;
 use App\Models\Kendaraan;
 use App\Models\User;
 
@@ -60,10 +59,5 @@ class Transaksi extends Model
     public function struk(): HasOne
     {
         return $this->hasOne(CetakStruk::class, 'transaksi_id');
-    }
-
-    public function deteksiAi(): HasMany
-    {
-        return $this->hasMany(DeteksiAi::class, 'transaksi_id');
     }
 }
